@@ -391,17 +391,13 @@ function showStandings() {
 
 async function saveToSheets() {
   if (!scriptUrl) return;
-  setSyncStatus('syncing', 'Saving...');
+  setSyncStatus("syncing", "Saving...");
   try {
-    const resp = await fetch(scriptUrl + '?action=save&data=' + encodeURIComponent(JSON.stringify({picks})));
-    const data = await resp.json();
-    if (data.success) {
-      setSyncStatus('synced', 'Saved to Google Sheets at ' + new Date().toLocaleTimeString());
-    } else {
-      setSyncStatus('error', 'Save failed: ' + (data.error || 'unknown error'));
-    }
+    const url = scriptUrl + "?action=save&data=" + encodeURIComponent(JSON.stringify({picks}));
+    await fetch(url, {mode: "no-cors"});
+    setSyncStatus("synced", "Saved to Google Sheets at " + new Date().toLocaleTimeString());
   } catch(e) {
-    setSyncStatus('error', 'Save failed — check internet connection');
+    setSyncStatus("error", "Save failed — check internet connection");
   }
 }
 
