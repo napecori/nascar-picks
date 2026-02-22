@@ -226,29 +226,78 @@
     .stats-header-row { grid-template-columns: 1fr; }
   }
   @media (max-width: 900px) {
-    .main { padding: 20px 16px; }
-    .header-inner { padding: 16px; flex-direction: column; align-items: flex-start; }
-    .site-title { font-size: 2.8rem; }
+    .main { padding: 16px; }
+    .header-inner { padding: 0 16px; }
     .points-ref-grid { grid-template-columns: 1fr; }
-    .nav-tabs { padding: 0 8px; }
-    .sync-bar { padding: 6px 16px; }
+    .nav-tabs { padding: 0 4px; }
+    .sync-bar { padding: 5px 16px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .stats-header-row { grid-template-columns: 1fr 1fr; }
+    .lb-bar-wrap { display: none; }
+    .lb-races { display: none; }
+    .lb-row, .lb-header { grid-template-columns: 40px 44px 1fr 80px; }
   }
   @media (max-width: 600px) {
-    .site-title { font-size: 2rem; letter-spacing: 2px; }
-    .header-badge { font-size: 0.85rem; padding: 4px 10px; }
-    .header-inner { padding: 12px 14px; gap: 10px; }
-    .main { padding: 14px 10px; }
-    .section-title { font-size: 1.3rem; }
+    /* Header */
+    .header-inner { padding: 0 12px; height: 52px; }
+    .site-title { font-size: 1.3rem; letter-spacing: 0.5px; }
+    .season-label { display: none; }
+    .header-badge-pill { display: none; }
+    /* Nav */
     .nav-tabs { padding: 0; }
-    .nav-tab { padding: 12px 12px; font-size: 0.95rem; }
-    .commish-bar { gap: 8px; padding: 10px 12px; }
-    .commish-bar input[type=password] { width: 130px; }
+    .nav-tab { padding: 10px 10px; font-size: 0.72rem; letter-spacing: 0; }
+    /* Sync bar */
+    .sync-bar { padding: 4px 12px; font-size: 0.7rem; }
+    /* Main */
+    .main { padding: 12px 10px; }
+    /* This week panel */
+    .this-week-header { padding: 12px 14px; }
+    .this-week-track { font-size: 1.3rem; }
+    .this-week-label { font-size: 0.7rem; }
+    .this-week-col-header { font-size: 0.75rem; padding: 5px 8px; }
+    .this-week-picks { grid-template-columns: 1fr 1fr; }
+    .this-week-col-headers { grid-template-columns: 1fr 1fr; }
+    .this-week-col-header:nth-child(2) { border-right: none; }
+    .this-week-col-header:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.1); }
+    .this-week-col-header:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.1); border-right: none; }
+    .this-week-player:nth-child(2) { border-right: none; }
+    .this-week-player:nth-child(3) { border-top: 1px solid #1e1e1e; border-right: 1px solid #1e1e1e; }
+    .this-week-player:nth-child(4) { border-top: 1px solid #1e1e1e; }
+    .tw-name { font-size: 0.78rem; padding: 8px 4px 8px 2px; }
+    .tw-pos { width: 20px; font-size: 0.85rem; }
+    .tw-num { width: 32px; padding: 6px 2px; }
+    .tw-pts { width: 28px; font-size: 0.85rem; padding-right: 6px; }
+    .this-week-total { font-size: 0.72rem; padding: 6px 10px; }
+    /* Leaderboard */
+    .lb-bar-wrap { display: none; }
+    .lb-races { display: none; }
+    .lb-row, .lb-header { grid-template-columns: 36px 40px 1fr 70px; }
+    .lb-name { font-size: 1.1rem; padding: 10px 6px; }
+    .lb-rank { font-size: 1rem; padding: 10px 0; }
+    .lb-pts { font-size: 1.3rem; padding-right: 10px; }
+    /* Tables */
+    tbody td { font-size: 0.78rem; padding: 7px 6px; }
+    thead th { font-size: 0.72rem; padding: 7px 6px; }
+    /* Commish bar */
+    .commish-bar { gap: 6px; padding: 8px 10px; }
+    .commish-bar input[type=password] { width: 120px; font-size: 0.82rem; }
     .commish-status { width: 100%; }
-    .autocomplete-wrap input { min-width: 90px; font-size: 0.85rem; }
-    .fin-input { width: 40px; font-size: 0.85rem; }
-    tbody td { font-size: 0.82rem; padding: 7px 8px; }
-    thead th { font-size: 0.82rem; padding: 8px 8px; }
-    .sync-bar { padding: 6px 10px; font-size: 0.72rem; }
+    /* Player tabs */
+    .player-tab { padding: 8px 12px; font-size: 0.72rem; }
+    /* Picks table inputs */
+    .autocomplete-wrap input { min-width: 80px; font-size: 0.8rem; }
+    .fin-input { width: 36px; font-size: 0.8rem; }
+    /* Driver stats */
+    .stats-grid { grid-template-columns: 1fr; }
+    .stats-header-row { grid-template-columns: 1fr; }
+    .stats-card-title { font-size: 0.9rem; }
+    .stats-row { padding: 8px 12px; }
+    /* Driver cards */
+    .drivers-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+    .driver-card-photo, .driver-card-photo-placeholder { height: 100px; }
+    .driver-card-name { font-size: 0.9rem; }
+    /* Schedule table - hide radio column on mobile */
+    .hide-mobile { display: none; }
   }
 </style>
 </head>
@@ -274,12 +323,12 @@
 </div>
 
 <nav class="nav-tabs">
-  <button class="nav-tab active" onclick="switchTab('standings',this)">&#127942; Standings</button>
-  <button class="nav-tab" id="picks-nav-tab" onclick="switchTab('picks',this)" style="display:none">&#128203; Weekly Picks</button>
-  <button class="nav-tab" onclick="switchTab('schedule',this)">&#128197; Schedule</button>
-  <button class="nav-tab" onclick="switchTab('pointsref',this)">&#128202; Points Ref</button>
-  <button class="nav-tab" onclick="switchTab('driverstats',this)">&#127941; Driver Stats</button>
-  <button class="nav-tab" onclick="switchTab('drivers',this)">&#128664; Drivers</button>
+  <button class="nav-tab active" onclick="switchTab('standings',this)">Standings</button>
+  <button class="nav-tab" id="picks-nav-tab" onclick="switchTab('picks',this)" style="display:none">Weekly Picks</button>
+  <button class="nav-tab" onclick="switchTab('schedule',this)">Schedule</button>
+  <button class="nav-tab" onclick="switchTab('pointsref',this)">Points Ref</button>
+  <button class="nav-tab" onclick="switchTab('driverstats',this)">Driver Stats</button>
+  <button class="nav-tab" onclick="switchTab('drivers',this)">Drivers</button>
 </nav>
 
 <main class="main">
@@ -325,14 +374,14 @@
   <!-- PICKS -->
   <div id="tab-picks" class="tab-content">
     <div class="commish-bar">
-      <label>&#128273; Commissioner</label>
+      <label>Commissioner</label>
       <input type="password" id="commish-pw" placeholder="Password" onkeydown="if(event.key==='Enter')commishLogin()">
       <button class="commish-btn" onclick="commishLogin()">Unlock</button>
       <button class="commish-btn" onclick="commishLogout()" style="background:#333;display:none" id="logout-btn">Lock</button>
-      <span class="commish-status" id="commish-status">&#128274; Locked &mdash; view only</span>
+      <span class="commish-status" id="commish-status">Locked &mdash; view only</span>
       <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <button class="commish-btn" onclick="syncRaceResults()" style="background:#1a3a5c;" title="Auto-fill finish positions from the Race Results tab in Google Sheets">&#127937; Sync Race Results</button>
-        <button class="commish-btn" onclick="syncFromSheet()" style="background:#1a4a1a;" title="Pull latest data from the Weekly Upload tab in Google Sheets">&#8635; Sync Picks</button>
+        <button class="commish-btn" onclick="syncRaceResults()" style="background:#1a3a5c;" title="Auto-fill finish positions from the Race Results tab in Google Sheets">Sync Race Results</button>
+        <button class="commish-btn" onclick="syncFromSheet()" style="background:#1a4a1a;" title="Pull latest data from the Weekly Upload tab in Google Sheets">Sync Picks</button>
         <span id="sync-upload-status" style="font-size:0.8rem;color:var(--light-gray);max-width:300px;"></span>
       </div>
     </div>
@@ -346,7 +395,7 @@
     <div class="section-title">2026 Race Schedule</div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>#</th><th>Track</th><th>Discipline</th><th>Date</th><th>Time</th><th>TV</th><th>Radio</th></tr></thead>
+        <thead><tr><th>#</th><th>Track</th><th>Discipline</th><th>Date</th><th>Time</th><th>TV</th><th class="hide-mobile">Radio</th></tr></thead>
         <tbody id="schedule-body"></tbody>
       </table>
     </div>
@@ -659,11 +708,20 @@ function carNumBadge(num, size) {
   const c = DRIVER_COLORS[num] || {bg:'#444', text:'#fff'};
   const fs = size === 'lg' ? '1rem' : size === 'sm' ? '0.65rem' : '0.8rem';
   const pad = size === 'lg' ? '3px 9px' : size === 'sm' ? '1px 5px' : '2px 7px';
-  const id = 'nb_' + num + '_' + size + '_' + Math.random().toString(36).slice(2,6);
-  return `<span id="${id}" style="display:inline-flex;align-items:center;flex-shrink:0;min-width:${h};">
-    <img src="images/numbers/${num}.png" style="height:${h};width:auto;object-fit:contain;display:block;"
-      onerror="var fb=document.getElementById('${id}');if(fb){fb.innerHTML='<span style=\'background:${c.bg};color:${c.text};font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:${fs};padding:${pad};border-radius:3px;letter-spacing:1px;line-height:1.3;\'>${num}</span>';}" alt="${num}">
-  </span>`;
+  // Use data attributes so onerror can find the fallback without complex escaping
+  return '<span class="num-badge-wrap" data-num="' + num + '" data-bg="' + c.bg + '" data-fg="' + c.text + '" data-fs="' + fs + '" data-pad="' + pad + '" style="display:inline-flex;align-items:center;flex-shrink:0;">'
+    + '<img src="images/numbers/' + num + '.png" style="height:' + h + ';width:auto;object-fit:contain;display:block;" onerror="numBadgeFallback(this)" alt="' + num + '">'
+    + '</span>';
+}
+
+function numBadgeFallback(img) {
+  const wrap = img.parentElement;
+  const num = wrap.dataset.num;
+  const bg = wrap.dataset.bg;
+  const fg = wrap.dataset.fg;
+  const fs = wrap.dataset.fs;
+  const pad = wrap.dataset.pad;
+  wrap.innerHTML = '<span style="background:' + bg + ';color:' + fg + ';font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:' + fs + ';padding:' + pad + ';border-radius:3px;letter-spacing:1px;line-height:1.3;display:inline-block;">' + num + '</span>';
 }
 
 // Track silhouette SVGs keyed by track name (partial match)
@@ -798,17 +856,17 @@ function renderThisWeek() {
 
   const trackImgSrc = getTrackImagePath(race.track);
   const trackSvg = getTrackSVG(race.track);
+  const trackHtml = trackImgSrc
+    ? '<img src="' + trackImgSrc + '" style="max-width:140px;max-height:90px;width:100%;object-fit:contain;filter:brightness(0) invert(1);" alt="">'
+    : '<svg width="120" height="90" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">' + trackSvg + '</svg>';
   panel.innerHTML = `
     <div class="this-week-header">
       <div style="flex:1">
-        <div class="this-week-label">&#127937; Race ${race.race} of 35 &mdash; This Weekend</div>
+        <div class="this-week-label">Race ${race.race} of 35 &mdash; This Weekend</div>
         <div class="this-week-track">${race.track}</div>
       </div>
       <div style="width:140px;height:90px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:0.5;">
-        ${trackImgSrc
-          ? `<img src="${trackImgSrc}" style="max-width:140px;max-height:90px;width:100%;object-fit:contain;filter:brightness(0) invert(1);" alt="">`
-          : `<svg width="120" height="90" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">${trackSvg}</svg>`
-        }
+        ${trackHtml}
       </div>
       <div class="this-week-meta" style="min-width:140px;">
         ${race.date} &bull; ${race.time}<br>
@@ -854,8 +912,12 @@ function renderStandings() {
     let cells = '';
     PLAYER_NAMES.forEach((_, pi) => {
       const d = picks[pi][ri];
-      const str = [d.d1name, d.d2name, d.d3name].filter(Boolean).join(', ') || '—';
-      cells += `<td class="center dim">${str}</td><td class="center pts">${weekScore(pi,ri)||'—'}</td><td class="center" style="color:#ccc">${cumulScore(pi,ri)||'—'}</td>`;
+      const names = [d.d1name, d.d2name, d.d3name].filter(Boolean);
+      const badges = names.map(n => {
+        const dr = DRIVERS.find(x => x.name === n);
+        return dr ? carNumBadge(dr.num, 'sm') : '<span style="color:#555">—</span>';
+      }).join('') || '—';
+      cells += `<td class="center" style="white-space:nowrap;padding:6px 8px;">${badges}</td><td class="center pts">${weekScore(pi,ri)||'—'}</td><td class="center" style="color:#ccc">${cumulScore(pi,ri)||'—'}</td>`;
     });
     tr.innerHTML = `<td class="week-num">${race.race}</td><td>${race.track}</td>
       <td><span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span></td>${cells}`;
@@ -1241,11 +1303,11 @@ function renderDriverStats() {
     ${highlightHtml}
     <div class="stats-grid">
       <div class="stats-card">
-        <div class="stats-card-title">&#127941; Top Drivers <span>Overall</span></div>
+        <div class="stats-card-title">Top Drivers <span>Overall</span></div>
         ${makeOverallCard()}
       </div>
       <div class="stats-card">
-        <div class="stats-card-title">&#128202; Most Picked <span>Drivers</span></div>
+        <div class="stats-card-title">Most Picked <span>Drivers</span></div>
         ${makePopularityCard()}
       </div>
       ${PLAYER_NAMES.map((name, pi) => `
