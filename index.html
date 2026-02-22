@@ -718,6 +718,11 @@ function carNumBadge(num, size) {
     + '</span>';
 }
 
+function trackImgError(img) {
+  const wrap = img.closest('.this-week-track-img-wrap');
+  if (wrap) wrap.style.display = 'none';
+}
+
 function numBadgeFallback(img) {
   const wrap = img.parentElement;
   const num = wrap.dataset.num;
@@ -861,7 +866,7 @@ function renderThisWeek() {
   const trackImgSrc = getTrackImagePath(race.track);
   const trackSvg = getTrackSVG(race.track);
   const trackHtml = trackImgSrc
-    ? '<img src="' + trackImgSrc + '" style="max-width:100px;max-height:80px;width:100%;object-fit:contain;filter:brightness(0) invert(1);" alt="" onerror="this.parentElement.parentElement.style.display='none'">'
+    ? '<img src="' + trackImgSrc + '" style="max-width:100px;max-height:80px;width:100%;object-fit:contain;filter:brightness(0) invert(1);" alt="" onerror="trackImgError(this)">'
     : '<svg width="100" height="80" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">' + trackSvg + '</svg>';
   panel.innerHTML = `
     <div class="this-week-header">
