@@ -117,6 +117,8 @@
   .this-week-driver.has-result { color: var(--light-gray); }
   .this-week-driver .driver-pts { color: var(--gold); font-weight: 700; margin-left: auto; font-size: 0.85rem; }
   .this-week-empty { color: var(--light-gray); font-style: italic; font-size: 0.9rem; }
+
+  .this-week-track-svg { opacity: 0.18; flex-shrink: 0; }
   .this-week-total { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--mid-gray); font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--gold); letter-spacing: 1px; }
   .no-picks-yet { padding: 20px 24px; color: var(--light-gray); font-style: italic; font-size: 0.95rem; }
 
@@ -152,6 +154,27 @@
     .lb-rank { width: 42px; font-size: 1.6rem; }
   }
 
+
+  /* DRIVERS GRID */
+  .drivers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .driver-card-roster { background: var(--gray); border: 1px solid var(--mid-gray); border-top: 4px solid var(--red); overflow: hidden; position: relative; transition: border-color 0.2s; }
+  .driver-card-roster:hover { border-color: var(--gold); }
+  .driver-card-photo { width: 100%; height: 140px; object-fit: cover; object-position: top; display: block; background: #1a1a1a; }
+  .driver-card-photo-placeholder { width: 100%; height: 140px; background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); display: flex; align-items: center; justify-content: center; }
+  .driver-card-num-big { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; line-height: 1; opacity: 0.15; }
+  .driver-card-body { padding: 10px 12px 12px; }
+  .driver-card-namenum { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .driver-card-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 1px; color: var(--cream); line-height: 1.2; }
+  .driver-card-team { font-size: 0.75rem; color: var(--light-gray); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .driver-card-mfr { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; padding: 1px 6px; border-radius: 2px; text-transform: uppercase; }
+  .mfr-chevrolet { background: #c8102e; color: #fff; }
+  .mfr-ford { background: #003087; color: #fff; }
+  .mfr-toyota { background: #eb0a1e; color: #fff; }
+  @media (max-width: 600px) {
+    .drivers-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .driver-card-photo, .driver-card-photo-placeholder { height: 110px; }
+    .driver-card-num-big { font-size: 3rem; }
+  }
   /* DRIVER STATS */
   .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 32px; }
   .stats-card { background: var(--gray); border: 1px solid var(--mid-gray); border-top: 4px solid var(--red); padding: 0; overflow: hidden; }
@@ -227,10 +250,11 @@
 
 <nav class="nav-tabs">
   <button class="nav-tab active" onclick="switchTab('standings',this)">&#127942; Standings</button>
-  <button class="nav-tab" onclick="switchTab('picks',this)">&#128203; Weekly Picks</button>
+  <button class="nav-tab" id="picks-nav-tab" onclick="switchTab('picks',this)" style="display:none">&#128203; Weekly Picks</button>
   <button class="nav-tab" onclick="switchTab('schedule',this)">&#128197; Schedule</button>
   <button class="nav-tab" onclick="switchTab('pointsref',this)">&#128202; Points Ref</button>
   <button class="nav-tab" onclick="switchTab('driverstats',this)">&#127941; Driver Stats</button>
+  <button class="nav-tab" onclick="switchTab('drivers',this)">&#128664; Drivers</button>
 </nav>
 
 <main class="main">
@@ -341,6 +365,13 @@
   <!-- DRIVER STATS -->
   <div id="tab-driverstats" class="tab-content">
     <div id="driverstats-inner"></div>
+  </div>
+
+
+  <!-- DRIVERS -->
+  <div id="tab-drivers" class="tab-content">
+    <div class="section-title">2026 Cup Series Driver Roster</div>
+    <div id="drivers-grid" class="drivers-grid"></div>
   </div>
 
 </main>
@@ -481,6 +512,7 @@ function commishLogin() {
     document.getElementById('commish-status').className = 'commish-status unlocked';
     document.getElementById('logout-btn').style.display = '';
     document.getElementById('commish-pw').value = '';
+    document.getElementById('picks-nav-tab').style.display = '';
     setInputsReadonly(false);
   } else {
     document.getElementById('commish-status').textContent = 'Wrong password';
@@ -492,6 +524,15 @@ function commishLogout() {
   document.getElementById('commish-status').textContent = 'Locked — view only';
   document.getElementById('commish-status').className = 'commish-status';
   document.getElementById('logout-btn').style.display = 'none';
+  document.getElementById('picks-nav-tab').style.display = 'none';
+  // If currently on picks tab, switch to standings
+  if (document.getElementById('tab-picks').classList.contains('active')) {
+    document.getElementById('tab-picks').classList.remove('active');
+    document.getElementById('tab-standings').classList.add('active');
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.nav-tab[onclick*="standings"]').classList.add('active');
+    renderStandings();
+  }
   setInputsReadonly(true);
 }
 function setInputsReadonly(ro) {
@@ -520,6 +561,7 @@ function switchTab(name, btn) {
   btn.classList.add('active');
   if (name === 'standings') renderStandings();
   if (name === 'driverstats') renderDriverStats();
+  if (name === 'drivers') renderDriverRoster();
 }
 
 function getCurrentRaceIndex() {
@@ -546,6 +588,98 @@ function getCurrentRaceIndex() {
   return SCHEDULE.length - 1;
 }
 
+
+
+// Car number colors by team
+const DRIVER_COLORS = {
+  '1':  {bg:'#e8000d', text:'#fff'},   // Chastain - Trackhouse red
+  '2':  {bg:'#003087', text:'#fff'},   // Cindric - Penske blue
+  '3':  {bg:'#c8102e', text:'#fff'},   // Dillon - RCR red
+  '4':  {bg:'#e87722', text:'#fff'},   // Gragson - FRM orange
+  '5':  {bg:'#e31837', text:'#fff'},   // Larson - HMS red
+  '6':  {bg:'#003087', text:'#fff'},   // Keselowski - RFK blue
+  '7':  {bg:'#00204e', text:'#fff'},   // Suarez - Spire dark blue
+  '8':  {bg:'#c8102e', text:'#fff'},   // K.Busch - RCR red
+  '9':  {bg:'#00843d', text:'#fff'},   // Elliott - HMS green
+  '10': {bg:'#e31837', text:'#fff'},   // Ty Dillon - Kaulig red
+  '11': {bg:'#e8000d', text:'#fff'},   // Hamlin - JGR red
+  '12': {bg:'#003087', text:'#fff'},   // Blaney - Penske blue
+  '16': {bg:'#e31837', text:'#fff'},   // Allmendinger - Kaulig red
+  '17': {bg:'#003087', text:'#fff'},   // Buescher - RFK blue
+  '19': {bg:'#006341', text:'#fff'},   // Briscoe - JGR green
+  '20': {bg:'#ffb81c', text:'#000'},   // C.Bell - JGR yellow
+  '21': {bg:'#003087', text:'#fff'},   // Berry - Wood Bros blue
+  '22': {bg:'#ffd700', text:'#000'},   // Logano - Penske yellow
+  '23': {bg:'#000000', text:'#c8102e'},// Wallace - 23XI black/red
+  '24': {bg:'#0057a8', text:'#fff'},   // Byron - HMS blue
+  '34': {bg:'#ff6b00', text:'#fff'},   // Gilliland - FRM orange
+  '35': {bg:'#e31837', text:'#fff'},   // Herbst - Kaulig red
+  '41': {bg:'#00529b', text:'#fff'},   // Custer - SHR blue
+  '42': {bg:'#00529b', text:'#fff'},   // Nemechek - Legacy blue
+  '43': {bg:'#004c97', text:'#fff'},   // Jones - Legacy blue
+  '45': {bg:'#000000', text:'#c8102e'},// Reddick - 23XI black
+  '47': {bg:'#006eb6', text:'#fff'},   // Stenhouse - JTG blue
+  '48': {bg:'#005aaa', text:'#fff'},   // Bowman - HMS blue
+  '51': {bg:'#333333', text:'#fff'},   // Ware - gray
+  '54': {bg:'#e8000d', text:'#fff'},   // Gibbs - JGR red
+  '71': {bg:'#2d6a4f', text:'#fff'},   // Z.Smith - Spire green
+  '77': {bg:'#ff6b00', text:'#fff'},   // Hocevar - Spire orange
+  '88': {bg:'#e8000d', text:'#fff'},   // Zilisch - Trackhouse red
+  '97': {bg:'#e8000d', text:'#fff'},   // SVG - Trackhouse red
+  '99': {bg:'#333333', text:'#fff'},   // Hemric - gray
+};
+
+function carNumBadge(num, size) {
+  const c = DRIVER_COLORS[num] || {bg:'#444', text:'#fff'};
+  const fs = size === 'lg' ? '1rem' : size === 'sm' ? '0.65rem' : '0.8rem';
+  const pad = size === 'lg' ? '3px 9px' : size === 'sm' ? '1px 5px' : '2px 7px';
+  const br = size === 'lg' ? '4px' : '3px';
+  return `<span style="background:${c.bg};color:${c.text};font-family:'Bebas Neue',sans-serif;font-size:${fs};padding:${pad};border-radius:${br};letter-spacing:1px;display:inline-block;line-height:1.3;flex-shrink:0;">${num}</span>`;
+}
+
+// Track silhouette SVGs keyed by track name (partial match)
+const TRACK_SVGS = {
+  // Ovals - superspeedways (very large, nearly round)
+  'daytona':       '<ellipse cx="60" cy="50" rx="52" ry="32" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/><ellipse cx="60" cy="50" rx="38" ry="18" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'talladega':     '<ellipse cx="60" cy="50" rx="52" ry="30" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/><ellipse cx="60" cy="50" rx="38" ry="17" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'echopark':      '<path d="M12,55 Q12,18 60,15 Q108,18 108,55 Q108,75 60,78 Q12,75 12,55 Z" fill="none" stroke="white" stroke-width="5"/><path d="M25,55 Q25,28 60,26 Q95,28 95,55 Q95,68 60,70 Q25,68 25,55 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  // Intermediate speedways (D-shaped / egg-shaped)
+  'charlotte':     '<path d="M20,70 L20,35 Q20,12 60,12 Q100,12 100,35 L100,70 Q100,85 60,88 Q20,85 20,70 Z" fill="none" stroke="white" stroke-width="5"/><path d="M32,68 L32,37 Q32,24 60,24 Q88,24 88,37 L88,68 Q88,78 60,80 Q32,78 32,68 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'michigan':      '<path d="M18,68 L18,33 Q18,10 60,10 Q102,10 102,33 L102,68 Q102,86 60,89 Q18,86 18,68 Z" fill="none" stroke="white" stroke-width="5"/><path d="M30,66 L30,35 Q30,22 60,22 Q90,22 90,35 L90,66 Q90,78 60,80 Q30,78 30,66 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'las vegas':     '<path d="M16,68 L16,33 Q16,11 60,11 Q104,11 104,33 L104,68 Q104,86 60,88 Q16,86 16,68 Z" fill="none" stroke="white" stroke-width="5"/><path d="M28,66 L28,35 Q28,23 60,23 Q92,23 92,35 L92,66 Q92,76 60,78 Q28,76 28,66 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'kansas':        '<path d="M17,67 L17,34 Q17,11 60,11 Q103,11 103,34 L103,67 Q103,85 60,88 Q17,85 17,67 Z" fill="none" stroke="white" stroke-width="5"/><path d="M29,65 L29,36 Q29,23 60,23 Q91,23 91,36 L91,65 Q91,76 60,78 Q29,76 29,65 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'texas':         '<path d="M17,67 L17,34 Q17,11 60,11 Q103,11 103,34 L103,67 Q103,85 60,88 Q17,85 17,67 Z" fill="none" stroke="white" stroke-width="5"/><path d="M29,65 L29,36 Q29,23 60,23 Q91,23 91,36 L91,65 Q91,76 60,78 Q29,76 29,65 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'nashville':     '<path d="M18,68 L18,33 Q18,10 60,10 Q102,10 102,33 L102,68 Q102,86 60,89 Q18,86 18,68 Z" fill="none" stroke="white" stroke-width="5"/><path d="M30,66 L30,35 Q30,22 60,22 Q90,22 90,35 L90,66 Q90,78 60,80 Q30,78 30,66 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'pocono':        '<path d="M60,10 L105,80 L15,80 Z" fill="none" stroke="white" stroke-width="5" stroke-linejoin="round"/><path d="M60,26 L92,72 L28,72 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3" stroke-linejoin="round"/>',
+  'indianapolis':  '<rect x="14" y="18" width="92" height="64" rx="18" ry="18" fill="none" stroke="white" stroke-width="5"/><rect x="26" y="30" width="68" height="40" rx="10" ry="10" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'darlington':    '<path d="M14,60 Q14,20 55,14 Q95,10 105,45 Q112,68 80,80 Q45,88 20,78 Q14,72 14,60 Z" fill="none" stroke="white" stroke-width="5"/><path d="M26,58 Q26,28 55,24 Q82,21 90,46 Q96,63 72,72 Q46,78 30,70 Q26,65 26,58 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'homestead':     '<path d="M17,67 L17,34 Q17,11 60,11 Q103,11 103,34 L103,67 Q103,85 60,88 Q17,85 17,67 Z" fill="none" stroke="white" stroke-width="5"/><path d="M29,65 L29,36 Q29,23 60,23 Q91,23 91,36 L91,65 Q91,76 60,78 Q29,76 29,65 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  // Short tracks
+  'bristol':       '<ellipse cx="60" cy="50" rx="44" ry="34" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="30" ry="20" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'martinsville':  '<path d="M22,72 L22,40 Q22,20 60,20 Q98,20 98,40 L98,72 Q98,82 60,82 Q22,82 22,72 Z" fill="none" stroke="white" stroke-width="5"/><path d="M34,70 L34,42 Q34,32 60,32 Q86,32 86,42 L86,70 Q86,76 60,76 Q34,76 34,70 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'richmond':      '<ellipse cx="60" cy="52" rx="46" ry="32" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="52" rx="32" ry="19" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'phoenix':       '<path d="M15,65 L15,38 Q15,16 55,14 Q95,12 105,36 L105,65 Q105,82 60,84 Q15,82 15,65 Z" fill="none" stroke="white" stroke-width="5"/><path d="M27,63 L27,40 Q27,26 55,25 Q83,24 92,38 L92,63 Q92,74 60,76 Q27,74 27,63 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'iowa':          '<ellipse cx="60" cy="50" rx="46" ry="32" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="32" ry="19" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'new hampshire': '<ellipse cx="60" cy="50" rx="46" ry="33" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="32" ry="20" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'north wilkesboro': '<ellipse cx="60" cy="52" rx="46" ry="30" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="52" rx="32" ry="18" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'world wide':    '<ellipse cx="60" cy="50" rx="46" ry="32" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="32" ry="19" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  // Road courses
+  'cota':          '<path d="M20,75 L20,50 L35,50 L35,30 L55,30 L55,20 L85,20 L85,35 L70,35 L70,55 L100,55 L100,75 L20,75 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+  'watkins glen':  '<path d="M15,70 L15,45 L30,30 L30,20 L55,20 L70,35 L95,35 L105,55 L85,70 L60,60 L40,70 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+  'sonoma':        '<path d="M25,70 L18,45 L30,25 L55,18 L80,28 L100,50 L90,70 L65,62 L50,70 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+  'coronado':      '<path d="M20,72 L20,40 L40,20 L80,20 L100,40 L100,72 L70,60 L50,72 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+  'chicago':       '<path d="M18,70 L18,38 L38,18 L82,18 L102,38 L102,70 L72,58 L48,70 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+};
+
+function getTrackSVG(trackName) {
+  const lower = trackName.toLowerCase();
+  for (const [key, svg] of Object.entries(TRACK_SVGS)) {
+    if (lower.includes(key)) return svg;
+  }
+  // Default: generic oval
+  return '<ellipse cx="60" cy="50" rx="48" ry="30" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="34" ry="17" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>';
+}
+
 function renderThisWeek() {
   const panel = document.getElementById('this-week-panel');
   const ri = getCurrentRaceIndex();
@@ -569,7 +703,9 @@ function renderThisWeek() {
         const pts = drv.fin ? finPts(drv.fin) : '';
         const ptsHtml = pts ? `<span class="driver-pts">${pts} pts</span>` : '';
         const cls = drv.fin ? 'has-result' : '';
-        driverHtml += `<div class="this-week-driver ${cls}">${drv.name}${ptsHtml}</div>`;
+        const driverObj = DRIVERS.find(d => d.name === drv.name);
+        const badge = driverObj ? carNumBadge(driverObj.num, 'sm') : '';
+        driverHtml += `<div class="this-week-driver ${cls}">${badge} ${drv.name}${ptsHtml}</div>`;
       });
     }
 
@@ -584,16 +720,20 @@ function renderThisWeek() {
     </div>`;
   });
 
+  const trackSvg = getTrackSVG(race.track);
   panel.innerHTML = `
     <div class="this-week-header">
-      <div>
+      <div style="flex:1">
         <div class="this-week-label">Race ${race.race} of 35 &mdash; This Weekend</div>
         <div class="this-week-track">${race.track}</div>
       </div>
-      <div class="this-week-meta">
+      <svg class="this-week-track-svg" width="120" height="100" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+        ${trackSvg}
+      </svg>
+      <div class="this-week-meta" style="min-width:140px;">
         ${race.date} &bull; ${race.time}<br>
         <span style="color:${tvColor};font-weight:700;">${race.tv}</span> &bull; ${race.radio}
-        &nbsp;<span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span>
+        <br><span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span>
       </div>
     </div>
     <div class="this-week-picks">${playerCols}</div>`;
@@ -799,6 +939,76 @@ function renderPointsRef() {
 }
 
 
+
+// ============================================================
+// DRIVER ROSTER TAB
+// ============================================================
+const DRIVER_ROSTER = [
+  {num:'1',  name:'Ross Chastain',        team:'Trackhouse Racing',       mfr:'Chevrolet'},
+  {num:'2',  name:'Austin Cindric',       team:'Team Penske',             mfr:'Ford'},
+  {num:'3',  name:'Austin Dillon',        team:'Richard Childress Racing',mfr:'Chevrolet'},
+  {num:'4',  name:'Noah Gragson',         team:'Front Row Motorsports',   mfr:'Ford'},
+  {num:'5',  name:'Kyle Larson',          team:'Hendrick Motorsports',    mfr:'Chevrolet'},
+  {num:'6',  name:'Brad Keselowski',      team:'RFK Racing',              mfr:'Ford'},
+  {num:'7',  name:'Daniel Suarez',        team:'Spire Motorsports',       mfr:'Chevrolet'},
+  {num:'8',  name:'Kyle Busch',           team:'Richard Childress Racing',mfr:'Chevrolet'},
+  {num:'9',  name:'Chase Elliott',        team:'Hendrick Motorsports',    mfr:'Chevrolet'},
+  {num:'10', name:'Ty Dillon',            team:'Kaulig Racing',           mfr:'Chevrolet'},
+  {num:'11', name:'Denny Hamlin',         team:'Joe Gibbs Racing',        mfr:'Toyota'},
+  {num:'12', name:'Ryan Blaney',          team:'Team Penske',             mfr:'Ford'},
+  {num:'16', name:'AJ Allmendinger',      team:'Kaulig Racing',           mfr:'Chevrolet'},
+  {num:'17', name:'Chris Buescher',       team:'RFK Racing',              mfr:'Ford'},
+  {num:'19', name:'Chase Briscoe',        team:'Joe Gibbs Racing',        mfr:'Toyota'},
+  {num:'20', name:'Christopher Bell',     team:'Joe Gibbs Racing',        mfr:'Toyota'},
+  {num:'21', name:'Josh Berry',           team:'Wood Brothers Racing',    mfr:'Ford'},
+  {num:'22', name:'Joey Logano',          team:'Team Penske',             mfr:'Ford'},
+  {num:'23', name:'Bubba Wallace',        team:'23XI Racing',             mfr:'Toyota'},
+  {num:'24', name:'William Byron',        team:'Hendrick Motorsports',    mfr:'Chevrolet'},
+  {num:'34', name:'Todd Gilliland',       team:'Front Row Motorsports',   mfr:'Ford'},
+  {num:'35', name:'Riley Herbst',         team:'Kaulig Racing',           mfr:'Chevrolet'},
+  {num:'41', name:'Cole Custer',          team:'Stewart-Haas Racing',     mfr:'Ford'},
+  {num:'42', name:'John Hunter Nemechek', team:'Legacy Motor Club',       mfr:'Chevrolet'},
+  {num:'43', name:'Erik Jones',           team:'Legacy Motor Club',       mfr:'Chevrolet'},
+  {num:'45', name:'Tyler Reddick',        team:'23XI Racing',             mfr:'Toyota'},
+  {num:'47', name:'Ricky Stenhouse Jr',   team:'JTG Daugherty Racing',    mfr:'Chevrolet'},
+  {num:'48', name:'Alex Bowman',          team:'Hendrick Motorsports',    mfr:'Chevrolet'},
+  {num:'51', name:'Cody Ware',            team:'Rick Ware Racing',        mfr:'Ford'},
+  {num:'54', name:'Ty Gibbs',             team:'Joe Gibbs Racing',        mfr:'Toyota'},
+  {num:'71', name:'Zane Smith',           team:'Spire Motorsports',       mfr:'Chevrolet'},
+  {num:'77', name:'Carson Hocevar',       team:'Spire Motorsports',       mfr:'Chevrolet'},
+  {num:'88', name:'Connor Zilisch',       team:'Trackhouse Racing',       mfr:'Chevrolet'},
+  {num:'97', name:'Shane van Gisbergen',  team:'Trackhouse Racing',       mfr:'Chevrolet'},
+  {num:'99', name:'Daniel Hemric',        team:'Spire Motorsports',       mfr:'Chevrolet'},
+];
+
+function renderDriverRoster() {
+  const grid = document.getElementById('drivers-grid');
+  if (!grid || grid.innerHTML) return;
+  grid.innerHTML = DRIVER_ROSTER.map(d => {
+    const colors = DRIVER_COLORS[d.num] || {bg:'#444', text:'#fff'};
+    const mfrClass = 'mfr-' + d.mfr.toLowerCase();
+    const photoPath = 'images/drivers/' + d.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,'') + '.jpg';
+    const badge = carNumBadge(d.num, 'sm');
+    return `<div class="driver-card-roster">
+      <div style="border-top: 4px solid ${colors.bg}; margin-top:-4px;"></div>
+      <div class="driver-card-photo-placeholder" style="position:relative;">
+        <img src="${photoPath}" class="driver-card-photo" 
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+          onload="this.nextElementSibling.style.display='none';"
+          alt="${d.name}">
+        <div class="driver-card-photo-placeholder" style="display:none;position:absolute;inset:0;">
+          <div class="driver-card-num-big" style="color:${colors.bg}">${d.num}</div>
+        </div>
+      </div>
+      <div class="driver-card-body">
+        <div class="driver-card-namenum">${badge}<div class="driver-card-name">${d.name}</div></div>
+        <div class="driver-card-team">${d.team}</div>
+        <span class="driver-card-mfr ${mfrClass}">${d.mfr}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 // ============================================================
 // DRIVER STATS
 // ============================================================
@@ -910,9 +1120,11 @@ function renderDriverStats() {
       const avg = d.finishes.length ? (d.finishes.reduce((a,b)=>a+b,0)/d.finishes.length).toFixed(1) : '—';
       const pct = Math.round((d.totalPts/maxPts)*100);
       const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      const dObjO = DRIVERS.find(d => d.name === name);
+      const badgeO = dObjO ? carNumBadge(dObjO.num, 'sm') : '';
       return `<div class="stats-row">
         <div class="stats-pos ${posClass}">${i+1}</div>
-        <div class="stats-driver-name">${name}<span class="stats-sub">${picks} picks &bull; avg fin ${avg}</span></div>
+        <div class="stats-driver-name">${badgeO} ${name}<span class="stats-sub">${picks} picks &bull; avg fin ${avg}</span></div>
         <div class="stats-bar-wrap"><div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%"></div></div></div>
         <div class="stats-val">${d.totalPts}<span class="stats-val-label">PTS</span></div>
       </div>`;
@@ -929,9 +1141,11 @@ function renderDriverStats() {
     return drivers.map((d, i) => {
       const pct = Math.round((d.count/max)*100);
       const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      const dObjP = DRIVERS.find(dr => dr.name === d.name);
+      const badgeP = dObjP ? carNumBadge(dObjP.num, 'sm') : '';
       return `<div class="stats-row">
         <div class="stats-pos ${posClass}">${i+1}</div>
-        <div class="stats-driver-name">${d.name}<span class="stats-sub">${d.pickers}</span></div>
+        <div class="stats-driver-name">${badgeP} ${d.name}<span class="stats-sub">${d.pickers}</span></div>
         <div class="stats-bar-wrap"><div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%"></div></div></div>
         <div class="stats-val">${d.count}<span class="stats-val-label">PICKS</span></div>
       </div>`;
