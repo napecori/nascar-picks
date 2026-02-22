@@ -9,7 +9,7 @@
   :root {
     --black: #080b0f; --surface: #0f1318; --surface2: #161b22; --surface3: #1c2330;
     --border: #21262d; --border2: #30363d;
-    --white: #e6edf3; --muted: #7d8590; --red: #1a7a3c; --accent: #1f6feb;
+    --white: #e6edf3; --muted: #7d8590; --red: #1a5c32; --accent: #1f6feb;
     --gold: #f0c040; --green: #3fb950; --cream: #e6edf3;
     --gray: #161b22; --mid-gray: #30363d; --light-gray: #7d8590;
   }
@@ -208,7 +208,7 @@
   .stats-pos.gold { color: var(--gold); }
   .stats-pos.silver { color: #aaa; }
   .stats-pos.bronze { color: #cd7f32; }
-  .stats-driver-name { flex: 1; font-size: 0.95rem; color: var(--cream); }
+  .stats-driver-name { flex: 1; font-size: 0.95rem; color: var(--cream); display: flex; align-items: center; gap: 8px; }
   .stats-bar-wrap { flex: 1; padding: 0 12px; }
   .stats-bar-bg { background: #111; height: 6px; border-radius: 3px; overflow: hidden; }
   .stats-bar-fill { height: 100%; border-radius: 3px; background: var(--red); }
@@ -923,7 +923,10 @@ function renderStandings() {
       }).join('') || '—';
       cells += `<td class="center" style="white-space:nowrap;padding:6px 8px;">${badges}</td><td class="center pts">${weekScore(pi,ri)||'—'}</td><td class="center" style="color:#ccc">${cumulScore(pi,ri)||'—'}</td>`;
     });
-    tr.innerHTML = `<td class="week-num">${race.race}</td><td>${race.track}</td>
+    const isChase = race.race >= 26;
+    if (isChase) tr.style.cssText += 'border-left: 2px solid rgba(240,192,64,0.4);';
+    tr.innerHTML = `<td class="week-num" style="${isChase ? 'color:var(--gold);' : ''}">${race.race}</td>
+      <td>${isChase ? '<span style="color:var(--gold);font-size:0.6rem;font-weight:700;letter-spacing:2px;display:block;line-height:1;margin-bottom:2px;opacity:0.8;">CHASE FOR THE CUP</span>' : ''}${race.track}</td>
       <td><span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span></td>${cells}`;
     tbody.appendChild(tr);
   });
@@ -1067,7 +1070,10 @@ function renderSchedule() {
   SCHEDULE.forEach(race => {
     const tr = document.createElement('tr');
     const tvColor = {FOX:'#f5a623',FS1:'#f5a623',Prime:'#00a8e0',USA:'#1a6bb5',NBC:'#d4a017'}[race.tv]||'#aaa';
-    tr.innerHTML = `<td class="week-num">${race.race}</td><td>${race.track}</td>
+    const isPlayoff = race.race >= 26;
+    if (isPlayoff) tr.style.cssText += 'border-left: 2px solid rgba(240,192,64,0.35);';
+    tr.innerHTML = `<td class="week-num" style="${isPlayoff ? 'color:var(--gold);' : ''}">${race.race}</td>
+      <td>${isPlayoff ? '<span style="color:var(--gold);font-size:0.6rem;font-weight:700;letter-spacing:2px;display:block;line-height:1;margin-bottom:2px;opacity:0.8;">CHASE FOR THE CUP</span>' : ''}${race.track}</td>
       <td><span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span></td>
       <td class="dim">${race.date}</td><td class="dim">${race.time}</td>
       <td style="color:${tvColor};font-weight:700;font-size:0.9rem">${race.tv}</td>
@@ -1296,7 +1302,7 @@ function renderDriverStats() {
       const badgeP = dObjP ? carNumBadge(dObjP.num, 'sm') : '';
       return `<div class="stats-row">
         <div class="stats-pos ${posClass}">${i+1}</div>
-        <div class="stats-driver-name">${badgeP} ${d.name}<span class="stats-sub">${d.pickers}</span></div>
+        <div class="stats-driver-name">${badgeP} ${d.name}</div>
         <div class="stats-bar-wrap"><div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%"></div></div></div>
         <div class="stats-val">${d.count}<span class="stats-val-label">PICKS</span></div>
       </div>`;
