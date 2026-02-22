@@ -513,6 +513,7 @@ const DISC_LABELS = {superspeedway:'Superspeedway',speedway:'Speedway',road:'Roa
 const DISC_CLASS  = {superspeedway:'disc-superspeedway',speedway:'disc-speedway',road:'disc-road',short:'disc-short'};
 
 let picks = emptyPicks();
+let raceResults = {};
 let commishUnlocked = false;
 let scriptUrl = SCRIPT_URL;
 let saveTimeout = null;
@@ -1323,7 +1324,8 @@ function renderDriverStats() {
         <div class="stats-card-title">&#128101; ${name}'s <span>Best Drivers</span></div>
         ${makePlayerCard(pi)}
       </div>`).join('')}
-    </div>`;
+    </div>
+    ${fullResultsHtml}`;
 }
 
 
