@@ -252,10 +252,10 @@
     .main { padding: 12px 10px; }
     /* This week panel */
     .this-week-header { padding: 10px 12px; gap: 8px; flex-wrap: nowrap; }
-    .this-week-track { font-size: 1.2rem; line-height: 1.1; }
-    .this-week-label { font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 2px; }
-    .this-week-meta { font-size: 0.68rem; line-height: 1.55; }
-    .this-week-track-img { display: none; }
+    .this-week-track { font-size: 1.15rem; line-height: 1.1; }
+    .this-week-label { font-size: 0.58rem; letter-spacing: 2px; margin-bottom: 2px; }
+    .this-week-meta { font-size: 0.65rem; line-height: 1.5; margin-top: 4px; }
+    .this-week-track-img-wrap { display: none; }
     .this-week-col-header { font-size: 0.78rem; padding: 5px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .tw-name { font-size: 0.75rem; }
     .this-week-col-header { font-size: 0.75rem; padding: 5px 8px; }
@@ -861,21 +861,22 @@ function renderThisWeek() {
   const trackImgSrc = getTrackImagePath(race.track);
   const trackSvg = getTrackSVG(race.track);
   const trackHtml = trackImgSrc
-    ? '<img src="' + trackImgSrc + '" style="max-width:140px;max-height:90px;width:100%;object-fit:contain;filter:brightness(0) invert(1);" alt="">'
-    : '<svg width="120" height="90" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">' + trackSvg + '</svg>';
+    ? '<img src="' + trackImgSrc + '" style="max-width:100px;max-height:80px;width:100%;object-fit:contain;filter:brightness(0) invert(1);" alt="" onerror="this.parentElement.parentElement.style.display='none'">'
+    : '<svg width="100" height="80" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">' + trackSvg + '</svg>';
   panel.innerHTML = `
     <div class="this-week-header">
       <div class="this-week-header-left">
         <div class="this-week-label">Race ${race.race} of 35 &mdash; This Weekend</div>
         <div class="this-week-track">${race.track}</div>
+        <div class="this-week-meta" style="text-align:left;margin-top:6px;">
+          ${race.date} &bull; ${race.time} &bull; <span style="color:${tvColor};font-weight:700;">${race.tv}</span>
+          &bull; <span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span>
+        </div>
       </div>
-      <div class="this-week-track-img" style="width:80px;height:60px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:0.4;">
-        ${trackHtml}
-      </div>
-      <div class="this-week-meta">
-        ${race.date}<br>${race.time}<br>
-        <span style="color:${tvColor};font-weight:700;">${race.tv}</span><br>
-        <span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span>
+      <div class="this-week-track-img-wrap">
+        <div style="transform:rotate(225deg);width:100px;height:80px;display:flex;align-items:center;justify-content:center;">
+          ${trackHtml}
+        </div>
       </div>
     </div>
     <div class="this-week-col-headers">${colHeaders}</div>
