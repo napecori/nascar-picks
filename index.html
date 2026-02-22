@@ -655,14 +655,14 @@ const DRIVER_COLORS = {
 };
 
 function carNumBadge(num, size) {
-  const h = size === 'lg' ? '32px' : size === 'sm' ? '20px' : '26px';
+  const h = size === 'lg' ? '32px' : size === 'sm' ? '22px' : '28px';
   const c = DRIVER_COLORS[num] || {bg:'#444', text:'#fff'};
   const fs = size === 'lg' ? '1rem' : size === 'sm' ? '0.65rem' : '0.8rem';
   const pad = size === 'lg' ? '3px 9px' : size === 'sm' ? '1px 5px' : '2px 7px';
-  return `<span style="display:inline-flex;align-items:center;flex-shrink:0;">
+  const id = 'nb_' + num + '_' + size + '_' + Math.random().toString(36).slice(2,6);
+  return `<span id="${id}" style="display:inline-flex;align-items:center;flex-shrink:0;min-width:${h};">
     <img src="images/numbers/${num}.png" style="height:${h};width:auto;object-fit:contain;display:block;"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';" alt="${num}">
-    <span style="display:none;background:${c.bg};color:${c.text};font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:${fs};padding:${pad};border-radius:3px;letter-spacing:1px;line-height:1.3;">${num}</span>
+      onerror="var fb=document.getElementById('${id}');if(fb){fb.innerHTML='<span style=\'background:${c.bg};color:${c.text};font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:${fs};padding:${pad};border-radius:3px;letter-spacing:1px;line-height:1.3;\'>${num}</span>';}" alt="${num}">
   </span>`;
 }
 
@@ -804,12 +804,11 @@ function renderThisWeek() {
         <div class="this-week-label">&#127937; Race ${race.race} of 35 &mdash; This Weekend</div>
         <div class="this-week-track">${race.track}</div>
       </div>
-      <div style="position:relative;width:120px;height:90px;flex-shrink:0;opacity:0.35;display:flex;align-items:center;justify-content:center;">
-        <img src="${trackImgSrc}" style="max-width:120px;max-height:90px;object-fit:contain;filter:brightness(0) invert(1);"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='block';" alt="">
-        <svg style="display:none;" width="120" height="90" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
-          ${trackSvg}
-        </svg>
+      <div style="width:140px;height:90px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:0.5;">
+        ${trackImgSrc
+          ? `<img src="${trackImgSrc}" style="max-width:140px;max-height:90px;width:100%;object-fit:contain;filter:brightness(0) invert(1);" alt="">`
+          : `<svg width="120" height="90" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">${trackSvg}</svg>`
+        }
       </div>
       <div class="this-week-meta" style="min-width:140px;">
         ${race.date} &bull; ${race.time}<br>
