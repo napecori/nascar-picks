@@ -397,22 +397,34 @@
   <div id="tab-pointsref" class="tab-content">
     <div class="points-ref-grid">
       <div>
-        <div class="section-title">Points Table</div>
+        <div class="section-title">Finish Points</div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Finish</th><th class="center">Points</th></tr></thead>
             <tbody id="points-ref-body"></tbody>
           </table>
         </div>
+        <div class="section-title" style="margin-top:24px;">Stage Points (per stage)</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Stage Position</th><th class="center">Points</th></tr></thead>
+            <tbody id="stage-points-body"></tbody>
+          </table>
+        </div>
+        <div class="section-title" style="margin-top:24px;">Bonus</div>
+        <div style="background:var(--gray);border:1px solid var(--mid-gray);padding:14px 16px;font-size:0.9rem;color:#bbb;">
+          <span style="color:var(--gold);font-weight:700;">+1 pt</span> — Fastest lap of the race
+        </div>
       </div>
       <div>
         <div class="section-title">How It Works</div>
         <div style="font-family:'Inter',sans-serif;color:#bbb;line-height:1.9;font-size:0.92rem;background:var(--gray);padding:24px;border-left:4px solid var(--gold);max-width:480px;">
           <p>Each week, every player picks <strong style="color:var(--gold);">3 drivers</strong> before the race.</p><br>
-          <p>After the race, each driver's finish maps to points using the table.</p><br>
-          <p>A player's <strong style="color:var(--gold);">weekly score</strong> is the sum of all three drivers' points.</p><br>
-          <p><strong style="color:var(--gold);">Cumulative points</strong> track the running total across all 35 races.</p><br>
-          <p>Most points after <strong style="color:var(--gold);">Race 35</strong> wins the season.</p>
+          <p><strong style="color:var(--gold);">Finish Points</strong> — Each driver earns points based on their final finishing position (1st = 55 pts, 2nd = 35 pts, sliding down to 1 pt for 36th–40th).</p><br>
+          <p><strong style="color:var(--gold);">Stage Points</strong> — The top 10 finishers at the end of each stage earn bonus points (10 pts for 1st down to 1 pt for 10th). There are 3 stages per race.</p><br>
+          <p><strong style="color:var(--gold);">Fastest Lap</strong> — The driver who sets the fastest single lap earns 1 bonus point.</p><br>
+          <p>A player's <strong style="color:var(--gold);">weekly score</strong> is the sum of all three drivers' finish + stage + bonus points.</p><br>
+          <p><strong style="color:var(--gold);">Cumulative points</strong> track the running total across all 35 races. Most points after Race 35 wins the season.</p>
         </div>
         <div style="margin-top:24px;">
           <div class="section-title">Discipline Key</div>
@@ -447,12 +459,17 @@
 const COMMISH_PASSWORD = 'JJ48';
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRrOw4atRLSkhRnMvbCGKOS131Y1cW7xjFrysu3HVxR0-RnA8pHw2mcILq-_T-btoc/exec';
 
+// NASCAR Cup Series official points
+// Final race finish points (1st=55, 2nd=35, 3rd-35th slide by 1, 36-40=1)
 const POINTS_TABLE = {
-  1:40,2:35,3:34,4:33,5:32,6:31,7:30,8:29,9:28,10:27,
+  1:55,2:35,3:34,4:33,5:32,6:31,7:30,8:29,9:28,10:27,
   11:26,12:25,13:24,14:23,15:22,16:21,17:20,18:19,19:18,20:17,
   21:16,22:15,23:14,24:13,25:12,26:11,27:10,28:9,29:8,30:7,
   31:6,32:5,33:4,34:3,35:2,36:1,37:1,38:1,39:1,40:1
 };
+// Stage points (top 10 per stage: 10,9,8...1)
+const STAGE_POINTS = [10,9,8,7,6,5,4,3,2,1];
+// Fastest lap = 1 bonus point
 
 const PLAYER_NAMES = ['Alex','Nick','Greg Sr','Greg Jr'];
 
@@ -520,7 +537,11 @@ let saveTimeout = null;
 
 function emptyPicks() {
   return Array.from({length:4}, () =>
-    Array.from({length:35}, () => ({d1name:'',d1fin:'',d2name:'',d2fin:'',d3name:'',d3fin:''}))
+    Array.from({length:35}, () => ({
+      d1name:'',d1fin:'',d1s1:'',d1s2:'',d1s3:'',d1fl:false,
+      d2name:'',d2fin:'',d2s1:'',d2s2:'',d2s3:'',d2fl:false,
+      d3name:'',d3fin:'',d3s1:'',d3s2:'',d3s3:'',d3fl:false
+    }))
   );
 }
 
@@ -617,9 +638,25 @@ function finPts(fin) {
   if (!n || n < 1) return 0;
   return POINTS_TABLE[Math.min(n, 40)] || 1;
 }
+function stagePts(pos) {
+  const n = parseInt(pos);
+  if (!n || n < 1 || n > 10) return 0;
+  return STAGE_POINTS[n - 1];
+}
+function driverPts(slot) {
+  // slot = {fin, s1, s2, s3, fl}
+  let total = finPts(slot.fin);
+  total += stagePts(slot.s1);
+  total += stagePts(slot.s2);
+  total += stagePts(slot.s3);
+  if (slot.fl) total += 1;
+  return total;
+}
 function weekScore(p, r) {
   const d = picks[p][r];
-  return finPts(d.d1fin) + finPts(d.d2fin) + finPts(d.d3fin);
+  return driverPts({fin:d.d1fin,s1:d.d1s1,s2:d.d1s2,s3:d.d1s3,fl:d.d1fl})
+       + driverPts({fin:d.d2fin,s1:d.d2s1,s2:d.d2s2,s3:d.d2s3,fl:d.d2fl})
+       + driverPts({fin:d.d3fin,s1:d.d3s1,s2:d.d3s2,s3:d.d3s3,fl:d.d3fl});
 }
 function cumulScore(p, upTo) {
   let t = 0;
@@ -994,7 +1031,11 @@ function makeFinInput(pi, ri, slot) {
 function refreshRow(pi, ri) {
   ['d1','d2','d3'].forEach(dx => {
     const el = document.getElementById(`p${pi}r${ri}${dx}pts`);
-    if (el) el.textContent = picks[pi][ri][dx+'fin'] ? finPts(picks[pi][ri][dx+'fin']) : '';
+    if (el) {
+      const d = picks[pi][ri];
+      const pts = d[dx+'fin'] ? driverPts({fin:d[dx+'fin'],s1:d[dx+'s1'],s2:d[dx+'s2'],s3:d[dx+'s3'],fl:d[dx+'fl']}) : '';
+      el.textContent = pts;
+    }
   });
   const w = document.getElementById(`p${pi}r${ri}wk`);
   const c = document.getElementById(`p${pi}r${ri}cu`);
@@ -1089,6 +1130,18 @@ function renderPointsRef() {
     tr.innerHTML = `<td>${p}${p<=3?sfx[p-1]:'th'}</td><td class="center pts">${POINTS_TABLE[p]}</td>`;
     tbody.appendChild(tr);
   }
+  // Stage points table
+  const stageTbody = document.getElementById('stage-points-body');
+  if (stageTbody) {
+    stageTbody.innerHTML = '';
+    STAGE_POINTS.forEach((pts, i) => {
+      const tr = document.createElement('tr');
+      const pos = i + 1;
+      const s = pos === 1 ? 'st' : pos === 2 ? 'nd' : pos === 3 ? 'rd' : 'th';
+      tr.innerHTML = `<td>${pos}${s}</td><td class="center pts">${pts}</td>`;
+      stageTbody.appendChild(tr);
+    });
+  }
 }
 
 
@@ -1182,7 +1235,7 @@ function renderDriverStats() {
         const fin  = parseInt(picks[pi][ri][slot+'fin']);
         if (!name) return;
         if (!driverStats[name]) driverStats[name] = {totalPts:0, timesPickedBy:{}, finishes:[], weeklyWins:0};
-        const pts = fin ? finPts(fin) : 0;
+        const pts = fin ? driverPts({fin, s1:picks[pi][ri][slot+'s1'], s2:picks[pi][ri][slot+'s2'], s3:picks[pi][ri][slot+'s3'], fl:picks[pi][ri][slot+'fl']}) : 0;
         driverStats[name].totalPts += pts;
         driverStats[name].timesPickedBy[pi] = (driverStats[name].timesPickedBy[pi]||0)+1;
         if (fin) driverStats[name].finishes.push(fin);
@@ -1200,7 +1253,7 @@ function renderDriverStats() {
         if (!name) return;
         if (!map[name]) map[name] = {pts:0, picks:0, finishes:[]};
         map[name].picks++;
-        if (fin) { map[name].pts += finPts(fin); map[name].finishes.push(fin); }
+        if (fin) { map[name].pts += driverPts({fin, s1:picks[pi][ri][slot+'s1'], s2:picks[pi][ri][slot+'s2'], s3:picks[pi][ri][slot+'s3'], fl:picks[pi][ri][slot+'fl']}); map[name].finishes.push(fin); }
       });
     });
     return map;
