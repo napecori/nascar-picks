@@ -328,7 +328,7 @@
 
 <nav class="nav-tabs">
   <button class="nav-tab active" onclick="switchTab('standings',this)">Standings</button>
-  <button class="nav-tab" id="picks-nav-tab" onclick="switchTab('picks',this)" style="display:none">Weekly Picks</button>
+  <button class="nav-tab" id="picks-nav-tab" onclick="switchTab('picks',this)">Weekly Picks</button>
   <button class="nav-tab" onclick="switchTab('schedule',this)">Schedule</button>
   <button class="nav-tab" onclick="switchTab('pointsref',this)">Points Ref</button>
   <button class="nav-tab" onclick="switchTab('driverstats',this)">Driver Stats</button>
@@ -714,7 +714,7 @@ function carNumBadge(num, size) {
   const pad = size === 'lg' ? '3px 9px' : size === 'sm' ? '1px 5px' : '2px 7px';
   // Use data attributes so onerror can find the fallback without complex escaping
   return '<span class="num-badge-wrap" data-num="' + num + '" data-bg="' + c.bg + '" data-fg="' + c.text + '" data-fs="' + fs + '" data-pad="' + pad + '" style="display:inline-flex;align-items:center;flex-shrink:0;">'
-    + '<img src="images/numbers/' + num + '.png" style="height:' + h + ';width:auto;object-fit:contain;display:block;" onerror="numBadgeFallback(this)" alt="' + num + '">'
+    + '<img src="images/numbers/' + num + '.png?v=2" style="height:' + h + ';width:auto;object-fit:contain;display:block;" onerror="numBadgeFallback(this)" alt="' + num + '">'
     + '</span>';
 }
 
@@ -1149,7 +1149,7 @@ function renderDriverRoster() {
       </div>
       <div class="driver-card-body">
         <div class="driver-card-namenum">
-          <img src="${numPath}" style="height:24px;width:auto;object-fit:contain;"
+          <img src="${numPath}?v=2" style="height:24px;width:auto;object-fit:contain;"
             onerror="this.style.display='none'" alt="${d.num}">
           <div class="driver-card-name">${d.name}</div>
         </div>
