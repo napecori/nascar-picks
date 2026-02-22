@@ -537,7 +537,13 @@ async function loadFromSheets() {
   try {
     const resp = await fetch(scriptUrl + '?action=load&t=' + Date.now());
     const data = await resp.json();
-    if (data.picks) picks = data.picks;
+    if (data.picks) {
+      picks = data.picks;
+      // Re-render picks panels so inputs show loaded data
+      document.getElementById('player-tabs').innerHTML = '';
+      document.getElementById('picks-panels').innerHTML = '';
+      renderPicksPanels();
+    }
     setSyncStatus('synced', 'Synced with Google Sheets — ' + new Date().toLocaleTimeString());
   } catch(e) {
     setSyncStatus('error', 'Could not connect to Google Sheets — check script URL in Weekly Picks tab');
@@ -812,10 +818,8 @@ function renderThisWeek() {
   const race = SCHEDULE[ri];
   const tvColor = {FOX:'#f5a623',FS1:'#f5a623',Prime:'#00a8e0',USA:'#1a6bb5',NBC:'#d4a017'}[race.tv]||'#aaa';
 
-  let colHeaders = '';
   let playerCols = '';
   PLAYER_NAMES.forEach((name, pi) => {
-    colHeaders += `<div class="this-week-col-header">${name}</div>`;
     const d = picks[pi][ri];
     const drivers = [
       {name: d.d1name, fin: d.d1fin},
@@ -873,7 +877,6 @@ function renderThisWeek() {
         </div>
       </div>
     </div>
-    <div class="this-week-col-headers">${colHeaders}</div>
     <div class="this-week-picks">${playerCols}</div>`;
 }
 
