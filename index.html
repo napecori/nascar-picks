@@ -45,6 +45,9 @@
 
 
   .commish-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 10px 16px; margin-bottom: 20px; border-radius: 0; }
+  .commish-bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+  .commish-bottom-bar .commish-bar { margin-bottom: 0; border-top: 2px solid var(--accent); border-bottom: none; border-left: none; border-right: none; border-radius: 0; padding: 8px 20px; }
+  body { padding-bottom: 60px; }
   .commish-bar label { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
   .commish-bar input[type=password] { background: var(--surface3); border: 1px solid var(--border2); color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.88rem; padding: 5px 10px; width: 150px; outline: none; border-radius: 4px; }
   .commish-bar input[type=password]:focus { border-color: var(--accent); }
@@ -258,15 +261,11 @@
     .this-week-track-img-wrap { display: none; }
     .this-week-col-header { font-size: 0.78rem; padding: 5px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .tw-name { font-size: 0.75rem; }
-    .this-week-col-header { font-size: 0.75rem; padding: 5px 8px; }
+    .this-week-col-header { font-size: 0.78rem; padding: 6px 10px; border-right: none; }
     .this-week-picks { grid-template-columns: 1fr 1fr; }
-    .this-week-col-headers { grid-template-columns: 1fr 1fr; }
-    .this-week-col-header:nth-child(2) { border-right: none; }
-    .this-week-col-header:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.1); }
-    .this-week-col-header:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.1); border-right: none; }
     .this-week-player:nth-child(2) { border-right: none; }
-    .this-week-player:nth-child(3) { border-top: 1px solid #1e1e1e; border-right: 1px solid #1e1e1e; }
-    .this-week-player:nth-child(4) { border-top: 1px solid #1e1e1e; }
+    .this-week-player:nth-child(3) { border-top: 1px solid #2a2a2a; border-right: 1px solid #1e1e1e; }
+    .this-week-player:nth-child(4) { border-top: 1px solid #2a2a2a; border-right: none; }
     .tw-name { font-size: 0.78rem; padding: 8px 4px 8px 2px; }
     .tw-pos { width: 20px; font-size: 0.85rem; }
     .tw-num { width: 32px; padding: 6px 2px; }
@@ -377,18 +376,7 @@
 
   <!-- PICKS -->
   <div id="tab-picks" class="tab-content">
-    <div class="commish-bar">
-      <label>Commissioner</label>
-      <input type="password" id="commish-pw" placeholder="Password" onkeydown="if(event.key==='Enter')commishLogin()">
-      <button class="commish-btn" onclick="commishLogin()">Unlock</button>
-      <button class="commish-btn" onclick="commishLogout()" style="background:#333;display:none" id="logout-btn">Lock</button>
-      <span class="commish-status" id="commish-status">Locked &mdash; view only</span>
-      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <button class="commish-btn" onclick="syncRaceResults()" style="background:#1a3a5c;" title="Auto-fill finish positions from the Race Results tab in Google Sheets">Sync Race Results</button>
-        <button class="commish-btn" onclick="syncFromSheet()" style="background:#1a4a1a;" title="Pull latest data from the Weekly Upload tab in Google Sheets">Sync Picks</button>
-        <span id="sync-upload-status" style="font-size:0.8rem;color:var(--light-gray);max-width:300px;"></span>
-      </div>
-    </div>
+    
 
     <div class="player-tabs" id="player-tabs"></div>
     <div id="picks-panels"></div>
@@ -858,6 +846,7 @@ function renderThisWeek() {
     const totalHtml = `<div class="this-week-total">WEEK <span>${weekPts || '—'}</span> &nbsp; TOTAL <span>${totalPts || '—'}</span></div>`;
 
     playerCols += `<div class="this-week-player">
+      <div class="this-week-col-header">${name}</div>
       ${driverHtml}
       ${totalHtml}
     </div>`;
@@ -1429,5 +1418,20 @@ renderPointsRef();
 renderPicksPanels();
 loadFromSheets();
 </script>
+
+<div class="commish-bottom-bar" id="commish-bottom-bar">
+<div class="commish-bar">
+      <label>Commissioner</label>
+      <input type="password" id="commish-pw" placeholder="Password" onkeydown="if(event.key==='Enter')commishLogin()">
+      <button class="commish-btn" onclick="commishLogin()">Unlock</button>
+      <button class="commish-btn" onclick="commishLogout()" style="background:#333;display:none" id="logout-btn">Lock</button>
+      <span class="commish-status" id="commish-status">Locked &mdash; view only</span>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button class="commish-btn" onclick="syncRaceResults()" style="background:#1a3a5c;" title="Auto-fill finish positions from the Race Results tab in Google Sheets">Sync Race Results</button>
+        <button class="commish-btn" onclick="syncFromSheet()" style="background:#1a4a1a;" title="Pull latest data from the Weekly Upload tab in Google Sheets">Sync Picks</button>
+        <span id="sync-upload-status" style="font-size:0.8rem;color:var(--light-gray);max-width:300px;"></span>
+      </div>
+    </div>
+</div>
 </body>
 </html>
