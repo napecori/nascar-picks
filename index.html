@@ -48,20 +48,6 @@
   .commish-status { font-size: 0.85rem; color: var(--light-gray); }
   .commish-status.unlocked { color: #4caf50; }
 
-  .standings-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 36px; }
-  .player-card { background: var(--gray); border: 2px solid var(--mid-gray); border-top: 5px solid var(--red); padding: 20px; position: relative; }
-  .player-card.rank-1 { border-top-color: var(--gold); }
-  .player-card.rank-2 { border-top-color: #aaa; }
-  .player-card.rank-3 { border-top-color: #cd7f32; }
-  .rank-badge { position: absolute; top: -14px; left: 16px; background: var(--red); color: var(--cream); font-family: 'Bebas Neue', sans-serif; font-size: 1rem; padding: 2px 10px; letter-spacing: 1px; }
-  .player-card.rank-1 .rank-badge { background: var(--gold); color: var(--black); }
-  .player-card.rank-2 .rank-badge { background: #888; }
-  .player-card.rank-3 .rank-badge { background: #cd7f32; }
-  .player-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 2px; margin-top: 8px; }
-  .player-pts { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--gold); line-height: 1; }
-  .player-pts-label { font-size: 0.75rem; letter-spacing: 3px; color: var(--light-gray); text-transform: uppercase; margin-bottom: 2px; }
-  .player-races { font-size: 0.85rem; color: var(--light-gray); margin-top: 8px; border-top: 1px solid var(--mid-gray); padding-top: 8px; }
-  .player-races span { color: var(--cream); font-weight: 600; }
 
   .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; color: var(--gold); border-left: 5px solid var(--red); padding-left: 12px; margin-bottom: 16px; }
   .table-wrap { overflow-x: auto; margin-bottom: 40px; -webkit-overflow-scrolling: touch; }
@@ -115,11 +101,89 @@
 
   .loading-state { text-align: center; padding: 60px; font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 3px; color: var(--light-gray); }
 
+
+  /* THIS WEEK PANEL */
+  .this-week-panel { background: var(--gray); border: 2px solid var(--mid-gray); border-top: 5px solid var(--red); padding: 0; margin-bottom: 8px; overflow: hidden; }
+  .this-week-header { background: var(--red); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .this-week-label { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; color: rgba(255,255,255,0.7); }
+  .this-week-track { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 2px; color: var(--cream); line-height: 1; }
+  .this-week-meta { font-family: 'Oswald', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.75); letter-spacing: 1px; text-align: right; }
+  .this-week-picks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .this-week-player { padding: 18px 20px; border-right: 1px solid var(--mid-gray); }
+  .this-week-player:last-child { border-right: none; }
+  .this-week-player-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; color: var(--gold); margin-bottom: 10px; border-bottom: 1px solid var(--mid-gray); padding-bottom: 6px; }
+  .this-week-driver { font-size: 0.95rem; color: var(--cream); padding: 3px 0; display: flex; align-items: center; gap: 6px; }
+  .this-week-driver::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+  .this-week-driver.has-result { color: var(--light-gray); }
+  .this-week-driver .driver-pts { color: var(--gold); font-weight: 700; margin-left: auto; font-size: 0.85rem; }
+  .this-week-empty { color: var(--light-gray); font-style: italic; font-size: 0.9rem; }
+  .this-week-total { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--mid-gray); font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--gold); letter-spacing: 1px; }
+  .no-picks-yet { padding: 20px 24px; color: var(--light-gray); font-style: italic; font-size: 0.95rem; }
+
+  /* LEADERBOARD LIST */
+  .leaderboard-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+  .lb-row { display: flex; align-items: center; gap: 0; background: var(--gray); border: 1px solid var(--mid-gray); overflow: hidden; position: relative; }
+  .lb-row.lb-1 { border-left: 5px solid var(--gold); }
+  .lb-row.lb-2 { border-left: 5px solid #aaa; }
+  .lb-row.lb-3 { border-left: 5px solid #cd7f32; }
+  .lb-row.lb-4 { border-left: 5px solid var(--mid-gray); }
+  .lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--mid-gray); width: 56px; text-align: center; flex-shrink: 0; }
+  .lb-row.lb-1 .lb-rank { color: var(--gold); }
+  .lb-row.lb-2 .lb-rank { color: #aaa; }
+  .lb-row.lb-3 .lb-rank { color: #cd7f32; }
+  .lb-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; flex: 1; padding: 12px 0; }
+  .lb-bar-wrap { flex: 2; padding: 0 20px 0 8px; }
+  .lb-bar-bg { background: #1a1a1a; height: 10px; border-radius: 5px; overflow: hidden; }
+  .lb-bar-fill { height: 100%; border-radius: 5px; background: var(--red); transition: width 0.6s ease; }
+  .lb-row.lb-1 .lb-bar-fill { background: var(--gold); }
+  .lb-row.lb-2 .lb-bar-fill { background: #aaa; }
+  .lb-row.lb-3 .lb-bar-fill { background: #cd7f32; }
+  .lb-pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--gold); width: 80px; text-align: right; padding-right: 20px; flex-shrink: 0; }
+  .lb-pts-label { font-size: 0.65rem; color: var(--light-gray); letter-spacing: 2px; display: block; text-align: right; margin-top: -4px; }
+  .lb-races { font-size: 0.75rem; color: var(--light-gray); width: 80px; text-align: right; padding-right: 20px; flex-shrink: 0; }
+
+  @media (max-width: 700px) {
+    .this-week-picks { grid-template-columns: 1fr 1fr; }
+    .this-week-player:nth-child(2) { border-right: none; }
+    .this-week-player:nth-child(3) { border-top: 1px solid var(--mid-gray); border-right: 1px solid var(--mid-gray); }
+    .this-week-player:nth-child(4) { border-top: 1px solid var(--mid-gray); border-right: none; }
+    .lb-bar-wrap { display: none; }
+    .lb-name { font-size: 1.3rem; }
+    .lb-rank { width: 42px; font-size: 1.6rem; }
+  }
+
+  /* DRIVER STATS */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 32px; }
+  .stats-card { background: var(--gray); border: 1px solid var(--mid-gray); border-top: 4px solid var(--red); padding: 0; overflow: hidden; }
+  .stats-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 3px; color: var(--cream); background: #1a1a1a; padding: 10px 16px; border-bottom: 1px solid var(--mid-gray); display: flex; align-items: center; gap: 8px; }
+  .stats-card-title span { color: var(--gold); }
+  .stats-row { display: flex; align-items: center; gap: 0; padding: 10px 16px; border-bottom: 1px solid #1f1f1f; }
+  .stats-row:last-child { border-bottom: none; }
+  .stats-pos { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--light-gray); width: 28px; flex-shrink: 0; }
+  .stats-pos.gold { color: var(--gold); }
+  .stats-pos.silver { color: #aaa; }
+  .stats-pos.bronze { color: #cd7f32; }
+  .stats-driver-name { flex: 1; font-size: 0.95rem; color: var(--cream); }
+  .stats-bar-wrap { flex: 1; padding: 0 12px; }
+  .stats-bar-bg { background: #111; height: 6px; border-radius: 3px; overflow: hidden; }
+  .stats-bar-fill { height: 100%; border-radius: 3px; background: var(--red); }
+  .stats-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--gold); width: 60px; text-align: right; flex-shrink: 0; }
+  .stats-val-label { font-size: 0.65rem; color: var(--light-gray); display: block; text-align: right; line-height: 1; margin-top: 1px; }
+  .stats-sub { font-size: 0.75rem; color: var(--light-gray); margin-left: 4px; }
+  .stats-empty { padding: 20px 16px; color: var(--light-gray); font-style: italic; font-size: 0.9rem; }
+  .stats-header-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .stats-highlight { background: var(--gray); border: 1px solid var(--mid-gray); border-left: 4px solid var(--gold); padding: 16px 20px; }
+  .stats-highlight-label { font-size: 0.7rem; letter-spacing: 3px; color: var(--light-gray); text-transform: uppercase; }
+  .stats-highlight-val { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--gold); line-height: 1.1; }
+  .stats-highlight-sub { font-size: 0.8rem; color: #bbb; margin-top: 2px; }
+  @media (max-width: 700px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .stats-header-row { grid-template-columns: 1fr; }
+  }
   @media (max-width: 900px) {
     .main { padding: 20px 16px; }
     .header-inner { padding: 16px; flex-direction: column; align-items: flex-start; }
     .site-title { font-size: 2.8rem; }
-    .standings-grid { grid-template-columns: 1fr 1fr; }
     .points-ref-grid { grid-template-columns: 1fr; }
     .nav-tabs { padding: 0 8px; }
     .sync-bar { padding: 6px 16px; }
@@ -132,10 +196,6 @@
     .section-title { font-size: 1.3rem; }
     .nav-tabs { padding: 0; }
     .nav-tab { padding: 12px 12px; font-size: 0.95rem; }
-    .standings-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-    .player-card { padding: 14px 12px; }
-    .player-name { font-size: 1.3rem; }
-    .player-pts { font-size: 2.2rem; }
     .commish-bar { gap: 8px; padding: 10px 12px; }
     .commish-bar input[type=password] { width: 130px; }
     .commish-status { width: 100%; }
@@ -170,6 +230,7 @@
   <button class="nav-tab" onclick="switchTab('picks',this)">&#128203; Weekly Picks</button>
   <button class="nav-tab" onclick="switchTab('schedule',this)">&#128197; Schedule</button>
   <button class="nav-tab" onclick="switchTab('pointsref',this)">&#128202; Points Ref</button>
+  <button class="nav-tab" onclick="switchTab('driverstats',this)">&#127941; Driver Stats</button>
 </nav>
 
 <main class="main">
@@ -178,8 +239,16 @@
   <div id="tab-standings" class="tab-content active">
     <div id="standings-loading" class="loading-state">Loading...</div>
     <div id="standings-inner" style="display:none">
-      <div id="standings-cards" class="standings-grid"></div>
-      <div class="section-title">Full Season Results</div>
+
+      <!-- THIS WEEK PANEL -->
+      <div id="this-week-panel" class="this-week-panel"></div>
+
+      <!-- LEADERBOARD -->
+      <div class="section-title" style="margin-top:32px;">Season Leaderboard</div>
+      <div id="leaderboard-list" class="leaderboard-list"></div>
+
+      <!-- FULL RESULTS -->
+      <div class="section-title" style="margin-top:36px;">Full Season Results</div>
       <div class="table-wrap">
         <table id="standings-full-table">
           <thead>
@@ -212,6 +281,11 @@
       <button class="commish-btn" onclick="commishLogin()">Unlock</button>
       <button class="commish-btn" onclick="commishLogout()" style="background:#333;display:none" id="logout-btn">Lock</button>
       <span class="commish-status" id="commish-status">&#128274; Locked &mdash; view only</span>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button class="commish-btn" onclick="syncRaceResults()" style="background:#1a3a5c;" title="Auto-fill finish positions from the Race Results tab in Google Sheets">&#127937; Sync Race Results</button>
+        <button class="commish-btn" onclick="syncFromSheet()" style="background:#1a4a1a;" title="Pull latest data from the Weekly Upload tab in Google Sheets">&#8635; Sync Picks</button>
+        <span id="sync-upload-status" style="font-size:0.8rem;color:var(--light-gray);max-width:300px;"></span>
+      </div>
     </div>
 
     <div class="player-tabs" id="player-tabs"></div>
@@ -261,6 +335,12 @@
         </div>
       </div>
     </div>
+  </div>
+
+
+  <!-- DRIVER STATS -->
+  <div id="tab-driverstats" class="tab-content">
+    <div id="driverstats-inner"></div>
   </div>
 
 </main>
@@ -439,23 +519,112 @@ function switchTab(name, btn) {
   document.getElementById('tab-' + name).classList.add('active');
   btn.classList.add('active');
   if (name === 'standings') renderStandings();
+  if (name === 'driverstats') renderDriverStats();
+}
+
+function getCurrentRaceIndex() {
+  // Stay on the most recently completed race through Monday (day 1)
+  // so everyone can see results before flipping to the next week on Tuesday
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon, 2=Tue...
+  const isMonOrEarlier = dayOfWeek <= 1; // Sun or Mon
+
+  let lastCompleted = -1;
+  for (let ri = 0; ri < SCHEDULE.length; ri++) {
+    const hasResults = PLAYER_NAMES.some((_, pi) => picks[pi][ri].d1fin);
+    if (hasResults) lastCompleted = ri;
+  }
+
+  // If it's Sunday or Monday and we have a completed race, stay on it
+  if (isMonOrEarlier && lastCompleted >= 0) return lastCompleted;
+
+  // Otherwise show the next upcoming race (first with no results)
+  for (let ri = 0; ri < SCHEDULE.length; ri++) {
+    const hasResults = PLAYER_NAMES.some((_, pi) => picks[pi][ri].d1fin);
+    if (!hasResults) return ri;
+  }
+  return SCHEDULE.length - 1;
+}
+
+function renderThisWeek() {
+  const panel = document.getElementById('this-week-panel');
+  const ri = getCurrentRaceIndex();
+  const race = SCHEDULE[ri];
+  const tvColor = {FOX:'#f5a623',FS1:'#f5a623',Prime:'#00a8e0',USA:'#1a6bb5',NBC:'#d4a017'}[race.tv]||'#aaa';
+
+  let playerCols = '';
+  PLAYER_NAMES.forEach((name, pi) => {
+    const d = picks[pi][ri];
+    const drivers = [
+      {name: d.d1name, fin: d.d1fin},
+      {name: d.d2name, fin: d.d2fin},
+      {name: d.d3name, fin: d.d3fin},
+    ].filter(x => x.name);
+
+    let driverHtml = '';
+    if (drivers.length === 0) {
+      driverHtml = '<div class="this-week-empty">No picks yet</div>';
+    } else {
+      drivers.forEach(drv => {
+        const pts = drv.fin ? finPts(drv.fin) : '';
+        const ptsHtml = pts ? `<span class="driver-pts">${pts} pts</span>` : '';
+        const cls = drv.fin ? 'has-result' : '';
+        driverHtml += `<div class="this-week-driver ${cls}">${drv.name}${ptsHtml}</div>`;
+      });
+    }
+
+    const weekPts = weekScore(pi, ri);
+    const totalPts = cumulScore(pi, ri);
+    const totalHtml = weekPts ? `<div class="this-week-total">Week: ${weekPts} pts &nbsp;|&nbsp; Total: ${totalPts} pts</div>` : '';
+
+    playerCols += `<div class="this-week-player">
+      <div class="this-week-player-name">${name}</div>
+      ${driverHtml}
+      ${totalHtml}
+    </div>`;
+  });
+
+  panel.innerHTML = `
+    <div class="this-week-header">
+      <div>
+        <div class="this-week-label">Race ${race.race} of 35 &mdash; This Weekend</div>
+        <div class="this-week-track">${race.track}</div>
+      </div>
+      <div class="this-week-meta">
+        ${race.date} &bull; ${race.time}<br>
+        <span style="color:${tvColor};font-weight:700;">${race.tv}</span> &bull; ${race.radio}
+        &nbsp;<span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span>
+      </div>
+    </div>
+    <div class="this-week-picks">${playerCols}</div>`;
+}
+
+function renderLeaderboard() {
+  const sorted = PLAYER_NAMES.map((n,i) => ({name:n, total:cumulScore(i,34), idx:i, scored: picks[i].filter(r => r.d1fin||r.d2fin||r.d3fin).length}))
+    .sort((a,b) => b.total - a.total);
+  const maxPts = sorted[0].total || 1;
+  const listEl = document.getElementById('leaderboard-list');
+  listEl.innerHTML = '';
+  sorted.forEach((p, i) => {
+    const rank = i + 1;
+    const pct = maxPts > 0 ? Math.round((p.total / maxPts) * 100) : 0;
+    listEl.innerHTML += `<div class="lb-row lb-${rank}">
+      <div class="lb-rank">#${rank}</div>
+      <div class="lb-name">${p.name}</div>
+      <div class="lb-bar-wrap">
+        <div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div>
+        <div class="lb-pts">${p.total}<span class="lb-pts-label">PTS</span></div>
+      </div>
+      <div class="lb-races">${p.scored} races</div>
+    </div>`;
+  });
 }
 
 function renderStandings() {
-  const sorted = PLAYER_NAMES.map((n,i) => ({name:n, total:cumulScore(i,34), idx:i})).sort((a,b) => b.total - a.total);
-  const cardsEl = document.getElementById('standings-cards');
-  cardsEl.innerHTML = '';
-  sorted.forEach((p, i) => {
-    const rank = i + 1;
-    const scored = picks[p.idx].filter(r => r.d1fin || r.d2fin || r.d3fin).length;
-    cardsEl.innerHTML += `<div class="player-card rank-${rank}">
-      <div class="rank-badge">#${rank}</div>
-      <div class="player-name">${p.name}</div>
-      <div class="player-pts-label">Total Points</div>
-      <div class="player-pts">${p.total}</div>
-      <div class="player-races">Races entered: <span>${scored}</span> / 35</div>
-    </div>`;
-  });
+  renderThisWeek();
+  renderLeaderboard();
   const tbody = document.getElementById('standings-full-body');
   tbody.innerHTML = '';
   SCHEDULE.forEach((race, ri) => {
@@ -627,6 +796,254 @@ function renderPointsRef() {
     tr.innerHTML = `<td>${p}${p<=3?sfx[p-1]:'th'}</td><td class="center pts">${POINTS_TABLE[p]}</td>`;
     tbody.appendChild(tr);
   }
+}
+
+
+// ============================================================
+// DRIVER STATS
+// ============================================================
+function renderDriverStats() {
+  const container = document.getElementById('driverstats-inner');
+  if (!container) return;
+
+  // Build driver stat maps
+  const driverStats = {}; // name -> {totalPts, timespicked, finishes, weeklyWins}
+
+  PLAYER_NAMES.forEach((_, pi) => {
+    SCHEDULE.forEach((race, ri) => {
+      ['d1','d2','d3'].forEach(slot => {
+        const name = picks[pi][ri][slot+'name'];
+        const fin  = parseInt(picks[pi][ri][slot+'fin']);
+        if (!name) return;
+        if (!driverStats[name]) driverStats[name] = {totalPts:0, timesPickedBy:{}, finishes:[], weeklyWins:0};
+        const pts = fin ? finPts(fin) : 0;
+        driverStats[name].totalPts += pts;
+        driverStats[name].timesPickedBy[pi] = (driverStats[name].timesPickedBy[pi]||0)+1;
+        if (fin) driverStats[name].finishes.push(fin);
+      });
+    });
+  });
+
+  // Per-player driver breakdown
+  const playerDriverStats = PLAYER_NAMES.map((_, pi) => {
+    const map = {};
+    SCHEDULE.forEach((race, ri) => {
+      ['d1','d2','d3'].forEach(slot => {
+        const name = picks[pi][ri][slot+'name'];
+        const fin = parseInt(picks[pi][ri][slot+'fin']);
+        if (!name) return;
+        if (!map[name]) map[name] = {pts:0, picks:0, finishes:[]};
+        map[name].picks++;
+        if (fin) { map[name].pts += finPts(fin); map[name].finishes.push(fin); }
+      });
+    });
+    return map;
+  });
+
+  // Summary highlights
+  const racesComplete = SCHEDULE.filter((_, ri) => PLAYER_NAMES.some((_, pi) => picks[pi][ri].d1fin)).length;
+  const totalDriverEntries = Object.values(driverStats).reduce((s,d) => s + Object.values(d.timesPickedBy).reduce((a,b)=>a+b,0), 0);
+  const mostPickedDriver = Object.entries(driverStats).sort((a,b) => {
+    const ac = Object.values(a[1].timesPickedBy).reduce((s,v)=>s+v,0);
+    const bc = Object.values(b[1].timesPickedBy).reduce((s,v)=>s+v,0);
+    return bc - ac;
+  })[0];
+  const topScoringDriver = Object.entries(driverStats).filter(([,d]) => d.finishes.length > 0).sort((a,b) => b[1].totalPts - a[1].totalPts)[0];
+
+  let highlightHtml = '';
+  if (racesComplete === 0) {
+    highlightHtml = '<div style="color:var(--light-gray);font-style:italic;padding:8px 0 24px;">Stats will appear once race results are entered.</div>';
+  } else {
+    highlightHtml = `<div class="stats-header-row">
+      <div class="stats-highlight">
+        <div class="stats-highlight-label">Races Completed</div>
+        <div class="stats-highlight-val">${racesComplete} <span style="font-size:1rem;color:var(--light-gray)">/ 35</span></div>
+      </div>
+      <div class="stats-highlight">
+        <div class="stats-highlight-label">Most Picked Driver</div>
+        <div class="stats-highlight-val" style="font-size:1.3rem">${mostPickedDriver ? mostPickedDriver[0] : '—'}</div>
+        <div class="stats-highlight-sub">${mostPickedDriver ? Object.values(mostPickedDriver[1].timesPickedBy).reduce((a,b)=>a+b,0) + ' total picks' : ''}</div>
+      </div>
+      <div class="stats-highlight">
+        <div class="stats-highlight-label">Top Scoring Driver</div>
+        <div class="stats-highlight-val" style="font-size:1.3rem">${topScoringDriver ? topScoringDriver[0] : '—'}</div>
+        <div class="stats-highlight-sub">${topScoringDriver ? topScoringDriver[1].totalPts + ' pts across all players' : ''}</div>
+      </div>
+      <div class="stats-highlight">
+        <div class="stats-highlight-label">Total Driver Picks Made</div>
+        <div class="stats-highlight-val">${totalDriverEntries}</div>
+      </div>
+    </div>`;
+  }
+
+  // Build per-player top drivers cards
+  function makePlayerCard(pi) {
+    const map = playerDriverStats[pi];
+    const drivers = Object.entries(map).filter(([,d]) => d.picks > 0)
+      .sort((a,b) => b[1].pts - a[1].pts).slice(0, 8);
+    const maxPts = drivers[0] ? drivers[0][1].pts : 1;
+
+    if (drivers.length === 0) return `<div class="stats-empty">No picks entered yet.</div>`;
+
+    return drivers.map(([name, d], i) => {
+      const avg = d.finishes.length ? (d.finishes.reduce((a,b)=>a+b,0)/d.finishes.length).toFixed(1) : '—';
+      const pct = maxPts > 0 ? Math.round((d.pts/maxPts)*100) : 0;
+      const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      return `<div class="stats-row">
+        <div class="stats-pos ${posClass}">${i+1}</div>
+        <div class="stats-driver-name">${name}<span class="stats-sub">${d.picks}x picked &bull; avg fin ${avg}</span></div>
+        <div class="stats-bar-wrap"><div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%"></div></div></div>
+        <div class="stats-val">${d.pts}<span class="stats-val-label">PTS</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Top drivers overall (by total pts across all players)
+  function makeOverallCard() {
+    const drivers = Object.entries(driverStats)
+      .filter(([,d]) => d.finishes.length > 0)
+      .sort((a,b) => b[1].totalPts - a[1].totalPts).slice(0, 8);
+    if (drivers.length === 0) return `<div class="stats-empty">No results entered yet.</div>`;
+    const maxPts = drivers[0][1].totalPts || 1;
+    return drivers.map(([name, d], i) => {
+      const picks = Object.values(d.timesPickedBy).reduce((a,b)=>a+b,0);
+      const avg = d.finishes.length ? (d.finishes.reduce((a,b)=>a+b,0)/d.finishes.length).toFixed(1) : '—';
+      const pct = Math.round((d.totalPts/maxPts)*100);
+      const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      return `<div class="stats-row">
+        <div class="stats-pos ${posClass}">${i+1}</div>
+        <div class="stats-driver-name">${name}<span class="stats-sub">${picks} picks &bull; avg fin ${avg}</span></div>
+        <div class="stats-bar-wrap"><div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%"></div></div></div>
+        <div class="stats-val">${d.totalPts}<span class="stats-val-label">PTS</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Most picked drivers (popularity)
+  function makePopularityCard() {
+    const drivers = Object.entries(driverStats)
+      .map(([name, d]) => ({name, count: Object.values(d.timesPickedBy).reduce((a,b)=>a+b,0), pickers: Object.keys(d.timesPickedBy).map(i => PLAYER_NAMES[i]).join(', ')}))
+      .sort((a,b) => b.count - a.count).slice(0, 8);
+    if (drivers.length === 0) return `<div class="stats-empty">No picks entered yet.</div>`;
+    const max = drivers[0].count || 1;
+    return drivers.map((d, i) => {
+      const pct = Math.round((d.count/max)*100);
+      const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      return `<div class="stats-row">
+        <div class="stats-pos ${posClass}">${i+1}</div>
+        <div class="stats-driver-name">${d.name}<span class="stats-sub">${d.pickers}</span></div>
+        <div class="stats-bar-wrap"><div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%"></div></div></div>
+        <div class="stats-val">${d.count}<span class="stats-val-label">PICKS</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  container.innerHTML = `
+    ${highlightHtml}
+    <div class="stats-grid">
+      <div class="stats-card">
+        <div class="stats-card-title">&#127941; Top Drivers <span>Overall</span></div>
+        ${makeOverallCard()}
+      </div>
+      <div class="stats-card">
+        <div class="stats-card-title">&#128202; Most Picked <span>Drivers</span></div>
+        ${makePopularityCard()}
+      </div>
+      ${PLAYER_NAMES.map((name, pi) => `
+      <div class="stats-card">
+        <div class="stats-card-title">&#128101; ${name}'s <span>Best Drivers</span></div>
+        ${makePlayerCard(pi)}
+      </div>`).join('')}
+    </div>`;
+}
+
+
+
+// ============================================================
+// SYNC RACE RESULTS FROM SHEET
+// ============================================================
+async function syncRaceResults() {
+  const statusEl = document.getElementById('sync-upload-status');
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '⏳ Syncing...';
+  statusEl.textContent = '';
+  setSyncStatus('syncing', 'Reading race results from Google Sheets...');
+  try {
+    const resp = await fetch(SCRIPT_URL + '?action=syncResults&t=' + Date.now());
+    const data = await resp.json();
+    if (data.success) {
+      // Reload picks
+      const loadResp = await fetch(SCRIPT_URL + '?action=load&t=' + Date.now());
+      const loadData = await loadResp.json();
+      if (loadData.picks) picks = loadData.picks;
+      // Re-render everything
+      document.getElementById('picks-panels').innerHTML = '';
+      document.getElementById('player-tabs').innerHTML = '';
+      renderPicksPanels();
+      renderStandings();
+      setSyncStatus('synced', 'Race results synced at ' + new Date().toLocaleTimeString());
+      statusEl.style.color = '#4caf50';
+      statusEl.textContent = data.message;
+      if (data.notFound && data.notFound.length) {
+        statusEl.style.color = 'var(--gold)';
+      }
+    } else {
+      setSyncStatus('error', 'Sync failed');
+      statusEl.style.color = '#f88';
+      statusEl.textContent = data.message || data.error || 'Sync failed';
+    }
+  } catch(e) {
+    setSyncStatus('error', 'Connection error');
+    statusEl.style.color = '#f88';
+    statusEl.textContent = 'Connection error';
+  }
+  btn.disabled = false;
+  btn.textContent = '🏁 Sync Race Results';
+}
+
+// ============================================================
+// SYNC FROM WEEKLY UPLOAD SHEET
+// ============================================================
+async function syncFromSheet() {
+  const btn = event.target;
+  const statusEl = document.getElementById('sync-upload-status');
+  btn.disabled = true;
+  btn.textContent = '⏳ Syncing...';
+  statusEl.textContent = '';
+  setSyncStatus('syncing', 'Syncing from Weekly Upload sheet...');
+  try {
+    const resp = await fetch(SCRIPT_URL + '?action=syncUpload&t=' + Date.now());
+    const data = await resp.json();
+    if (data.success) {
+      // Reload data from sheets to get the updated picks
+      const loadResp = await fetch(SCRIPT_URL + '?action=load&t=' + Date.now());
+      const loadData = await loadResp.json();
+      if (loadData.picks) picks = loadData.picks;
+      // Re-render everything
+      document.getElementById('picks-panels').innerHTML = '';
+      document.getElementById('player-tabs').innerHTML = '';
+      renderPicksPanels();
+      renderStandings();
+      setSyncStatus('synced', 'Synced at ' + new Date().toLocaleTimeString());
+      statusEl.style.color = '#4caf50';
+      statusEl.textContent = data.message || ('Updated ' + data.updated + ' entries');
+      if (data.errors && data.errors.length) {
+        statusEl.style.color = 'var(--gold)';
+        statusEl.textContent += ' ⚠ ' + data.errors.join(', ');
+      }
+    } else {
+      setSyncStatus('error', 'Sync failed');
+      statusEl.style.color = 'var(--red)';
+      statusEl.textContent = data.message || data.error || 'Sync failed';
+    }
+  } catch(e) {
+    setSyncStatus('error', 'Sync failed — check connection');
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = 'Connection error';
+  }
+  btn.disabled = false;
+  btn.textContent = '↻ Sync from Sheet';
 }
 
 // INIT
