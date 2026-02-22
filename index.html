@@ -4,24 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thunder Picks — NASCAR 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Special+Elite&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --black: #0a0a0a; --cream: #f5f0e8; --red: #c8102e; --gold: #d4a017;
-    --dark-gold: #a07810; --gray: #2a2a2a; --mid-gray: #444; --light-gray: #888;
-    --checkered: repeating-conic-gradient(#0a0a0a 0% 25%, #f5f0e8 0% 50%) 0 0 / 20px 20px;
+    --black: #080b0f; --surface: #0f1318; --surface2: #161b22; --surface3: #1c2330;
+    --border: #21262d; --border2: #30363d;
+    --white: #e6edf3; --muted: #7d8590; --red: #e53935; --accent: #1f6feb;
+    --gold: #f0c040; --green: #3fb950; --cream: #e6edf3;
+    --gray: #161b22; --mid-gray: #30363d; --light-gray: #7d8590;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background-color: var(--black); color: var(--cream); font-family: 'Barlow Condensed', sans-serif; min-height: 100vh; }
-  .site-header { background: var(--black); border-bottom: 6px solid var(--red); }
-  .header-checkered { height: 18px; background: var(--checkered); opacity: 0.6; }
-  .header-inner { padding: 24px 40px 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-  .site-title { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; letter-spacing: 4px; color: var(--cream); line-height: 1; text-shadow: 4px 4px 0 var(--red); }
-  .site-title span { color: var(--gold); }
-  .header-badge { background: var(--red); color: var(--cream); font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; padding: 6px 16px; border: 2px solid var(--gold); text-align: center; line-height: 1.4; }
-  .season-label { font-family: 'Oswald', sans-serif; font-size: 0.85rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+  body { background-color: var(--black); color: var(--white); font-family: 'Inter', 'Inter', sans-serif; min-height: 100vh; }
 
-  .sync-bar { background: #111; border-bottom: 1px solid var(--mid-gray); padding: 6px 40px; display: flex; align-items: center; gap: 10px; font-size: 0.8rem; }
+  /* HEADER */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); }
+  .header-checkered { display: none; }
+  .header-inner { padding: 0 40px; display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 64px; }
+  .site-title { font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; color: var(--white); line-height: 1; text-transform: uppercase; }
+  .site-title span { color: var(--red); }
+  .header-badge { display: flex; align-items: center; gap: 16px; }
+  .header-badge-pill { background: var(--surface3); border: 1px solid var(--border2); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 1px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+  .season-label { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+
+  .sync-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 5px 40px; display: flex; align-items: center; gap: 10px; font-size: 0.75rem; }
   .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; flex-shrink: 0; }
   .sync-dot.synced { background: #4caf50; }
   .sync-dot.syncing { background: var(--gold); animation: pulse 1s infinite; }
@@ -29,68 +34,67 @@
   @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
   .sync-text { color: var(--light-gray); }
 
-  .nav-tabs { display: flex; background: var(--gray); border-bottom: 3px solid var(--red); padding: 0 40px; overflow-x: auto; }
-  .nav-tab { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; padding: 14px 28px; cursor: pointer; border: none; background: none; color: var(--light-gray); border-bottom: 4px solid transparent; margin-bottom: -3px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
-  .nav-tab:hover { color: var(--cream); }
-  .nav-tab.active { color: var(--gold); border-bottom: 4px solid var(--gold); background: var(--black); }
+  .nav-tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 40px; overflow-x: auto; }
+  .nav-tab { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px; padding: 14px 20px; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; text-transform: uppercase; }
+  .nav-tab:hover { color: var(--white); }
+  .nav-tab.active { color: var(--white); border-bottom: 2px solid var(--red); }
 
-  .main { padding: 32px 40px; }
+  .main { padding: 28px 40px; max-width: 1600px; margin: 0 auto; }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
 
-  .commish-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--gray); border: 1px solid var(--mid-gray); border-left: 4px solid var(--gold); padding: 10px 18px; margin-bottom: 24px; }
-  .commish-bar label { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; font-size: 1rem; color: var(--gold); white-space: nowrap; }
-  .commish-bar input[type=password] { background: #111; border: 1px solid var(--mid-gray); color: var(--cream); font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; padding: 5px 10px; width: 160px; outline: none; }
-  .commish-bar input[type=password]:focus { border-color: var(--gold); }
-  .commish-btn { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; font-size: 1rem; padding: 6px 18px; background: var(--red); color: var(--cream); border: none; cursor: pointer; white-space: nowrap; }
+  .commish-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 10px 16px; margin-bottom: 20px; border-radius: 0; }
+  .commish-bar label { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
+  .commish-bar input[type=password] { background: var(--surface3); border: 1px solid var(--border2); color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.88rem; padding: 5px 10px; width: 150px; outline: none; border-radius: 4px; }
+  .commish-bar input[type=password]:focus { border-color: var(--accent); }
+  .commish-btn { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; background: var(--red); color: #fff; border: none; cursor: pointer; white-space: nowrap; border-radius: 4px; }
   .commish-btn:hover { opacity: 0.85; }
-  .commish-status { font-size: 0.85rem; color: var(--light-gray); }
-  .commish-status.unlocked { color: #4caf50; }
+  .commish-status { font-size: 0.8rem; color: var(--muted); }
+  .commish-status.unlocked { color: var(--green); }
 
 
-  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; color: var(--gold); border-left: 5px solid var(--red); padding-left: 12px; margin-bottom: 16px; }
+  .section-title { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
   .table-wrap { overflow-x: auto; margin-bottom: 40px; -webkit-overflow-scrolling: touch; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-  thead tr { background: var(--red); font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1.5px; }
-  thead th { padding: 10px 14px; text-align: left; color: var(--cream); white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--surface3); font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  thead th { padding: 10px 14px; text-align: left; color: var(--muted); white-space: nowrap; border-bottom: 1px solid var(--border); }
   thead th.center { text-align: center; }
-  tbody tr { border-bottom: 1px solid var(--mid-gray); transition: background 0.15s; }
-  tbody tr:hover { background: rgba(212,160,23,0.08); }
-  tbody tr:nth-child(even) { background: rgba(255,255,255,0.03); }
-  tbody tr:nth-child(even):hover { background: rgba(212,160,23,0.08); }
-  tbody td { padding: 9px 14px; color: var(--cream); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody tr:nth-child(even) { background: rgba(255,255,255,0.01); }
+  tbody td { padding: 9px 14px; color: var(--white); white-space: nowrap; }
   tbody td.center { text-align: center; }
-  tbody td.pts { color: var(--gold); font-weight: 700; font-size: 1.05rem; }
-  tbody td.dim { color: var(--light-gray); font-size: 0.85rem; }
+  tbody td.pts { color: var(--gold); font-weight: 700; font-size: 0.95rem; }
+  tbody td.dim { color: var(--muted); font-size: 0.82rem; }
   .discipline-badge { display: inline-block; padding: 2px 8px; font-size: 0.75rem; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; border-radius: 2px; }
-  .disc-superspeedway { background: #1a3a6e; color: #7ab3ff; }
-  .disc-speedway { background: #3a1a00; color: #ffa040; }
-  .disc-road { background: #1a3a1a; color: #7aff7a; }
-  .disc-short { background: #3a1a3a; color: #ff80ff; }
+  .disc-superspeedway { background: rgba(31,111,235,0.15); color: #58a6ff; border: 1px solid rgba(31,111,235,0.3); }
+  .disc-speedway { background: rgba(240,100,0,0.15); color: #f0a060; border: 1px solid rgba(240,100,0,0.3); }
+  .disc-road { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid rgba(63,185,80,0.3); }
+  .disc-short { background: rgba(163,113,247,0.15); color: #a371f7; border: 1px solid rgba(163,113,247,0.3); }
 
-  .player-tabs { display: flex; border-bottom: 2px solid var(--mid-gray); overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .player-tab { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 2px; padding: 10px 24px; cursor: pointer; background: var(--gray); border: none; color: var(--light-gray); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; flex-shrink: 0; transition: all 0.15s; }
-  .player-tab.active { color: var(--gold); border-bottom-color: var(--gold); background: var(--black); }
-  .player-tab:hover:not(.active) { color: var(--cream); }
+  .player-tabs { display: flex; border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--surface); }
+  .player-tab { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 10px 22px; cursor: pointer; background: none; border: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; flex-shrink: 0; transition: all 0.15s; }
+  .player-tab.active { color: var(--white); border-bottom-color: var(--red); }
+  .player-tab:hover:not(.active) { color: var(--white); }
   .picks-content { display: none; }
   .picks-content.active { display: block; }
-  .picks-table thead tr { background: #1a1a1a; }
+  .picks-table thead tr { background: var(--surface3); }
   .picks-table thead th { border-right: 1px solid var(--mid-gray); }
-  .picks-table .group-header { background: var(--red); font-family: 'Bebas Neue', sans-serif; letter-spacing: 1.5px; text-align: center; font-size: 0.9rem; }
-  .picks-table .subheader { background: #1c1c1c; font-family: 'Oswald', sans-serif; font-size: 0.75rem; letter-spacing: 1px; color: var(--light-gray); text-transform: uppercase; }
+  .picks-table .group-header { background: var(--red); font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 1px; text-align: center; font-size: 0.78rem; text-transform: uppercase; }
+  .picks-table .subheader { background: var(--surface3); font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
   .edit-cell { background: rgba(255,255,255,0.03); }
 
   .autocomplete-wrap { position: relative; display: inline-block; width: 100%; }
-  .autocomplete-wrap input { background: transparent; border: none; border-bottom: 1px dashed var(--mid-gray); color: var(--cream); font-family: 'Barlow Condensed', sans-serif; font-size: 0.92rem; width: 100%; padding: 2px 4px; outline: none; min-width: 120px; }
-  .autocomplete-wrap input:focus { border-bottom-color: var(--gold); background: rgba(212,160,23,0.05); }
+  .autocomplete-wrap input { background: transparent; border: none; border-bottom: 1px solid var(--border2); color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.85rem; width: 100%; padding: 2px 4px; outline: none; min-width: 120px; }
+  .autocomplete-wrap input:focus { border-bottom-color: var(--accent); background: rgba(31,111,235,0.05); }
   .autocomplete-wrap input[readonly] { color: var(--light-gray); cursor: not-allowed; border-bottom-style: solid; border-bottom-color: #333; }
-  .ac-dropdown { position: absolute; top: 100%; left: 0; z-index: 100; background: #1a1a1a; border: 1px solid var(--gold); min-width: 200px; max-height: 180px; overflow-y: auto; display: none; box-shadow: 0 4px 16px rgba(0,0,0,0.7); }
+  .ac-dropdown { position: absolute; top: 100%; left: 0; z-index: 100; background: var(--surface3); border: 1px solid var(--border2); min-width: 200px; max-height: 180px; overflow-y: auto; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.8); border-radius: 4px; }
   .ac-dropdown.open { display: block; }
   .ac-item { padding: 7px 12px; cursor: pointer; font-size: 0.9rem; color: var(--cream); border-bottom: 1px solid #333; }
-  .ac-item:hover, .ac-item.selected { background: var(--red); }
+  .ac-item:hover, .ac-item.selected { background: var(--accent); }
   .ac-item .car-num { color: var(--gold); font-weight: 700; margin-right: 6px; font-size: 0.8rem; }
-  .fin-input { background: transparent; border: none; border-bottom: 1px dashed var(--mid-gray); color: var(--cream); font-family: 'Barlow Condensed', sans-serif; font-size: 0.92rem; width: 50px; padding: 2px 4px; outline: none; text-align: center; }
+  .fin-input { background: transparent; border: none; border-bottom: 1px solid var(--border2); color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.85rem; width: 50px; padding: 2px 4px; outline: none; text-align: center; }
   .fin-input:focus { border-bottom-color: var(--gold); background: rgba(212,160,23,0.05); }
   .fin-input[readonly] { color: var(--light-gray); cursor: not-allowed; border-bottom-style: solid; border-bottom-color: #333; }
   .week-num { color: var(--light-gray); font-size: 0.85rem; text-align: center; }
@@ -99,59 +103,77 @@
   .points-ref-grid { display: grid; grid-template-columns: 280px 1fr; gap: 32px; }
   .footer-checkered { height: 18px; background: var(--checkered); opacity: 0.4; margin-top: 60px; }
 
-  .loading-state { text-align: center; padding: 60px; font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 3px; color: var(--light-gray); }
+  .loading-state { text-align: center; padding: 60px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: 3px; color: var(--light-gray); }
 
 
-  /* THIS WEEK PANEL */
-  .this-week-panel { background: var(--gray); border: 2px solid var(--mid-gray); border-top: 5px solid var(--red); padding: 0; margin-bottom: 8px; overflow: hidden; }
-  .this-week-header { background: var(--red); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-  .this-week-label { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; color: rgba(255,255,255,0.7); }
-  .this-week-track { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 2px; color: var(--cream); line-height: 1; }
-  .this-week-meta { font-family: 'Oswald', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.75); letter-spacing: 1px; text-align: right; }
-  .this-week-picks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-  .this-week-player { padding: 18px 20px; border-right: 1px solid var(--mid-gray); }
+  /* THIS WEEK PANEL — broadcast TV style */
+  .this-week-panel { background: #111; border: 1px solid #222; padding: 0; margin-bottom: 20px; overflow: hidden; }
+  .this-week-header { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); border-bottom: 3px solid var(--gold); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .this-week-label { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.85rem; letter-spacing: 4px; color: var(--gold); }
+  .this-week-track { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: 2px; color: #fff; line-height: 1; }
+  .this-week-meta { font-family: 'Inter', sans-serif; font-size: 0.82rem; color: #999; letter-spacing: 1px; text-align: right; }
+  .this-week-track-svg { opacity: 0.12; flex-shrink: 0; }
+
+  /* Player columns header bar */
+  .this-week-col-headers { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--red); }
+  .this-week-col-header { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.9rem; letter-spacing: 3px; color: rgba(255,255,255,0.9); padding: 6px 16px; border-right: 1px solid rgba(255,255,255,0.15); }
+  .this-week-col-header:last-child { border-right: none; }
+
+  /* TV-style pick rows */
+  .this-week-picks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #1e1e1e; }
+  .this-week-player { padding: 12px 0; border-right: 1px solid #1e1e1e; }
   .this-week-player:last-child { border-right: none; }
-  .this-week-player-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; color: var(--gold); margin-bottom: 10px; border-bottom: 1px solid var(--mid-gray); padding-bottom: 6px; }
-  .this-week-driver { font-size: 0.95rem; color: var(--cream); padding: 3px 0; display: flex; align-items: center; gap: 6px; }
-  .this-week-driver::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
-  .this-week-driver.has-result { color: var(--light-gray); }
-  .this-week-driver .driver-pts { color: var(--gold); font-weight: 700; margin-left: auto; font-size: 0.85rem; }
-  .this-week-empty { color: var(--light-gray); font-style: italic; font-size: 0.9rem; }
+  .this-week-driver { display: flex; align-items: center; gap: 0; border-bottom: 1px solid #1a1a1a; transition: background 0.15s; }
+  .this-week-driver:last-of-type { border-bottom: none; }
+  .this-week-driver:hover { background: #1a1a1a; }
+  .tw-pos { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1rem; color: #555; width: 28px; text-align: center; flex-shrink: 0; padding: 10px 0; }
+  .tw-num { width: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 8px 4px; }
+  .tw-name { flex: 1; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 500; color: #e8e8e8; letter-spacing: 0.5px; padding: 10px 8px 10px 4px; }
+  .tw-pts { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1rem; color: var(--gold); width: 40px; text-align: right; padding-right: 12px; flex-shrink: 0; }
+  .tw-pts.no-result { color: #333; }
+  .this-week-empty { padding: 14px 16px; color: #444; font-style: italic; font-size: 0.85rem; }
+  .this-week-total { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.85rem; color: #555; letter-spacing: 2px; padding: 8px 16px; border-top: 1px solid #1e1e1e; background: #0d0d0d; display: flex; justify-content: space-between; }
+  .this-week-total span { color: var(--gold); }
+  .no-picks-yet { padding: 20px 24px; color: #444; font-style: italic; font-size: 0.9rem; }
 
-  .this-week-track-svg { opacity: 0.18; flex-shrink: 0; }
-  .this-week-total { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--mid-gray); font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--gold); letter-spacing: 1px; }
-  .no-picks-yet { padding: 20px 24px; color: var(--light-gray); font-style: italic; font-size: 0.95rem; }
-
-  /* LEADERBOARD LIST */
-  .leaderboard-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
-  .lb-row { display: flex; align-items: center; gap: 0; background: var(--gray); border: 1px solid var(--mid-gray); overflow: hidden; position: relative; }
-  .lb-row.lb-1 { border-left: 5px solid var(--gold); }
-  .lb-row.lb-2 { border-left: 5px solid #aaa; }
-  .lb-row.lb-3 { border-left: 5px solid #cd7f32; }
-  .lb-row.lb-4 { border-left: 5px solid var(--mid-gray); }
-  .lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--mid-gray); width: 56px; text-align: center; flex-shrink: 0; }
+  /* LEADERBOARD — broadcast TV style */
+  .leaderboard-list { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+  .lb-header { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px; background: var(--red); padding: 6px 12px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 3px; color: rgba(255,255,255,0.8); align-items: center; gap: 0; }
+  .lb-row { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px; align-items: center; background: #141414; border-bottom: 1px solid #1c1c1c; transition: background 0.15s; }
+  .lb-row:hover { background: #1a1a1a; }
+  .lb-row.lb-1 { background: #1a1500; border-left: 3px solid var(--gold); }
+  .lb-row.lb-2 { background: #151515; border-left: 3px solid #888; }
+  .lb-row.lb-3 { background: #130d00; border-left: 3px solid #cd7f32; }
+  .lb-row.lb-4 { border-left: 3px solid #333; }
+  .lb-rank { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.1rem; color: #555; text-align: center; padding: 14px 0; }
   .lb-row.lb-1 .lb-rank { color: var(--gold); }
-  .lb-row.lb-2 .lb-rank { color: #aaa; }
+  .lb-row.lb-2 .lb-rank { color: #888; }
   .lb-row.lb-3 .lb-rank { color: #cd7f32; }
-  .lb-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; flex: 1; padding: 12px 0; }
-  .lb-bar-wrap { flex: 2; padding: 0 20px 0 8px; }
-  .lb-bar-bg { background: #1a1a1a; height: 10px; border-radius: 5px; overflow: hidden; }
-  .lb-bar-fill { height: 100%; border-radius: 5px; background: var(--red); transition: width 0.6s ease; }
+  .lb-carnum { width: 48px; display: flex; align-items: center; justify-content: center; padding: 8px 4px; }
+  .lb-name { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: 1.5px; color: #fff; padding: 12px 8px; }
+  .lb-bar-wrap { padding: 0 16px; }
+  .lb-bar-bg { background: #0a0a0a; height: 6px; border-radius: 3px; overflow: hidden; }
+  .lb-bar-fill { height: 100%; border-radius: 3px; background: #333; transition: width 0.8s ease; }
   .lb-row.lb-1 .lb-bar-fill { background: var(--gold); }
-  .lb-row.lb-2 .lb-bar-fill { background: #aaa; }
+  .lb-row.lb-2 .lb-bar-fill { background: #888; }
   .lb-row.lb-3 .lb-bar-fill { background: #cd7f32; }
-  .lb-pts { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--gold); width: 80px; text-align: right; padding-right: 20px; flex-shrink: 0; }
-  .lb-pts-label { font-size: 0.65rem; color: var(--light-gray); letter-spacing: 2px; display: block; text-align: right; margin-top: -4px; }
-  .lb-races { font-size: 0.75rem; color: var(--light-gray); width: 80px; text-align: right; padding-right: 20px; flex-shrink: 0; }
+  .lb-pts { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.6rem; color: #fff; text-align: right; padding-right: 16px; }
+  .lb-row.lb-1 .lb-pts { color: var(--gold); }
+  .lb-pts-label { font-size: 0.6rem; color: #555; letter-spacing: 2px; display: block; text-align: right; line-height: 1; }
+  .lb-races { font-size: 0.72rem; color: #555; text-align: right; padding-right: 16px; letter-spacing: 1px; }
 
   @media (max-width: 700px) {
     .this-week-picks { grid-template-columns: 1fr 1fr; }
+    .this-week-col-headers { grid-template-columns: 1fr 1fr; }
+    .this-week-col-header:nth-child(2) { border-right: none; }
+    .this-week-col-header:nth-child(3), .this-week-col-header:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.15); }
     .this-week-player:nth-child(2) { border-right: none; }
-    .this-week-player:nth-child(3) { border-top: 1px solid var(--mid-gray); border-right: 1px solid var(--mid-gray); }
-    .this-week-player:nth-child(4) { border-top: 1px solid var(--mid-gray); border-right: none; }
+    .this-week-player:nth-child(3) { border-top: 1px solid #1e1e1e; border-right: 1px solid #1e1e1e; }
+    .this-week-player:nth-child(4) { border-top: 1px solid #1e1e1e; border-right: none; }
+    .lb-row, .lb-header { grid-template-columns: 40px 44px 1fr 80px; }
     .lb-bar-wrap { display: none; }
-    .lb-name { font-size: 1.3rem; }
-    .lb-rank { width: 42px; font-size: 1.6rem; }
+    .lb-races { display: none; }
+    .lb-name { font-size: 1.1rem; }
   }
 
 
@@ -161,10 +183,10 @@
   .driver-card-roster:hover { border-color: var(--gold); }
   .driver-card-photo { width: 100%; height: 140px; object-fit: cover; object-position: top; display: block; background: #1a1a1a; }
   .driver-card-photo-placeholder { width: 100%; height: 140px; background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); display: flex; align-items: center; justify-content: center; }
-  .driver-card-num-big { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; line-height: 1; opacity: 0.15; }
+  .driver-card-num-big { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 4rem; line-height: 1; opacity: 0.15; }
   .driver-card-body { padding: 10px 12px 12px; }
   .driver-card-namenum { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-  .driver-card-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 1px; color: var(--cream); line-height: 1.2; }
+  .driver-card-name { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.05rem; letter-spacing: 1px; color: var(--cream); line-height: 1.2; }
   .driver-card-team { font-size: 0.75rem; color: var(--light-gray); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .driver-card-mfr { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; padding: 1px 6px; border-radius: 2px; text-transform: uppercase; }
   .mfr-chevrolet { background: #c8102e; color: #fff; }
@@ -178,11 +200,11 @@
   /* DRIVER STATS */
   .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 32px; }
   .stats-card { background: var(--gray); border: 1px solid var(--mid-gray); border-top: 4px solid var(--red); padding: 0; overflow: hidden; }
-  .stats-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 3px; color: var(--cream); background: #1a1a1a; padding: 10px 16px; border-bottom: 1px solid var(--mid-gray); display: flex; align-items: center; gap: 8px; }
+  .stats-card-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: 3px; color: var(--cream); background: #1a1a1a; padding: 10px 16px; border-bottom: 1px solid var(--mid-gray); display: flex; align-items: center; gap: 8px; }
   .stats-card-title span { color: var(--gold); }
   .stats-row { display: flex; align-items: center; gap: 0; padding: 10px 16px; border-bottom: 1px solid #1f1f1f; }
   .stats-row:last-child { border-bottom: none; }
-  .stats-pos { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--light-gray); width: 28px; flex-shrink: 0; }
+  .stats-pos { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--light-gray); width: 28px; flex-shrink: 0; }
   .stats-pos.gold { color: var(--gold); }
   .stats-pos.silver { color: #aaa; }
   .stats-pos.bronze { color: #cd7f32; }
@@ -190,14 +212,14 @@
   .stats-bar-wrap { flex: 1; padding: 0 12px; }
   .stats-bar-bg { background: #111; height: 6px; border-radius: 3px; overflow: hidden; }
   .stats-bar-fill { height: 100%; border-radius: 3px; background: var(--red); }
-  .stats-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--gold); width: 60px; text-align: right; flex-shrink: 0; }
+  .stats-val { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--gold); width: 60px; text-align: right; flex-shrink: 0; }
   .stats-val-label { font-size: 0.65rem; color: var(--light-gray); display: block; text-align: right; line-height: 1; margin-top: 1px; }
   .stats-sub { font-size: 0.75rem; color: var(--light-gray); margin-left: 4px; }
   .stats-empty { padding: 20px 16px; color: var(--light-gray); font-style: italic; font-size: 0.9rem; }
   .stats-header-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
   .stats-highlight { background: var(--gray); border: 1px solid var(--mid-gray); border-left: 4px solid var(--gold); padding: 16px 20px; }
   .stats-highlight-label { font-size: 0.7rem; letter-spacing: 3px; color: var(--light-gray); text-transform: uppercase; }
-  .stats-highlight-val { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--gold); line-height: 1.1; }
+  .stats-highlight-val { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 2rem; color: var(--gold); line-height: 1.1; }
   .stats-highlight-sub { font-size: 0.8rem; color: #bbb; margin-top: 2px; }
   @media (max-width: 700px) {
     .stats-grid { grid-template-columns: 1fr; }
@@ -233,13 +255,16 @@
 <body>
 
 <header class="site-header">
-  <div class="header-checkered"></div>
   <div class="header-inner">
-    <div>
-      <div class="site-title">&#127937; <span>Thunder</span> Picks</div>
-      <div class="season-label">NASCAR Fantasy League &mdash; 2026 Season</div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="site-title"><span>Thunder</span> Picks</div>
+      <div class="season-label">NASCAR Cup Series &bull; 2026</div>
     </div>
-    <div class="header-badge">35 RACES<br>4 PLAYERS<br>3 PICKS/WEEK</div>
+    <div class="header-badge">
+      <span class="header-badge-pill">35 Races</span>
+      <span class="header-badge-pill">4 Players</span>
+      <span class="header-badge-pill">3 Picks / Week</span>
+    </div>
   </div>
 </header>
 
@@ -283,7 +308,7 @@
               <th class="center" colspan="3">Greg Sr</th>
               <th class="center" colspan="3">Greg Jr</th>
             </tr>
-            <tr style="background:#1c1c1c;font-family:'Oswald',sans-serif;font-size:0.75rem;color:#888;">
+            <tr style="background:#1c1c1c;font-family:'Inter',sans-serif;font-size:0.72rem;color:#888;font-weight:600;letter-spacing:1px;">
               <th></th><th></th><th></th>
               <th class="center">Picks</th><th class="center">Pts</th><th class="center">Cumul.</th>
               <th class="center">Picks</th><th class="center">Pts</th><th class="center">Cumul.</th>
@@ -341,7 +366,7 @@
       </div>
       <div>
         <div class="section-title">How It Works</div>
-        <div style="font-family:'Special Elite',serif;color:#bbb;line-height:1.9;font-size:1rem;background:var(--gray);padding:24px;border-left:4px solid var(--gold);max-width:480px;">
+        <div style="font-family:'Inter',sans-serif;color:#bbb;line-height:1.9;font-size:0.92rem;background:var(--gray);padding:24px;border-left:4px solid var(--gold);max-width:480px;">
           <p>Each week, every player picks <strong style="color:var(--gold);">3 drivers</strong> before the race.</p><br>
           <p>After the race, each driver's finish maps to points using the table.</p><br>
           <p>A player's <strong style="color:var(--gold);">weekly score</strong> is the sum of all three drivers' points.</p><br>
@@ -375,7 +400,7 @@
   </div>
 
 </main>
-<div class="footer-checkered"></div>
+<div style="height:1px;background:var(--border);margin-top:60px;"></div>
 
 <script>
 const COMMISH_PASSWORD = 'JJ48';
@@ -630,11 +655,15 @@ const DRIVER_COLORS = {
 };
 
 function carNumBadge(num, size) {
+  const h = size === 'lg' ? '32px' : size === 'sm' ? '20px' : '26px';
   const c = DRIVER_COLORS[num] || {bg:'#444', text:'#fff'};
   const fs = size === 'lg' ? '1rem' : size === 'sm' ? '0.65rem' : '0.8rem';
   const pad = size === 'lg' ? '3px 9px' : size === 'sm' ? '1px 5px' : '2px 7px';
-  const br = size === 'lg' ? '4px' : '3px';
-  return `<span style="background:${c.bg};color:${c.text};font-family:'Bebas Neue',sans-serif;font-size:${fs};padding:${pad};border-radius:${br};letter-spacing:1px;display:inline-block;line-height:1.3;flex-shrink:0;">${num}</span>`;
+  return `<span style="display:inline-flex;align-items:center;flex-shrink:0;">
+    <img src="images/numbers/${num}.png" style="height:${h};width:auto;object-fit:contain;display:block;"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';" alt="${num}">
+    <span style="display:none;background:${c.bg};color:${c.text};font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:${fs};padding:${pad};border-radius:3px;letter-spacing:1px;line-height:1.3;">${num}</span>
+  </span>`;
 }
 
 // Track silhouette SVGs keyed by track name (partial match)
@@ -671,6 +700,48 @@ const TRACK_SVGS = {
   'chicago':       '<path d="M18,70 L18,38 L38,18 L82,18 L102,38 L102,70 L72,58 L48,70 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
 };
 
+
+// Map track names to uploaded image filenames
+const TRACK_IMAGE_MAP = {
+  'echopark':        'echopark-atlanta.svg',
+  'atlanta':         'echopark-atlanta.svg',
+  'circuit of the americas': 'cota.svg',
+  'cota':            'cota.svg',
+  'phoenix':         'phoenix.svg',
+  'las vegas':       'las-vegas.svg',
+  'darlington':      'darlington.svg',
+  'martinsville':    'martinsville.svg',
+  'bristol':         'bristol.svg',
+  'kansas':          'kansas.svg',
+  'texas':           'texas.svg',
+  'watkins glen':    'watkins-glen.svg',
+  'charlotte':       'charlotte.svg',
+  'talladega':       'talladega.svg',
+  'dover':           'dover.svg',
+  'michigan':        'michigan.svg',
+  'pocono':          'pocono.svg',
+  'new hampshire':   'new-hampshire.svg',
+  'chicago':         'chicagoland.svg',
+  'richmond':        'richmond.svg',
+  'sonoma':          'sonoma.svg',
+  'indianapolis':    'indianapolis-motorspeedway.svg',
+  'iowa':            'iowa.svg',
+  'homestead':       'homestead.svg',
+  'nashville':       'nashville.svg',
+  'north wilkesboro':'north-wilkesboro.svg',
+  'coronado':        'naval-base-coronado.svg',
+  'wwtr':            'WWTR.svg',
+  'world wide':      'WWTR.svg',
+};
+
+function getTrackImagePath(trackName) {
+  const lower = trackName.toLowerCase();
+  for (const [key, file] of Object.entries(TRACK_IMAGE_MAP)) {
+    if (lower.includes(key)) return 'images/tracks/' + file;
+  }
+  return null;
+}
+
 function getTrackSVG(trackName) {
   const lower = trackName.toLowerCase();
   for (const [key, svg] of Object.entries(TRACK_SVGS)) {
@@ -686,8 +757,10 @@ function renderThisWeek() {
   const race = SCHEDULE[ri];
   const tvColor = {FOX:'#f5a623',FS1:'#f5a623',Prime:'#00a8e0',USA:'#1a6bb5',NBC:'#d4a017'}[race.tv]||'#aaa';
 
+  let colHeaders = '';
   let playerCols = '';
   PLAYER_NAMES.forEach((name, pi) => {
+    colHeaders += `<div class="this-week-col-header">${name}</div>`;
     const d = picks[pi][ri];
     const drivers = [
       {name: d.d1name, fin: d.d1fin},
@@ -699,43 +772,52 @@ function renderThisWeek() {
     if (drivers.length === 0) {
       driverHtml = '<div class="this-week-empty">No picks yet</div>';
     } else {
-      drivers.forEach(drv => {
-        const pts = drv.fin ? finPts(drv.fin) : '';
-        const ptsHtml = pts ? `<span class="driver-pts">${pts} pts</span>` : '';
-        const cls = drv.fin ? 'has-result' : '';
+      drivers.forEach((drv, idx) => {
+        const pts = drv.fin ? finPts(drv.fin) : null;
+        const ptsHtml = `<div class="tw-pts ${pts===null?'no-result':''}">${pts !== null ? pts : '—'}</div>`;
         const driverObj = DRIVERS.find(d => d.name === drv.name);
         const badge = driverObj ? carNumBadge(driverObj.num, 'sm') : '';
-        driverHtml += `<div class="this-week-driver ${cls}">${badge} ${drv.name}${ptsHtml}</div>`;
+        driverHtml += `<div class="this-week-driver">
+          <div class="tw-pos">${idx+1}</div>
+          <div class="tw-num">${badge}</div>
+          <div class="tw-name">${drv.name}</div>
+          ${ptsHtml}
+        </div>`;
       });
     }
 
     const weekPts = weekScore(pi, ri);
     const totalPts = cumulScore(pi, ri);
-    const totalHtml = weekPts ? `<div class="this-week-total">Week: ${weekPts} pts &nbsp;|&nbsp; Total: ${totalPts} pts</div>` : '';
+    const totalHtml = `<div class="this-week-total">WEEK <span>${weekPts || '—'}</span> &nbsp; TOTAL <span>${totalPts || '—'}</span></div>`;
 
     playerCols += `<div class="this-week-player">
-      <div class="this-week-player-name">${name}</div>
       ${driverHtml}
       ${totalHtml}
     </div>`;
   });
 
+  const trackImgSrc = getTrackImagePath(race.track);
   const trackSvg = getTrackSVG(race.track);
   panel.innerHTML = `
     <div class="this-week-header">
       <div style="flex:1">
-        <div class="this-week-label">Race ${race.race} of 35 &mdash; This Weekend</div>
+        <div class="this-week-label">&#127937; Race ${race.race} of 35 &mdash; This Weekend</div>
         <div class="this-week-track">${race.track}</div>
       </div>
-      <svg class="this-week-track-svg" width="120" height="100" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
-        ${trackSvg}
-      </svg>
+      <div style="position:relative;width:120px;height:90px;flex-shrink:0;opacity:0.35;display:flex;align-items:center;justify-content:center;">
+        <img src="${trackImgSrc}" style="max-width:120px;max-height:90px;object-fit:contain;filter:brightness(0) invert(1);"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='block';" alt="">
+        <svg style="display:none;" width="120" height="90" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+          ${trackSvg}
+        </svg>
+      </div>
       <div class="this-week-meta" style="min-width:140px;">
         ${race.date} &bull; ${race.time}<br>
         <span style="color:${tvColor};font-weight:700;">${race.tv}</span> &bull; ${race.radio}
         <br><span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span>
       </div>
     </div>
+    <div class="this-week-col-headers">${colHeaders}</div>
     <div class="this-week-picks">${playerCols}</div>`;
 }
 
@@ -744,20 +826,21 @@ function renderLeaderboard() {
     .sort((a,b) => b.total - a.total);
   const maxPts = sorted[0].total || 1;
   const listEl = document.getElementById('leaderboard-list');
-  listEl.innerHTML = '';
+  listEl.innerHTML = `<div class="lb-header">
+    <div>POS</div><div></div><div>PLAYER</div><div></div><div style="text-align:right;padding-right:16px;">PTS</div><div style="text-align:right;padding-right:16px;">RACES</div>
+  </div>`;
   sorted.forEach((p, i) => {
     const rank = i + 1;
     const pct = maxPts > 0 ? Math.round((p.total / maxPts) * 100) : 0;
     listEl.innerHTML += `<div class="lb-row lb-${rank}">
-      <div class="lb-rank">#${rank}</div>
+      <div class="lb-rank">${rank}</div>
+      <div class="lb-carnum"></div>
       <div class="lb-name">${p.name}</div>
       <div class="lb-bar-wrap">
         <div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${pct}%"></div></div>
       </div>
-      <div>
-        <div class="lb-pts">${p.total}<span class="lb-pts-label">PTS</span></div>
-      </div>
-      <div class="lb-races">${p.scored} races</div>
+      <div class="lb-pts">${p.total}<span class="lb-pts-label">PTS</span></div>
+      <div class="lb-races">${p.scored} / 35 races</div>
     </div>`;
   });
 }
@@ -944,41 +1027,41 @@ function renderPointsRef() {
 // DRIVER ROSTER TAB
 // ============================================================
 const DRIVER_ROSTER = [
-  {num:'1',  name:'Ross Chastain',        team:'Trackhouse Racing',       mfr:'Chevrolet'},
-  {num:'2',  name:'Austin Cindric',       team:'Team Penske',             mfr:'Ford'},
-  {num:'3',  name:'Austin Dillon',        team:'Richard Childress Racing',mfr:'Chevrolet'},
-  {num:'4',  name:'Noah Gragson',         team:'Front Row Motorsports',   mfr:'Ford'},
-  {num:'5',  name:'Kyle Larson',          team:'Hendrick Motorsports',    mfr:'Chevrolet'},
-  {num:'6',  name:'Brad Keselowski',      team:'RFK Racing',              mfr:'Ford'},
-  {num:'7',  name:'Daniel Suarez',        team:'Spire Motorsports',       mfr:'Chevrolet'},
-  {num:'8',  name:'Kyle Busch',           team:'Richard Childress Racing',mfr:'Chevrolet'},
-  {num:'9',  name:'Chase Elliott',        team:'Hendrick Motorsports',    mfr:'Chevrolet'},
-  {num:'10', name:'Ty Dillon',            team:'Kaulig Racing',           mfr:'Chevrolet'},
-  {num:'11', name:'Denny Hamlin',         team:'Joe Gibbs Racing',        mfr:'Toyota'},
-  {num:'12', name:'Ryan Blaney',          team:'Team Penske',             mfr:'Ford'},
-  {num:'16', name:'AJ Allmendinger',      team:'Kaulig Racing',           mfr:'Chevrolet'},
-  {num:'17', name:'Chris Buescher',       team:'RFK Racing',              mfr:'Ford'},
-  {num:'19', name:'Chase Briscoe',        team:'Joe Gibbs Racing',        mfr:'Toyota'},
-  {num:'20', name:'Christopher Bell',     team:'Joe Gibbs Racing',        mfr:'Toyota'},
-  {num:'21', name:'Josh Berry',           team:'Wood Brothers Racing',    mfr:'Ford'},
-  {num:'22', name:'Joey Logano',          team:'Team Penske',             mfr:'Ford'},
-  {num:'23', name:'Bubba Wallace',        team:'23XI Racing',             mfr:'Toyota'},
-  {num:'24', name:'William Byron',        team:'Hendrick Motorsports',    mfr:'Chevrolet'},
-  {num:'34', name:'Todd Gilliland',       team:'Front Row Motorsports',   mfr:'Ford'},
-  {num:'35', name:'Riley Herbst',         team:'Kaulig Racing',           mfr:'Chevrolet'},
-  {num:'41', name:'Cole Custer',          team:'Stewart-Haas Racing',     mfr:'Ford'},
-  {num:'42', name:'John Hunter Nemechek', team:'Legacy Motor Club',       mfr:'Chevrolet'},
-  {num:'43', name:'Erik Jones',           team:'Legacy Motor Club',       mfr:'Chevrolet'},
-  {num:'45', name:'Tyler Reddick',        team:'23XI Racing',             mfr:'Toyota'},
-  {num:'47', name:'Ricky Stenhouse Jr',   team:'JTG Daugherty Racing',    mfr:'Chevrolet'},
-  {num:'48', name:'Alex Bowman',          team:'Hendrick Motorsports',    mfr:'Chevrolet'},
-  {num:'51', name:'Cody Ware',            team:'Rick Ware Racing',        mfr:'Ford'},
-  {num:'54', name:'Ty Gibbs',             team:'Joe Gibbs Racing',        mfr:'Toyota'},
-  {num:'71', name:'Zane Smith',           team:'Spire Motorsports',       mfr:'Chevrolet'},
-  {num:'77', name:'Carson Hocevar',       team:'Spire Motorsports',       mfr:'Chevrolet'},
-  {num:'88', name:'Connor Zilisch',       team:'Trackhouse Racing',       mfr:'Chevrolet'},
-  {num:'97', name:'Shane van Gisbergen',  team:'Trackhouse Racing',       mfr:'Chevrolet'},
-  {num:'99', name:'Daniel Hemric',        team:'Spire Motorsports',       mfr:'Chevrolet'},
+  {num:'1',  name:'Ross Chastain',        team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'Ross-Chastain.png'},
+  {num:'2',  name:'Austin Cindric',       team:'Team Penske',             mfr:'Ford',      photo:'Austin-Cindric.png'},
+  {num:'3',  name:'Austin Dillon',        team:'Richard Childress Racing',mfr:'Chevrolet', photo:'Austin-Dillon.png'},
+  {num:'4',  name:'Noah Gragson',         team:'Front Row Motorsports',   mfr:'Ford',      photo:'Noah-Gragson.png'},
+  {num:'5',  name:'Kyle Larson',          team:'Hendrick Motorsports',    mfr:'Chevrolet', photo:'Kyle-Larson.png'},
+  {num:'6',  name:'Brad Keselowski',      team:'RFK Racing',              mfr:'Ford',      photo:'Brad-Keselowski.png'},
+  {num:'7',  name:'Daniel Suarez',        team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Daniel-Suarez.png'},
+  {num:'8',  name:'Kyle Busch',           team:'Richard Childress Racing',mfr:'Chevrolet', photo:'Kyle-Busch.png'},
+  {num:'9',  name:'Chase Elliott',        team:'Hendrick Motorsports',    mfr:'Chevrolet', photo:'Chase-Elliott.png'},
+  {num:'10', name:'Ty Dillon',            team:'Kaulig Racing',           mfr:'Chevrolet', photo:'Ty-Dillon.png'},
+  {num:'11', name:'Denny Hamlin',         team:'Joe Gibbs Racing',        mfr:'Toyota',    photo:'Denny-Hamlin.png'},
+  {num:'12', name:'Ryan Blaney',          team:'Team Penske',             mfr:'Ford',      photo:'Ryan-Blaney.png'},
+  {num:'16', name:'AJ Allmendinger',      team:'Kaulig Racing',           mfr:'Chevrolet', photo:'AJ-Allmendinger.png'},
+  {num:'17', name:'Chris Buescher',       team:'RFK Racing',              mfr:'Ford',      photo:'Chris-Buescher.png'},
+  {num:'19', name:'Chase Briscoe',        team:'Joe Gibbs Racing',        mfr:'Toyota',    photo:'Chase-Briscoe.png'},
+  {num:'20', name:'Christopher Bell',     team:'Joe Gibbs Racing',        mfr:'Toyota',    photo:'Christopher-Bell.png'},
+  {num:'21', name:'Josh Berry',           team:'Wood Brothers Racing',    mfr:'Ford',      photo:'Josh-Berry.png'},
+  {num:'22', name:'Joey Logano',          team:'Team Penske',             mfr:'Ford',      photo:'Joey-Logano.png'},
+  {num:'23', name:'Bubba Wallace',        team:'23XI Racing',             mfr:'Toyota',    photo:'Bubba-Wallace.png'},
+  {num:'24', name:'William Byron',        team:'Hendrick Motorsports',    mfr:'Chevrolet', photo:'William-Byron.png'},
+  {num:'34', name:'Todd Gilliland',       team:'Front Row Motorsports',   mfr:'Ford',      photo:'Todd-Gilliand.png'},
+  {num:'35', name:'Riley Herbst',         team:'Kaulig Racing',           mfr:'Chevrolet', photo:'Riley-Herbst.png'},
+  {num:'41', name:'Cole Custer',          team:'Stewart-Haas Racing',     mfr:'Ford',      photo:'Cole-Custer.png'},
+  {num:'42', name:'John Hunter Nemechek', team:'Legacy Motor Club',       mfr:'Chevrolet', photo:'John-hunter-Nemechek.png'},
+  {num:'43', name:'Erik Jones',           team:'Legacy Motor Club',       mfr:'Chevrolet', photo:'Erik-Jones.png'},
+  {num:'45', name:'Tyler Reddick',        team:'23XI Racing',             mfr:'Toyota',    photo:'Tyler-Reddick.png'},
+  {num:'47', name:'Ricky Stenhouse Jr',   team:'JTG Daugherty Racing',    mfr:'Chevrolet', photo:'Ricky-Stenhouse-Jr.png'},
+  {num:'48', name:'Alex Bowman',          team:'Hendrick Motorsports',    mfr:'Chevrolet', photo:'Alex-Bowman.png'},
+  {num:'51', name:'Cody Ware',            team:'Rick Ware Racing',        mfr:'Ford',      photo:'Cody-Ware.png'},
+  {num:'54', name:'Ty Gibbs',             team:'Joe Gibbs Racing',        mfr:'Toyota',    photo:'Ty-Gibbs.png'},
+  {num:'71', name:'Zane Smith',           team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Zane-Smith.png'},
+  {num:'77', name:'Carson Hocevar',       team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Carson-Hocevar.png'},
+  {num:'88', name:'Connor Zilisch',       team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'Connor-Zilisch.png'},
+  {num:'97', name:'Shane van Gisbergen',  team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'shane-van-gisbergen.png'},
+  {num:'99', name:'Daniel Hemric',        team:'Spire Motorsports',       mfr:'Chevrolet', photo:null},
 ];
 
 function renderDriverRoster() {
@@ -987,21 +1070,24 @@ function renderDriverRoster() {
   grid.innerHTML = DRIVER_ROSTER.map(d => {
     const colors = DRIVER_COLORS[d.num] || {bg:'#444', text:'#fff'};
     const mfrClass = 'mfr-' + d.mfr.toLowerCase();
-    const photoPath = 'images/drivers/' + d.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,'') + '.jpg';
-    const badge = carNumBadge(d.num, 'sm');
-    return `<div class="driver-card-roster">
-      <div style="border-top: 4px solid ${colors.bg}; margin-top:-4px;"></div>
+    const photoPath = d.photo ? 'images/drivers/' + d.photo : null;
+    const numPath = 'images/numbers/' + d.num + '.png';
+    return `<div class="driver-card-roster" style="border-top-color:${colors.bg}">
       <div class="driver-card-photo-placeholder" style="position:relative;">
-        <img src="${photoPath}" class="driver-card-photo" 
+        ${photoPath ? `<img src="${photoPath}" class="driver-card-photo"
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
           onload="this.nextElementSibling.style.display='none';"
-          alt="${d.name}">
-        <div class="driver-card-photo-placeholder" style="display:none;position:absolute;inset:0;">
+          alt="${d.name}">` : ''}
+        <div class="driver-card-photo-placeholder" style="${photoPath ? 'display:none;' : ''}position:absolute;inset:0;">
           <div class="driver-card-num-big" style="color:${colors.bg}">${d.num}</div>
         </div>
       </div>
       <div class="driver-card-body">
-        <div class="driver-card-namenum">${badge}<div class="driver-card-name">${d.name}</div></div>
+        <div class="driver-card-namenum">
+          <img src="${numPath}" style="height:24px;width:auto;object-fit:contain;"
+            onerror="this.style.display='none'" alt="${d.num}">
+          <div class="driver-card-name">${d.name}</div>
+        </div>
         <div class="driver-card-team">${d.team}</div>
         <span class="driver-card-mfr ${mfrClass}">${d.mfr}</span>
       </div>
