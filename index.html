@@ -392,16 +392,7 @@ function scheduleSave() {
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(saveToSheets, 1500);
 }
-  scriptUrl = val;
-  localStorage.setItem(STORAGE_KEY, scriptUrl);
-  document.getElementById('url-save-status').textContent = 'Saved! Connecting...';
-  document.getElementById('setup-banner').classList.remove('visible');
-  loadFromSheets().then(() => {
-    document.getElementById('picks-panels').innerHTML = '';
-    document.getElementById('player-tabs').innerHTML = '';
-    renderPicksPanels();
-  });
-}
+
 
 function commishLogin() {
   if (document.getElementById('commish-pw').value === COMMISH_PASSWORD) {
