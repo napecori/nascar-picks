@@ -38,12 +38,6 @@
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
-  .setup-banner { background: #1a1a00; border: 2px solid var(--gold); padding: 20px 24px; margin-bottom: 24px; display: none; }
-  .setup-banner.visible { display: block; }
-  .setup-banner h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 2px; color: var(--gold); margin-bottom: 10px; }
-  .setup-banner p { color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 8px; }
-  .setup-banner input { background: #111; border: 1px solid var(--gold); color: var(--cream); font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; padding: 8px 12px; width: 100%; max-width: 540px; outline: none; margin-top: 6px; }
-  .setup-banner button { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; font-size: 1rem; padding: 8px 20px; background: var(--gold); color: var(--black); border: none; cursor: pointer; margin-top: 10px; }
 
   .commish-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--gray); border: 1px solid var(--mid-gray); border-left: 4px solid var(--gold); padding: 10px 18px; margin-bottom: 24px; }
   .commish-bar label { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; font-size: 1rem; color: var(--gold); white-space: nowrap; }
@@ -212,14 +206,6 @@
 
   <!-- PICKS -->
   <div id="tab-picks" class="tab-content">
-    <div class="setup-banner" id="setup-banner">
-      <h3>&#9881; One-Time Setup: Connect Google Sheets</h3>
-      <p>Paste your Google Apps Script Web App URL below to sync picks across all devices. Everyone will see live updates instantly. Follow the setup instructions file included with this download.</p>
-      <input type="text" id="script-url-input" placeholder="https://script.google.com/macros/s/YOUR_ID_HERE/exec">
-      <br><button onclick="saveScriptUrl()">Save &amp; Connect</button>
-      <span style="color:var(--light-gray);font-size:0.85rem;margin-left:12px;" id="url-save-status"></span>
-    </div>
-
     <div class="commish-bar">
       <label>&#128273; Commissioner</label>
       <input type="password" id="commish-pw" placeholder="Password" onkeydown="if(event.key==='Enter')commishLogin()">
@@ -282,7 +268,7 @@
 
 <script>
 const COMMISH_PASSWORD = 'JJ48';
-const STORAGE_KEY = 'thunder_script_url_v2';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRrOw4atRLSkhRnMvbCGKOS131Y1cW7xjFrysu3HVxR0-RnA8pHw2mcILq-_T-btoc/exec';
 
 const POINTS_TABLE = {
   1:40,2:35,3:34,4:33,5:32,6:31,7:30,8:29,9:28,10:27,
@@ -351,7 +337,7 @@ const DISC_CLASS  = {superspeedway:'disc-superspeedway',speedway:'disc-speedway'
 
 let picks = emptyPicks();
 let commishUnlocked = false;
-let scriptUrl = localStorage.getItem(STORAGE_KEY) || '';
+let scriptUrl = SCRIPT_URL;
 let saveTimeout = null;
 
 function emptyPicks() {
@@ -367,7 +353,6 @@ function setSyncStatus(state, msg) {
 
 async function loadFromSheets() {
   if (!scriptUrl) {
-    setSyncStatus('', 'Not connected to Google Sheets — go to Weekly Picks to set up');
     showStandings();
     return;
   }
@@ -393,8 +378,10 @@ async function saveToSheets() {
   if (!scriptUrl) return;
   setSyncStatus("syncing", "Saving...");
   try {
-    const url = scriptUrl + "?action=save&data=" + encodeURIComponent(JSON.stringify({picks}));
-    await fetch(url, {mode: "no-cors"});
+    const formData = new FormData();
+    formData.append("action", "save");
+    formData.append("data", JSON.stringify({picks}));
+    await fetch(scriptUrl, {method: "POST", body: formData, mode: "no-cors"});
     setSyncStatus("synced", "Saved to Google Sheets at " + new Date().toLocaleTimeString());
   } catch(e) {
     setSyncStatus("error", "Save failed — check internet connection");
@@ -405,13 +392,6 @@ function scheduleSave() {
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(saveToSheets, 1500);
 }
-
-function saveScriptUrl() {
-  const val = document.getElementById('script-url-input').value.trim();
-  if (!val.startsWith('https://script.google.com')) {
-    document.getElementById('url-save-status').textContent = 'Invalid — must start with https://script.google.com';
-    return;
-  }
   scriptUrl = val;
   localStorage.setItem(STORAGE_KEY, scriptUrl);
   document.getElementById('url-save-status').textContent = 'Saved! Connecting...';
@@ -659,11 +639,6 @@ function renderPointsRef() {
 }
 
 // INIT
-if (!scriptUrl) {
-  document.getElementById('setup-banner').classList.add('visible');
-} else {
-  document.getElementById('script-url-input').value = scriptUrl;
-}
 renderSchedule();
 renderPointsRef();
 renderPicksPanels();
