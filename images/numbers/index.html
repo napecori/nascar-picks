@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thunder Picks — NASCAR 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080b0f; --surface: #0f1318; --surface2: #161b22; --surface3: #1c2330;
+    --border: #21262d; --border2: #30363d;
+    --white: #e6edf3; --muted: #7d8590; --red: #e53935; --accent: #1f6feb;
+    --gold: #f0c040; --green: #3fb950; --cream: #e6edf3;
+    --gray: #161b22; --mid-gray: #30363d; --light-gray: #7d8590;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background-color: var(--black); color: var(--white); font-family: 'Inter', 'Inter', sans-serif; min-height: 100vh; }
+
+  /* HEADER */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); }
+  .header-checkered { display: none; }
+  .header-inner { padding: 0 40px; display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 64px; }
+  .site-title { font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; color: var(--white); line-height: 1; text-transform: uppercase; }
+  .site-title span { color: var(--red); }
+  .header-badge { display: flex; align-items: center; gap: 16px; }
+  .header-badge-pill { background: var(--surface3); border: 1px solid var(--border2); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 1px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+  .season-label { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+
+  .sync-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 5px 40px; display: flex; align-items: center; gap: 10px; font-size: 0.75rem; }
+  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; flex-shrink: 0; }
+  .sync-dot.synced { background: #4caf50; }
+  .sync-dot.syncing { background: var(--gold); animation: pulse 1s infinite; }
+  .sync-dot.error { background: var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+  .sync-text { color: var(--light-gray); }
+
+  .nav-tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 40px; overflow-x: auto; }
+  .nav-tab { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px; padding: 14px 20px; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; text-transform: uppercase; }
+  .nav-tab:hover { color: var(--white); }
+  .nav-tab.active { color: var(--white); border-bottom: 2px solid var(--red); }
+
+  .main { padding: 28px 40px; max-width: 1600px; margin: 0 auto; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+
+  .commish-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--accent); padding: 10px 16px; margin-bottom: 20px; border-radius: 0; }
+  .commish-bar label { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
+  .commish-bar input[type=password] { background: var(--surface3); border: 1px solid var(--border2); color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.88rem; padding: 5px 10px; width: 150px; outline: none; border-radius: 4px; }
+  .commish-bar input[type=password]:focus { border-color: var(--accent); }
+  .commish-btn { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; background: var(--red); color: #fff; border: none; cursor: pointer; white-space: nowrap; border-radius: 4px; }
+  .commish-btn:hover { opacity: 0.85; }
+  .commish-status { font-size: 0.8rem; color: var(--muted); }
+  .commish-status.unlocked { color: var(--green); }
+
+
+  .section-title { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .table-wrap { overflow-x: auto; margin-bottom: 40px; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead tr { background: var(--surface3); font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  thead th { padding: 10px 14px; text-align: left; color: var(--muted); white-space: nowrap; border-bottom: 1px solid var(--border); }
+  thead th.center { text-align: center; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody tr:nth-child(even) { background: rgba(255,255,255,0.01); }
+  tbody td { padding: 9px 14px; color: var(--white); white-space: nowrap; }
+  tbody td.center { text-align: center; }
+  tbody td.pts { color: var(--gold); font-weight: 700; font-size: 0.95rem; }
+  tbody td.dim { color: var(--muted); font-size: 0.82rem; }
+  .discipline-badge { display: inline-block; padding: 2px 8px; font-size: 0.75rem; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; border-radius: 2px; }
+  .disc-superspeedway { background: rgba(31,111,235,0.15); color: #58a6ff; border: 1px solid rgba(31,111,235,0.3); }
+  .disc-speedway { background: rgba(240,100,0,0.15); color: #f0a060; border: 1px solid rgba(240,100,0,0.3); }
+  .disc-road { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid rgba(63,185,80,0.3); }
+  .disc-short { background: rgba(163,113,247,0.15); color: #a371f7; border: 1px solid rgba(163,113,247,0.3); }
+
+  .player-tabs { display: flex; border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--surface); }
+  .player-tab { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 10px 22px; cursor: pointer; background: none; border: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; flex-shrink: 0; transition: all 0.15s; }
+  .player-tab.active { color: var(--white); border-bottom-color: var(--red); }
+  .player-tab:hover:not(.active) { color: var(--white); }
+  .picks-content { display: none; }
+  .picks-content.active { display: block; }
+  .picks-table thead tr { background: var(--surface3); }
+  .picks-table thead th { border-right: 1px solid var(--mid-gray); }
+  .picks-table .group-header { background: var(--red); font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 1px; text-align: center; font-size: 0.78rem; text-transform: uppercase; }
+  .picks-table .subheader { background: var(--surface3); font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
+  .edit-cell { background: rgba(255,255,255,0.03); }
+
+  .autocomplete-wrap { position: relative; display: inline-block; width: 100%; }
+  .autocomplete-wrap input { background: transparent; border: none; border-bottom: 1px solid var(--border2); color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.85rem; width: 100%; padding: 2px 4px; outline: none; min-width: 120px; }
+  .autocomplete-wrap input:focus { border-bottom-color: var(--accent); background: rgba(31,111,235,0.05); }
+  .autocomplete-wrap input[readonly] { color: var(--light-gray); cursor: not-allowed; border-bottom-style: solid; border-bottom-color: #333; }
+  .ac-dropdown { position: absolute; top: 100%; left: 0; z-index: 100; background: var(--surface3); border: 1px solid var(--border2); min-width: 200px; max-height: 180px; overflow-y: auto; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.8); border-radius: 4px; }
+  .ac-dropdown.open { display: block; }
+  .ac-item { padding: 7px 12px; cursor: pointer; font-size: 0.9rem; color: var(--cream); border-bottom: 1px solid #333; }
+  .ac-item:hover, .ac-item.selected { background: var(--accent); }
+  .ac-item .car-num { color: var(--gold); font-weight: 700; margin-right: 6px; font-size: 0.8rem; }
+  .fin-input { background: transparent; border: none; border-bottom: 1px solid var(--border2); color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.85rem; width: 50px; padding: 2px 4px; outline: none; text-align: center; }
+  .fin-input:focus { border-bottom-color: var(--gold); background: rgba(212,160,23,0.05); }
+  .fin-input[readonly] { color: var(--light-gray); cursor: not-allowed; border-bottom-style: solid; border-bottom-color: #333; }
+  .week-num { color: var(--light-gray); font-size: 0.85rem; text-align: center; }
+  .total-row td { background: #1a1a1a !important; font-weight: 700; border-top: 2px solid var(--gold); }
+
+  .points-ref-grid { display: grid; grid-template-columns: 280px 1fr; gap: 32px; }
+  .footer-checkered { height: 18px; background: var(--checkered); opacity: 0.4; margin-top: 60px; }
+
+  .loading-state { text-align: center; padding: 60px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: 3px; color: var(--light-gray); }
+
+
+  /* THIS WEEK PANEL — broadcast TV style */
+  .this-week-panel { background: #111; border: 1px solid #222; padding: 0; margin-bottom: 20px; overflow: hidden; }
+  .this-week-header { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); border-bottom: 3px solid var(--gold); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .this-week-label { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.85rem; letter-spacing: 4px; color: var(--gold); }
+  .this-week-track { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: 2px; color: #fff; line-height: 1; }
+  .this-week-meta { font-family: 'Inter', sans-serif; font-size: 0.82rem; color: #999; letter-spacing: 1px; text-align: right; }
+  .this-week-track-svg { opacity: 0.12; flex-shrink: 0; }
+
+  /* Player columns header bar */
+  .this-week-col-headers { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--red); }
+  .this-week-col-header { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.9rem; letter-spacing: 3px; color: rgba(255,255,255,0.9); padding: 6px 16px; border-right: 1px solid rgba(255,255,255,0.15); }
+  .this-week-col-header:last-child { border-right: none; }
+
+  /* TV-style pick rows */
+  .this-week-picks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #1e1e1e; }
+  .this-week-player { padding: 12px 0; border-right: 1px solid #1e1e1e; }
+  .this-week-player:last-child { border-right: none; }
+  .this-week-driver { display: flex; align-items: center; gap: 0; border-bottom: 1px solid #1a1a1a; transition: background 0.15s; }
+  .this-week-driver:last-of-type { border-bottom: none; }
+  .this-week-driver:hover { background: #1a1a1a; }
+  .tw-pos { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1rem; color: #555; width: 28px; text-align: center; flex-shrink: 0; padding: 10px 0; }
+  .tw-num { width: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 8px 4px; }
+  .tw-name { flex: 1; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 500; color: #e8e8e8; letter-spacing: 0.5px; padding: 10px 8px 10px 4px; }
+  .tw-pts { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1rem; color: var(--gold); width: 40px; text-align: right; padding-right: 12px; flex-shrink: 0; }
+  .tw-pts.no-result { color: #333; }
+  .this-week-empty { padding: 14px 16px; color: #444; font-style: italic; font-size: 0.85rem; }
+  .this-week-total { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.85rem; color: #555; letter-spacing: 2px; padding: 8px 16px; border-top: 1px solid #1e1e1e; background: #0d0d0d; display: flex; justify-content: space-between; }
+  .this-week-total span { color: var(--gold); }
+  .no-picks-yet { padding: 20px 24px; color: #444; font-style: italic; font-size: 0.9rem; }
+
+  /* LEADERBOARD — broadcast TV style */
+  .leaderboard-list { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+  .lb-header { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px; background: var(--red); padding: 6px 12px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 3px; color: rgba(255,255,255,0.8); align-items: center; gap: 0; }
+  .lb-row { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px; align-items: center; background: #141414; border-bottom: 1px solid #1c1c1c; transition: background 0.15s; }
+  .lb-row:hover { background: #1a1a1a; }
+  .lb-row.lb-1 { background: #1a1500; border-left: 3px solid var(--gold); }
+  .lb-row.lb-2 { background: #151515; border-left: 3px solid #888; }
+  .lb-row.lb-3 { background: #130d00; border-left: 3px solid #cd7f32; }
+  .lb-row.lb-4 { border-left: 3px solid #333; }
+  .lb-rank { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.1rem; color: #555; text-align: center; padding: 14px 0; }
+  .lb-row.lb-1 .lb-rank { color: var(--gold); }
+  .lb-row.lb-2 .lb-rank { color: #888; }
+  .lb-row.lb-3 .lb-rank { color: #cd7f32; }
+  .lb-carnum { width: 48px; display: flex; align-items: center; justify-content: center; padding: 8px 4px; }
+  .lb-name { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: 1.5px; color: #fff; padding: 12px 8px; }
+  .lb-bar-wrap { padding: 0 16px; }
+  .lb-bar-bg { background: #0a0a0a; height: 6px; border-radius: 3px; overflow: hidden; }
+  .lb-bar-fill { height: 100%; border-radius: 3px; background: #333; transition: width 0.8s ease; }
+  .lb-row.lb-1 .lb-bar-fill { background: var(--gold); }
+  .lb-row.lb-2 .lb-bar-fill { background: #888; }
+  .lb-row.lb-3 .lb-bar-fill { background: #cd7f32; }
+  .lb-pts { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.6rem; color: #fff; text-align: right; padding-right: 16px; }
+  .lb-row.lb-1 .lb-pts { color: var(--gold); }
+  .lb-pts-label { font-size: 0.6rem; color: #555; letter-spacing: 2px; display: block; text-align: right; line-height: 1; }
+  .lb-races { font-size: 0.72rem; color: #555; text-align: right; padding-right: 16px; letter-spacing: 1px; }
+
+  @media (max-width: 700px) {
+    .this-week-picks { grid-template-columns: 1fr 1fr; }
+    .this-week-col-headers { grid-template-columns: 1fr 1fr; }
+    .this-week-col-header:nth-child(2) { border-right: none; }
+    .this-week-col-header:nth-child(3), .this-week-col-header:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.15); }
+    .this-week-player:nth-child(2) { border-right: none; }
+    .this-week-player:nth-child(3) { border-top: 1px solid #1e1e1e; border-right: 1px solid #1e1e1e; }
+    .this-week-player:nth-child(4) { border-top: 1px solid #1e1e1e; border-right: none; }
+    .lb-row, .lb-header { grid-template-columns: 40px 44px 1fr 80px; }
+    .lb-bar-wrap { display: none; }
+    .lb-races { display: none; }
+    .lb-name { font-size: 1.1rem; }
+  }
+
+
+  /* DRIVERS GRID */
+  .drivers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .driver-card-roster { background: var(--gray); border: 1px solid var(--mid-gray); border-top: 4px solid var(--red); overflow: hidden; position: relative; transition: border-color 0.2s; }
+  .driver-card-roster:hover { border-color: var(--gold); }
+  .driver-card-photo { width: 100%; height: 140px; object-fit: cover; object-position: top; display: block; background: #1a1a1a; }
+  .driver-card-photo-placeholder { width: 100%; height: 140px; background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); display: flex; align-items: center; justify-content: center; }
+  .driver-card-num-big { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 4rem; line-height: 1; opacity: 0.15; }
+  .driver-card-body { padding: 10px 12px 12px; }
+  .driver-card-namenum { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .driver-card-name { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.05rem; letter-spacing: 1px; color: var(--cream); line-height: 1.2; }
+  .driver-card-team { font-size: 0.75rem; color: var(--light-gray); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .driver-card-mfr { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; padding: 1px 6px; border-radius: 2px; text-transform: uppercase; }
+  .mfr-chevrolet { background: #c8102e; color: #fff; }
+  .mfr-ford { background: #003087; color: #fff; }
+  .mfr-toyota { background: #eb0a1e; color: #fff; }
+  @media (max-width: 600px) {
+    .drivers-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .driver-card-photo, .driver-card-photo-placeholder { height: 110px; }
+    .driver-card-num-big { font-size: 3rem; }
+  }
+  /* DRIVER STATS */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 32px; }
+  .stats-card { background: var(--gray); border: 1px solid var(--mid-gray); border-top: 4px solid var(--red); padding: 0; overflow: hidden; }
+  .stats-card-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: 3px; color: var(--cream); background: #1a1a1a; padding: 10px 16px; border-bottom: 1px solid var(--mid-gray); display: flex; align-items: center; gap: 8px; }
+  .stats-card-title span { color: var(--gold); }
+  .stats-row { display: flex; align-items: center; gap: 0; padding: 10px 16px; border-bottom: 1px solid #1f1f1f; }
+  .stats-row:last-child { border-bottom: none; }
+  .stats-pos { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--light-gray); width: 28px; flex-shrink: 0; }
+  .stats-pos.gold { color: var(--gold); }
+  .stats-pos.silver { color: #aaa; }
+  .stats-pos.bronze { color: #cd7f32; }
+  .stats-driver-name { flex: 1; font-size: 0.95rem; color: var(--cream); }
+  .stats-bar-wrap { flex: 1; padding: 0 12px; }
+  .stats-bar-bg { background: #111; height: 6px; border-radius: 3px; overflow: hidden; }
+  .stats-bar-fill { height: 100%; border-radius: 3px; background: var(--red); }
+  .stats-val { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--gold); width: 60px; text-align: right; flex-shrink: 0; }
+  .stats-val-label { font-size: 0.65rem; color: var(--light-gray); display: block; text-align: right; line-height: 1; margin-top: 1px; }
+  .stats-sub { font-size: 0.75rem; color: var(--light-gray); margin-left: 4px; }
+  .stats-empty { padding: 20px 16px; color: var(--light-gray); font-style: italic; font-size: 0.9rem; }
+  .stats-header-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .stats-highlight { background: var(--gray); border: 1px solid var(--mid-gray); border-left: 4px solid var(--gold); padding: 16px 20px; }
+  .stats-highlight-label { font-size: 0.7rem; letter-spacing: 3px; color: var(--light-gray); text-transform: uppercase; }
+  .stats-highlight-val { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 2rem; color: var(--gold); line-height: 1.1; }
+  .stats-highlight-sub { font-size: 0.8rem; color: #bbb; margin-top: 2px; }
+  @media (max-width: 700px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .stats-header-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .main { padding: 16px; }
+    .header-inner { padding: 0 16px; }
+    .points-ref-grid { grid-template-columns: 1fr; }
+    .nav-tabs { padding: 0 4px; }
+    .sync-bar { padding: 5px 16px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .stats-header-row { grid-template-columns: 1fr 1fr; }
+    .lb-bar-wrap { display: none; }
+    .lb-races { display: none; }
+    .lb-row, .lb-header { grid-template-columns: 40px 44px 1fr 80px; }
+  }
+  @media (max-width: 600px) {
+    /* Header */
+    .header-inner { padding: 0 12px; height: 52px; }
+    .site-title { font-size: 1.3rem; letter-spacing: 0.5px; }
+    .season-label { display: none; }
+    .header-badge-pill { display: none; }
+    /* Nav */
+    .nav-tabs { padding: 0; }
+    .nav-tab { padding: 10px 10px; font-size: 0.72rem; letter-spacing: 0; }
+    /* Sync bar */
+    .sync-bar { padding: 4px 12px; font-size: 0.7rem; }
+    /* Main */
+    .main { padding: 12px 10px; }
+    /* This week panel */
+    .this-week-header { padding: 12px 14px; gap: 8px; }
+    .this-week-track { font-size: 1.4rem; white-space: normal; }
+    .this-week-label { font-size: 0.65rem; letter-spacing: 2px; margin-bottom: 2px; }
+    .this-week-meta { font-size: 0.7rem; }
+    .this-week-track-img { width: 50px; height: 44px; }
+    .this-week-col-header { font-size: 0.75rem; padding: 5px 8px; }
+    .this-week-picks { grid-template-columns: 1fr 1fr; }
+    .this-week-col-headers { grid-template-columns: 1fr 1fr; }
+    .this-week-col-header:nth-child(2) { border-right: none; }
+    .this-week-col-header:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.1); }
+    .this-week-col-header:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.1); border-right: none; }
+    .this-week-player:nth-child(2) { border-right: none; }
+    .this-week-player:nth-child(3) { border-top: 1px solid #1e1e1e; border-right: 1px solid #1e1e1e; }
+    .this-week-player:nth-child(4) { border-top: 1px solid #1e1e1e; }
+    .tw-name { font-size: 0.78rem; padding: 8px 4px 8px 2px; }
+    .tw-pos { width: 20px; font-size: 0.85rem; }
+    .tw-num { width: 32px; padding: 6px 2px; }
+    .tw-pts { width: 28px; font-size: 0.85rem; padding-right: 6px; }
+    .this-week-total { font-size: 0.72rem; padding: 6px 10px; }
+    /* Leaderboard */
+    .lb-bar-wrap { display: none; }
+    .lb-races { display: none; }
+    .lb-row, .lb-header { grid-template-columns: 36px 40px 1fr 70px; }
+    .lb-name { font-size: 1.1rem; padding: 10px 6px; }
+    .lb-rank { font-size: 1rem; padding: 10px 0; }
+    .lb-pts { font-size: 1.3rem; padding-right: 10px; }
+    /* Tables */
+    tbody td { font-size: 0.78rem; padding: 7px 6px; }
+    thead th { font-size: 0.72rem; padding: 7px 6px; }
+    /* Commish bar */
+    .commish-bar { gap: 6px; padding: 8px 10px; }
+    .commish-bar input[type=password] { width: 120px; font-size: 0.82rem; }
+    .commish-status { width: 100%; }
+    /* Player tabs */
+    .player-tab { padding: 8px 12px; font-size: 0.72rem; }
+    /* Picks table inputs */
+    .autocomplete-wrap input { min-width: 80px; font-size: 0.8rem; }
+    .fin-input { width: 36px; font-size: 0.8rem; }
+    /* Driver stats */
+    .stats-grid { grid-template-columns: 1fr; }
+    .stats-header-row { grid-template-columns: 1fr; }
+    .stats-card-title { font-size: 0.9rem; }
+    .stats-row { padding: 8px 12px; }
+    /* Driver cards */
+    .drivers-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+    .driver-card-photo, .driver-card-photo-placeholder { height: 100px; }
+    .driver-card-name { font-size: 0.9rem; }
+    /* Schedule table - hide radio column on mobile */
+    .hide-mobile { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="site-title"><span>Thunder</span> Picks</div>
+      <div class="season-label">NASCAR Cup Series &bull; 2026</div>
+    </div>
+    <div class="header-badge">
+      <span class="header-badge-pill">35 Races</span>
+      <span class="header-badge-pill">4 Players</span>
+      <span class="header-badge-pill">3 Picks / Week</span>
+    </div>
+  </div>
+</header>
+
+<div class="sync-bar">
+  <div class="sync-dot" id="sync-dot"></div>
+  <span class="sync-text" id="sync-text">Not connected &mdash; go to Weekly Picks tab to set up Google Sheets sync</span>
+</div>
+
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab('standings',this)">Standings</button>
+  <button class="nav-tab" id="picks-nav-tab" onclick="switchTab('picks',this)" style="display:none">Weekly Picks</button>
+  <button class="nav-tab" onclick="switchTab('schedule',this)">Schedule</button>
+  <button class="nav-tab" onclick="switchTab('pointsref',this)">Points Ref</button>
+  <button class="nav-tab" onclick="switchTab('driverstats',this)">Driver Stats</button>
+  <button class="nav-tab" onclick="switchTab('drivers',this)">Drivers</button>
+</nav>
+
+<main class="main">
+
+  <!-- STANDINGS -->
+  <div id="tab-standings" class="tab-content active">
+    <div id="standings-loading" class="loading-state">Loading...</div>
+    <div id="standings-inner" style="display:none">
+
+      <!-- THIS WEEK PANEL -->
+      <div id="this-week-panel" class="this-week-panel"></div>
+
+      <!-- LEADERBOARD -->
+      <div class="section-title" style="margin-top:32px;">Season Leaderboard</div>
+      <div id="leaderboard-list" class="leaderboard-list"></div>
+
+      <!-- FULL RESULTS -->
+      <div class="section-title" style="margin-top:36px;">Full Season Results</div>
+      <div class="table-wrap">
+        <table id="standings-full-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Track</th><th>Discipline</th>
+              <th class="center" colspan="3">Alex</th>
+              <th class="center" colspan="3">Nick</th>
+              <th class="center" colspan="3">Greg Sr</th>
+              <th class="center" colspan="3">Greg Jr</th>
+            </tr>
+            <tr style="background:#1c1c1c;font-family:'Inter',sans-serif;font-size:0.72rem;color:#888;font-weight:600;letter-spacing:1px;">
+              <th></th><th></th><th></th>
+              <th class="center">Picks</th><th class="center">Pts</th><th class="center">Cumul.</th>
+              <th class="center">Picks</th><th class="center">Pts</th><th class="center">Cumul.</th>
+              <th class="center">Picks</th><th class="center">Pts</th><th class="center">Cumul.</th>
+              <th class="center">Picks</th><th class="center">Pts</th><th class="center">Cumul.</th>
+            </tr>
+          </thead>
+          <tbody id="standings-full-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PICKS -->
+  <div id="tab-picks" class="tab-content">
+    <div class="commish-bar">
+      <label>Commissioner</label>
+      <input type="password" id="commish-pw" placeholder="Password" onkeydown="if(event.key==='Enter')commishLogin()">
+      <button class="commish-btn" onclick="commishLogin()">Unlock</button>
+      <button class="commish-btn" onclick="commishLogout()" style="background:#333;display:none" id="logout-btn">Lock</button>
+      <span class="commish-status" id="commish-status">Locked &mdash; view only</span>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button class="commish-btn" onclick="syncRaceResults()" style="background:#1a3a5c;" title="Auto-fill finish positions from the Race Results tab in Google Sheets">Sync Race Results</button>
+        <button class="commish-btn" onclick="syncFromSheet()" style="background:#1a4a1a;" title="Pull latest data from the Weekly Upload tab in Google Sheets">Sync Picks</button>
+        <span id="sync-upload-status" style="font-size:0.8rem;color:var(--light-gray);max-width:300px;"></span>
+      </div>
+    </div>
+
+    <div class="player-tabs" id="player-tabs"></div>
+    <div id="picks-panels"></div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div id="tab-schedule" class="tab-content">
+    <div class="section-title">2026 Race Schedule</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Track</th><th>Discipline</th><th>Date</th><th>Time</th><th>TV</th><th class="hide-mobile">Radio</th></tr></thead>
+        <tbody id="schedule-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- POINTS REF -->
+  <div id="tab-pointsref" class="tab-content">
+    <div class="points-ref-grid">
+      <div>
+        <div class="section-title">Points Table</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Finish</th><th class="center">Points</th></tr></thead>
+            <tbody id="points-ref-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="section-title">How It Works</div>
+        <div style="font-family:'Inter',sans-serif;color:#bbb;line-height:1.9;font-size:0.92rem;background:var(--gray);padding:24px;border-left:4px solid var(--gold);max-width:480px;">
+          <p>Each week, every player picks <strong style="color:var(--gold);">3 drivers</strong> before the race.</p><br>
+          <p>After the race, each driver's finish maps to points using the table.</p><br>
+          <p>A player's <strong style="color:var(--gold);">weekly score</strong> is the sum of all three drivers' points.</p><br>
+          <p><strong style="color:var(--gold);">Cumulative points</strong> track the running total across all 35 races.</p><br>
+          <p>Most points after <strong style="color:var(--gold);">Race 35</strong> wins the season.</p>
+        </div>
+        <div style="margin-top:24px;">
+          <div class="section-title">Discipline Key</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+            <div><span class="discipline-badge disc-superspeedway">Superspeedway</span> <span style="color:#888;font-size:0.85rem;margin-left:8px;">Daytona, Talladega, Atlanta</span></div>
+            <div><span class="discipline-badge disc-speedway">Speedway</span> <span style="color:#888;font-size:0.85rem;margin-left:8px;">Charlotte, Michigan, etc.</span></div>
+            <div><span class="discipline-badge disc-road">Road Course</span> <span style="color:#888;font-size:0.85rem;margin-left:8px;">COTA, Sonoma, Watkins Glen</span></div>
+            <div><span class="discipline-badge disc-short">Short Track</span> <span style="color:#888;font-size:0.85rem;margin-left:8px;">Bristol, Martinsville, Richmond</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- DRIVER STATS -->
+  <div id="tab-driverstats" class="tab-content">
+    <div id="driverstats-inner"></div>
+  </div>
+
+
+  <!-- DRIVERS -->
+  <div id="tab-drivers" class="tab-content">
+    <div class="section-title">2026 Cup Series Driver Roster</div>
+    <div id="drivers-grid" class="drivers-grid"></div>
+  </div>
+
+</main>
+<div style="height:1px;background:var(--border);margin-top:60px;"></div>
+
+<script>
+const COMMISH_PASSWORD = 'JJ48';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRrOw4atRLSkhRnMvbCGKOS131Y1cW7xjFrysu3HVxR0-RnA8pHw2mcILq-_T-btoc/exec';
+
+const POINTS_TABLE = {
+  1:40,2:35,3:34,4:33,5:32,6:31,7:30,8:29,9:28,10:27,
+  11:26,12:25,13:24,14:23,15:22,16:21,17:20,18:19,19:18,20:17,
+  21:16,22:15,23:14,24:13,25:12,26:11,27:10,28:9,29:8,30:7,
+  31:6,32:5,33:4,34:3,35:2,36:1,37:1,38:1,39:1,40:1
+};
+
+const PLAYER_NAMES = ['Alex','Nick','Greg Sr','Greg Jr'];
+
+const DRIVERS = [
+  {num:'1',name:'Ross Chastain'},{num:'2',name:'Austin Cindric'},{num:'3',name:'Austin Dillon'},
+  {num:'4',name:'Noah Gragson'},{num:'5',name:'Kyle Larson'},{num:'6',name:'Brad Keselowski'},
+  {num:'7',name:'Daniel Suarez'},{num:'8',name:'Kyle Busch'},{num:'9',name:'Chase Elliott'},
+  {num:'10',name:'Ty Dillon'},{num:'11',name:'Denny Hamlin'},{num:'12',name:'Ryan Blaney'},
+  {num:'16',name:'AJ Allmendinger'},{num:'17',name:'Chris Buescher'},{num:'19',name:'Chase Briscoe'},
+  {num:'20',name:'Christopher Bell'},{num:'21',name:'Josh Berry'},{num:'22',name:'Joey Logano'},
+  {num:'23',name:'Bubba Wallace'},{num:'24',name:'William Byron'},{num:'34',name:'Todd Gilliland'},
+  {num:'35',name:'Riley Herbst'},{num:'41',name:'Cole Custer'},{num:'42',name:'John Hunter Nemechek'},
+  {num:'43',name:'Erik Jones'},{num:'45',name:'Tyler Reddick'},{num:'47',name:'Ricky Stenhouse Jr'},
+  {num:'48',name:'Alex Bowman'},{num:'51',name:'Cody Ware'},{num:'54',name:'Ty Gibbs'},
+  {num:'71',name:'Zane Smith'},{num:'77',name:'Carson Hocevar'},{num:'88',name:'Connor Zilisch'},
+  {num:'97',name:'Shane van Gisbergen'},{num:'99',name:'Daniel Hemric'},
+];
+
+const SCHEDULE = [
+  {race:1,  track:'EchoPark Speedway (Atlanta)',       disc:'superspeedway', date:'Sun. Feb 22', time:'3:00pm ET',  tv:'FOX',   radio:'PRN'},
+  {race:2,  track:'Circuit of the Americas',           disc:'road',          date:'Sun. Mar 1',  time:'3:30pm ET',  tv:'FOX',   radio:'PRN'},
+  {race:3,  track:'Phoenix Raceway',                   disc:'short',         date:'Sun. Mar 8',  time:'3:30pm ET',  tv:'FS1',   radio:'MRN'},
+  {race:4,  track:'Las Vegas Motor Speedway',          disc:'speedway',      date:'Sun. Mar 15', time:'4:00pm ET',  tv:'FS1',   radio:'PRN'},
+  {race:5,  track:'Darlington Raceway',                disc:'speedway',      date:'Sun. Mar 22', time:'3:00pm ET',  tv:'FOX',   radio:'PRN'},
+  {race:6,  track:'Martinsville Speedway',             disc:'short',         date:'Sun. Mar 29', time:'3:30pm ET',  tv:'FS1',   radio:'MRN'},
+  {race:7,  track:'Bristol Motor Speedway',            disc:'short',         date:'Sun. Apr 12', time:'3:00pm ET',  tv:'FS1',   radio:'PRN'},
+  {race:8,  track:'Kansas Speedway',                   disc:'speedway',      date:'Sun. Apr 19', time:'2:00pm ET',  tv:'FOX',   radio:'MRN'},
+  {race:9,  track:'Talladega Superspeedway',           disc:'superspeedway', date:'Sun. Apr 26', time:'3:00pm ET',  tv:'FOX',   radio:'PRN'},
+  {race:10, track:'Texas Motor Speedway',              disc:'speedway',      date:'Sun. May 3',  time:'3:30pm ET',  tv:'FS1',   radio:'PRN'},
+  {race:11, track:'Watkins Glen International',        disc:'road',          date:'Sun. May 10', time:'3:00pm ET',  tv:'FS1',   radio:'MRN'},
+  {race:12, track:'Charlotte Motor Speedway',          disc:'speedway',      date:'Sun. May 24', time:'6:00pm ET',  tv:'Prime', radio:'PRN'},
+  {race:13, track:'Nashville Superspeedway',           disc:'speedway',      date:'Sun. May 31', time:'7:00pm ET',  tv:'Prime', radio:'PRN'},
+  {race:14, track:'Michigan International Speedway',   disc:'speedway',      date:'Sun. Jun 7',  time:'3:00pm ET',  tv:'Prime', radio:'MRN'},
+  {race:15, track:'Pocono Raceway',                    disc:'speedway',      date:'Sun. Jun 14', time:'3:00pm ET',  tv:'Prime', radio:'PRN'},
+  {race:16, track:'Naval Base Coronado',               disc:'road',          date:'Sun. Jun 21', time:'4:00pm ET',  tv:'Prime', radio:'PRN'},
+  {race:17, track:'Sonoma Raceway',                    disc:'road',          date:'Sun. Jun 28', time:'3:30pm ET',  tv:'Prime', radio:'PRN'},
+  {race:18, track:'Chicagoland Speedway',              disc:'speedway',      date:'Sun. Jul 5',  time:'6:00pm ET',  tv:'USA',   radio:'MRN'},
+  {race:19, track:'EchoPark Speedway (Atlanta)',       disc:'superspeedway', date:'Sun. Jul 12', time:'7:00pm ET',  tv:'USA',   radio:'PRN'},
+  {race:20, track:'North Wilkesboro Speedway',         disc:'short',         date:'Sun. Jul 19', time:'7:00pm ET',  tv:'USA',   radio:'PRN'},
+  {race:21, track:'Indianapolis Motor Speedway',       disc:'speedway',      date:'Sun. Jul 26', time:'2:00pm ET',  tv:'USA',   radio:'PRN'},
+  {race:22, track:'Iowa Speedway',                     disc:'short',         date:'Sun. Aug 9',  time:'3:30pm ET',  tv:'USA',   radio:'MRN'},
+  {race:23, track:'Richmond Raceway',                  disc:'short',         date:'Sat. Aug 15', time:'7:00pm ET',  tv:'USA',   radio:'MRN'},
+  {race:24, track:'New Hampshire Motor Speedway',      disc:'short',         date:'Sun. Aug 23', time:'3:00pm ET',  tv:'USA',   radio:'PRN'},
+  {race:25, track:'Daytona International Speedway',    disc:'superspeedway', date:'Sat. Aug 29', time:'7:30pm ET',  tv:'NBC',   radio:'PRN'},
+  {race:26, track:'Darlington Raceway',                disc:'speedway',      date:'Sun. Sep 6',  time:'5:00pm ET',  tv:'USA',   radio:'PRN'},
+  {race:27, track:'World Wide Technology Raceway',     disc:'short',         date:'Sun. Sep 13', time:'3:00pm ET',  tv:'USA',   radio:'PRN'},
+  {race:28, track:'Bristol Motor Speedway',            disc:'short',         date:'Sat. Sep 19', time:'7:30pm ET',  tv:'USA',   radio:'PRN'},
+  {race:29, track:'Kansas Speedway',                   disc:'speedway',      date:'Sun. Sep 27', time:'3:00pm ET',  tv:'USA',   radio:'PRN'},
+  {race:30, track:'Las Vegas Motor Speedway',          disc:'speedway',      date:'Sun. Oct 4',  time:'5:30pm ET',  tv:'NBC',   radio:'PRN'},
+  {race:31, track:'Charlotte Motor Speedway',          disc:'speedway',      date:'Sun. Oct 11', time:'3:00pm ET',  tv:'NBC',   radio:'PRN'},
+  {race:32, track:'Phoenix Raceway',                   disc:'short',         date:'Sun. Oct 18', time:'3:00pm ET',  tv:'NBC',   radio:'MRN'},
+  {race:33, track:'Talladega Superspeedway',           disc:'superspeedway', date:'Sun. Oct 25', time:'2:00pm ET',  tv:'NBC',   radio:'PRN'},
+  {race:34, track:'Martinsville Speedway',             disc:'short',         date:'Sun. Nov 1',  time:'2:00pm ET',  tv:'NBC',   radio:'PRN'},
+  {race:35, track:'Homestead-Miami Speedway',          disc:'speedway',      date:'Sun. Nov 8',  time:'3:00pm ET',  tv:'NBC',   radio:'PRN'},
+];
+
+const DISC_LABELS = {superspeedway:'Superspeedway',speedway:'Speedway',road:'Road Course',short:'Short Track'};
+const DISC_CLASS  = {superspeedway:'disc-superspeedway',speedway:'disc-speedway',road:'disc-road',short:'disc-short'};
+
+let picks = emptyPicks();
+let commishUnlocked = false;
+let scriptUrl = SCRIPT_URL;
+let saveTimeout = null;
+
+function emptyPicks() {
+  return Array.from({length:4}, () =>
+    Array.from({length:35}, () => ({d1name:'',d1fin:'',d2name:'',d2fin:'',d3name:'',d3fin:''}))
+  );
+}
+
+function setSyncStatus(state, msg) {
+  document.getElementById('sync-dot').className = 'sync-dot ' + state;
+  document.getElementById('sync-text').textContent = msg;
+}
+
+async function loadFromSheets() {
+  if (!scriptUrl) {
+    showStandings();
+    return;
+  }
+  setSyncStatus('syncing', 'Loading data from Google Sheets...');
+  try {
+    const resp = await fetch(scriptUrl + '?action=load&t=' + Date.now());
+    const data = await resp.json();
+    if (data.picks) picks = data.picks;
+    setSyncStatus('synced', 'Synced with Google Sheets — ' + new Date().toLocaleTimeString());
+  } catch(e) {
+    setSyncStatus('error', 'Could not connect to Google Sheets — check script URL in Weekly Picks tab');
+  }
+  showStandings();
+}
+
+function showStandings() {
+  document.getElementById('standings-loading').style.display = 'none';
+  document.getElementById('standings-inner').style.display = 'block';
+  renderStandings();
+}
+
+async function saveToSheets() {
+  if (!scriptUrl) return;
+  setSyncStatus("syncing", "Saving...");
+  try {
+    const formData = new FormData();
+    formData.append("action", "save");
+    formData.append("data", JSON.stringify({picks}));
+    await fetch(scriptUrl, {method: "POST", body: formData, mode: "no-cors"});
+    setSyncStatus("synced", "Saved to Google Sheets at " + new Date().toLocaleTimeString());
+  } catch(e) {
+    setSyncStatus("error", "Save failed — check internet connection");
+  }
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(saveToSheets, 1500);
+}
+
+
+function commishLogin() {
+  if (document.getElementById('commish-pw').value === COMMISH_PASSWORD) {
+    commishUnlocked = true;
+    document.getElementById('commish-status').textContent = 'Unlocked — editing enabled';
+    document.getElementById('commish-status').className = 'commish-status unlocked';
+    document.getElementById('logout-btn').style.display = '';
+    document.getElementById('commish-pw').value = '';
+    document.getElementById('picks-nav-tab').style.display = '';
+    setInputsReadonly(false);
+  } else {
+    document.getElementById('commish-status').textContent = 'Wrong password';
+    document.getElementById('commish-status').className = 'commish-status';
+  }
+}
+function commishLogout() {
+  commishUnlocked = false;
+  document.getElementById('commish-status').textContent = 'Locked — view only';
+  document.getElementById('commish-status').className = 'commish-status';
+  document.getElementById('logout-btn').style.display = 'none';
+  document.getElementById('picks-nav-tab').style.display = 'none';
+  // If currently on picks tab, switch to standings
+  if (document.getElementById('tab-picks').classList.contains('active')) {
+    document.getElementById('tab-picks').classList.remove('active');
+    document.getElementById('tab-standings').classList.add('active');
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.nav-tab[onclick*="standings"]').classList.add('active');
+    renderStandings();
+  }
+  setInputsReadonly(true);
+}
+function setInputsReadonly(ro) {
+  document.querySelectorAll('.driver-input, .fin-input').forEach(el => el.readOnly = ro);
+}
+
+function finPts(fin) {
+  const n = parseInt(fin);
+  if (!n || n < 1) return 0;
+  return POINTS_TABLE[Math.min(n, 40)] || 1;
+}
+function weekScore(p, r) {
+  const d = picks[p][r];
+  return finPts(d.d1fin) + finPts(d.d2fin) + finPts(d.d3fin);
+}
+function cumulScore(p, upTo) {
+  let t = 0;
+  for (let r = 0; r <= upTo; r++) t += weekScore(p, r);
+  return t;
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'standings') renderStandings();
+  if (name === 'driverstats') renderDriverStats();
+  if (name === 'drivers') renderDriverRoster();
+}
+
+function getCurrentRaceIndex() {
+  // Stay on the most recently completed race through Monday (day 1)
+  // so everyone can see results before flipping to the next week on Tuesday
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon, 2=Tue...
+  const isMonOrEarlier = dayOfWeek <= 1; // Sun or Mon
+
+  let lastCompleted = -1;
+  for (let ri = 0; ri < SCHEDULE.length; ri++) {
+    const hasResults = PLAYER_NAMES.some((_, pi) => picks[pi][ri].d1fin);
+    if (hasResults) lastCompleted = ri;
+  }
+
+  // If it's Sunday or Monday and we have a completed race, stay on it
+  if (isMonOrEarlier && lastCompleted >= 0) return lastCompleted;
+
+  // Otherwise show the next upcoming race (first with no results)
+  for (let ri = 0; ri < SCHEDULE.length; ri++) {
+    const hasResults = PLAYER_NAMES.some((_, pi) => picks[pi][ri].d1fin);
+    if (!hasResults) return ri;
+  }
+  return SCHEDULE.length - 1;
+}
+
+
+
+// Car number colors by team
+const DRIVER_COLORS = {
+  '1':  {bg:'#e8000d', text:'#fff'},   // Chastain - Trackhouse red
+  '2':  {bg:'#003087', text:'#fff'},   // Cindric - Penske blue
+  '3':  {bg:'#c8102e', text:'#fff'},   // Dillon - RCR red
+  '4':  {bg:'#e87722', text:'#fff'},   // Gragson - FRM orange
+  '5':  {bg:'#e31837', text:'#fff'},   // Larson - HMS red
+  '6':  {bg:'#003087', text:'#fff'},   // Keselowski - RFK blue
+  '7':  {bg:'#00204e', text:'#fff'},   // Suarez - Spire dark blue
+  '8':  {bg:'#c8102e', text:'#fff'},   // K.Busch - RCR red
+  '9':  {bg:'#00843d', text:'#fff'},   // Elliott - HMS green
+  '10': {bg:'#e31837', text:'#fff'},   // Ty Dillon - Kaulig red
+  '11': {bg:'#e8000d', text:'#fff'},   // Hamlin - JGR red
+  '12': {bg:'#003087', text:'#fff'},   // Blaney - Penske blue
+  '16': {bg:'#e31837', text:'#fff'},   // Allmendinger - Kaulig red
+  '17': {bg:'#003087', text:'#fff'},   // Buescher - RFK blue
+  '19': {bg:'#006341', text:'#fff'},   // Briscoe - JGR green
+  '20': {bg:'#ffb81c', text:'#000'},   // C.Bell - JGR yellow
+  '21': {bg:'#003087', text:'#fff'},   // Berry - Wood Bros blue
+  '22': {bg:'#ffd700', text:'#000'},   // Logano - Penske yellow
+  '23': {bg:'#000000', text:'#c8102e'},// Wallace - 23XI black/red
+  '24': {bg:'#0057a8', text:'#fff'},   // Byron - HMS blue
+  '34': {bg:'#ff6b00', text:'#fff'},   // Gilliland - FRM orange
+  '35': {bg:'#e31837', text:'#fff'},   // Herbst - Kaulig red
+  '41': {bg:'#00529b', text:'#fff'},   // Custer - SHR blue
+  '42': {bg:'#00529b', text:'#fff'},   // Nemechek - Legacy blue
+  '43': {bg:'#004c97', text:'#fff'},   // Jones - Legacy blue
+  '45': {bg:'#000000', text:'#c8102e'},// Reddick - 23XI black
+  '47': {bg:'#006eb6', text:'#fff'},   // Stenhouse - JTG blue
+  '48': {bg:'#005aaa', text:'#fff'},   // Bowman - HMS blue
+  '51': {bg:'#333333', text:'#fff'},   // Ware - gray
+  '54': {bg:'#e8000d', text:'#fff'},   // Gibbs - JGR red
+  '71': {bg:'#2d6a4f', text:'#fff'},   // Z.Smith - Spire green
+  '77': {bg:'#ff6b00', text:'#fff'},   // Hocevar - Spire orange
+  '88': {bg:'#e8000d', text:'#fff'},   // Zilisch - Trackhouse red
+  '97': {bg:'#e8000d', text:'#fff'},   // SVG - Trackhouse red
+  '99': {bg:'#333333', text:'#fff'},   // Hemric - gray
+};
+
+function carNumBadge(num, size) {
+  const h = size === 'lg' ? '32px' : size === 'sm' ? '22px' : '28px';
+  const c = DRIVER_COLORS[num] || {bg:'#444', text:'#fff'};
+  const fs = size === 'lg' ? '1rem' : size === 'sm' ? '0.65rem' : '0.8rem';
+  const pad = size === 'lg' ? '3px 9px' : size === 'sm' ? '1px 5px' : '2px 7px';
+  // Use data attributes so onerror can find the fallback without complex escaping
+  return '<span class="num-badge-wrap" data-num="' + num + '" data-bg="' + c.bg + '" data-fg="' + c.text + '" data-fs="' + fs + '" data-pad="' + pad + '" style="display:inline-flex;align-items:center;flex-shrink:0;">'
+    + '<img src="images/numbers/' + num + '.png" style="height:' + h + ';width:auto;object-fit:contain;display:block;" onerror="numBadgeFallback(this)" alt="' + num + '">'
+    + '</span>';
+}
+
+function numBadgeFallback(img) {
+  const wrap = img.parentElement;
+  const num = wrap.dataset.num;
+  const bg = wrap.dataset.bg;
+  const fg = wrap.dataset.fg;
+  const fs = wrap.dataset.fs;
+  const pad = wrap.dataset.pad;
+  wrap.innerHTML = '<span style="background:' + bg + ';color:' + fg + ';font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:' + fs + ';padding:' + pad + ';border-radius:3px;letter-spacing:1px;line-height:1.3;display:inline-block;">' + num + '</span>';
+}
+
+// Track silhouette SVGs keyed by track name (partial match)
+const TRACK_SVGS = {
+  // Ovals - superspeedways (very large, nearly round)
+  'daytona':       '<ellipse cx="60" cy="50" rx="52" ry="32" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/><ellipse cx="60" cy="50" rx="38" ry="18" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'talladega':     '<ellipse cx="60" cy="50" rx="52" ry="30" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/><ellipse cx="60" cy="50" rx="38" ry="17" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'echopark':      '<path d="M12,55 Q12,18 60,15 Q108,18 108,55 Q108,75 60,78 Q12,75 12,55 Z" fill="none" stroke="white" stroke-width="5"/><path d="M25,55 Q25,28 60,26 Q95,28 95,55 Q95,68 60,70 Q25,68 25,55 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  // Intermediate speedways (D-shaped / egg-shaped)
+  'charlotte':     '<path d="M20,70 L20,35 Q20,12 60,12 Q100,12 100,35 L100,70 Q100,85 60,88 Q20,85 20,70 Z" fill="none" stroke="white" stroke-width="5"/><path d="M32,68 L32,37 Q32,24 60,24 Q88,24 88,37 L88,68 Q88,78 60,80 Q32,78 32,68 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'michigan':      '<path d="M18,68 L18,33 Q18,10 60,10 Q102,10 102,33 L102,68 Q102,86 60,89 Q18,86 18,68 Z" fill="none" stroke="white" stroke-width="5"/><path d="M30,66 L30,35 Q30,22 60,22 Q90,22 90,35 L90,66 Q90,78 60,80 Q30,78 30,66 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'las vegas':     '<path d="M16,68 L16,33 Q16,11 60,11 Q104,11 104,33 L104,68 Q104,86 60,88 Q16,86 16,68 Z" fill="none" stroke="white" stroke-width="5"/><path d="M28,66 L28,35 Q28,23 60,23 Q92,23 92,35 L92,66 Q92,76 60,78 Q28,76 28,66 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'kansas':        '<path d="M17,67 L17,34 Q17,11 60,11 Q103,11 103,34 L103,67 Q103,85 60,88 Q17,85 17,67 Z" fill="none" stroke="white" stroke-width="5"/><path d="M29,65 L29,36 Q29,23 60,23 Q91,23 91,36 L91,65 Q91,76 60,78 Q29,76 29,65 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'texas':         '<path d="M17,67 L17,34 Q17,11 60,11 Q103,11 103,34 L103,67 Q103,85 60,88 Q17,85 17,67 Z" fill="none" stroke="white" stroke-width="5"/><path d="M29,65 L29,36 Q29,23 60,23 Q91,23 91,36 L91,65 Q91,76 60,78 Q29,76 29,65 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'nashville':     '<path d="M18,68 L18,33 Q18,10 60,10 Q102,10 102,33 L102,68 Q102,86 60,89 Q18,86 18,68 Z" fill="none" stroke="white" stroke-width="5"/><path d="M30,66 L30,35 Q30,22 60,22 Q90,22 90,35 L90,66 Q90,78 60,80 Q30,78 30,66 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'pocono':        '<path d="M60,10 L105,80 L15,80 Z" fill="none" stroke="white" stroke-width="5" stroke-linejoin="round"/><path d="M60,26 L92,72 L28,72 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3" stroke-linejoin="round"/>',
+  'indianapolis':  '<rect x="14" y="18" width="92" height="64" rx="18" ry="18" fill="none" stroke="white" stroke-width="5"/><rect x="26" y="30" width="68" height="40" rx="10" ry="10" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'darlington':    '<path d="M14,60 Q14,20 55,14 Q95,10 105,45 Q112,68 80,80 Q45,88 20,78 Q14,72 14,60 Z" fill="none" stroke="white" stroke-width="5"/><path d="M26,58 Q26,28 55,24 Q82,21 90,46 Q96,63 72,72 Q46,78 30,70 Q26,65 26,58 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'homestead':     '<path d="M17,67 L17,34 Q17,11 60,11 Q103,11 103,34 L103,67 Q103,85 60,88 Q17,85 17,67 Z" fill="none" stroke="white" stroke-width="5"/><path d="M29,65 L29,36 Q29,23 60,23 Q91,23 91,36 L91,65 Q91,76 60,78 Q29,76 29,65 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  // Short tracks
+  'bristol':       '<ellipse cx="60" cy="50" rx="44" ry="34" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="30" ry="20" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'martinsville':  '<path d="M22,72 L22,40 Q22,20 60,20 Q98,20 98,40 L98,72 Q98,82 60,82 Q22,82 22,72 Z" fill="none" stroke="white" stroke-width="5"/><path d="M34,70 L34,42 Q34,32 60,32 Q86,32 86,42 L86,70 Q86,76 60,76 Q34,76 34,70 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'richmond':      '<ellipse cx="60" cy="52" rx="46" ry="32" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="52" rx="32" ry="19" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'phoenix':       '<path d="M15,65 L15,38 Q15,16 55,14 Q95,12 105,36 L105,65 Q105,82 60,84 Q15,82 15,65 Z" fill="none" stroke="white" stroke-width="5"/><path d="M27,63 L27,40 Q27,26 55,25 Q83,24 92,38 L92,63 Q92,74 60,76 Q27,74 27,63 Z" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'iowa':          '<ellipse cx="60" cy="50" rx="46" ry="32" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="32" ry="19" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'new hampshire': '<ellipse cx="60" cy="50" rx="46" ry="33" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="32" ry="20" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'north wilkesboro': '<ellipse cx="60" cy="52" rx="46" ry="30" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="52" rx="32" ry="18" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  'world wide':    '<ellipse cx="60" cy="50" rx="46" ry="32" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="32" ry="19" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>',
+  // Road courses
+  'cota':          '<path d="M20,75 L20,50 L35,50 L35,30 L55,30 L55,20 L85,20 L85,35 L70,35 L70,55 L100,55 L100,75 L20,75 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+  'watkins glen':  '<path d="M15,70 L15,45 L30,30 L30,20 L55,20 L70,35 L95,35 L105,55 L85,70 L60,60 L40,70 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+  'sonoma':        '<path d="M25,70 L18,45 L30,25 L55,18 L80,28 L100,50 L90,70 L65,62 L50,70 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+  'coronado':      '<path d="M20,72 L20,40 L40,20 L80,20 L100,40 L100,72 L70,60 L50,72 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+  'chicago':       '<path d="M18,70 L18,38 L38,18 L82,18 L102,38 L102,70 L72,58 L48,70 Z" fill="none" stroke="white" stroke-width="4.5" stroke-linejoin="round"/>',
+};
+
+
+// Map track names to uploaded image filenames
+const TRACK_IMAGE_MAP = {
+  'echopark':        'echopark-atlanta.svg',
+  'atlanta':         'echopark-atlanta.svg',
+  'circuit of the americas': 'cota.svg',
+  'cota':            'cota.svg',
+  'phoenix':         'phoenix.svg',
+  'las vegas':       'las-vegas.svg',
+  'darlington':      'darlington.svg',
+  'martinsville':    'martinsville.svg',
+  'bristol':         'bristol.svg',
+  'kansas':          'kansas.svg',
+  'texas':           'texas.svg',
+  'watkins glen':    'watkins-glen.svg',
+  'charlotte':       'charlotte.svg',
+  'talladega':       'talladega.svg',
+  'dover':           'dover.svg',
+  'michigan':        'michigan.svg',
+  'pocono':          'pocono.svg',
+  'new hampshire':   'new-hampshire.svg',
+  'chicago':         'chicagoland.svg',
+  'richmond':        'richmond.svg',
+  'sonoma':          'sonoma.svg',
+  'indianapolis':    'indianapolis-motorspeedway.svg',
+  'iowa':            'iowa.svg',
+  'homestead':       'homestead.svg',
+  'nashville':       'nashville.svg',
+  'north wilkesboro':'north-wilkesboro.svg',
+  'coronado':        'naval-base-coronado.svg',
+  'wwtr':            'WWTR.svg',
+  'world wide':      'WWTR.svg',
+};
+
+function getTrackImagePath(trackName) {
+  const lower = trackName.toLowerCase();
+  for (const [key, file] of Object.entries(TRACK_IMAGE_MAP)) {
+    if (lower.includes(key)) return 'images/tracks/' + file;
+  }
+  return null;
+}
+
+function getTrackSVG(trackName) {
+  const lower = trackName.toLowerCase();
+  for (const [key, svg] of Object.entries(TRACK_SVGS)) {
+    if (lower.includes(key)) return svg;
+  }
+  // Default: generic oval
+  return '<ellipse cx="60" cy="50" rx="48" ry="30" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="34" ry="17" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>';
+}
+
+function renderThisWeek() {
+  const panel = document.getElementById('this-week-panel');
+  const ri = getCurrentRaceIndex();
+  const race = SCHEDULE[ri];
+  const tvColor = {FOX:'#f5a623',FS1:'#f5a623',Prime:'#00a8e0',USA:'#1a6bb5',NBC:'#d4a017'}[race.tv]||'#aaa';
+
+  let colHeaders = '';
+  let playerCols = '';
+  PLAYER_NAMES.forEach((name, pi) => {
+    colHeaders += `<div class="this-week-col-header">${name}</div>`;
+    const d = picks[pi][ri];
+    const drivers = [
+      {name: d.d1name, fin: d.d1fin},
+      {name: d.d2name, fin: d.d2fin},
+      {name: d.d3name, fin: d.d3fin},
+    ].filter(x => x.name);
+
+    let driverHtml = '';
+    if (drivers.length === 0) {
+      driverHtml = '<div class="this-week-empty">No picks yet</div>';
+    } else {
+      drivers.forEach((drv, idx) => {
+        const pts = drv.fin ? finPts(drv.fin) : null;
+        const ptsHtml = `<div class="tw-pts ${pts===null?'no-result':''}">${pts !== null ? pts : '—'}</div>`;
+        const driverObj = DRIVERS.find(d => d.name === drv.name);
+        const badge = driverObj ? carNumBadge(driverObj.num, 'sm') : '';
+        driverHtml += `<div class="this-week-driver">
+          <div class="tw-pos">${idx+1}</div>
+          <div class="tw-num">${badge}</div>
+          <div class="tw-name">${drv.name}</div>
+          ${ptsHtml}
+        </div>`;
+      });
+    }
+
+    const weekPts = weekScore(pi, ri);
+    const totalPts = cumulScore(pi, ri);
+    const totalHtml = `<div class="this-week-total">WEEK <span>${weekPts || '—'}</span> &nbsp; TOTAL <span>${totalPts || '—'}</span></div>`;
+
+    playerCols += `<div class="this-week-player">
+      ${driverHtml}
+      ${totalHtml}
+    </div>`;
+  });
+
+  const trackImgSrc = getTrackImagePath(race.track);
+  const trackSvg = getTrackSVG(race.track);
+  const trackHtml = trackImgSrc
+    ? '<img src="' + trackImgSrc + '" style="max-width:140px;max-height:90px;width:100%;object-fit:contain;filter:brightness(0) invert(1);" alt="">'
+    : '<svg width="120" height="90" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">' + trackSvg + '</svg>';
+  panel.innerHTML = `
+    <div class="this-week-header">
+      <div class="this-week-header-left">
+        <div class="this-week-label">Race ${race.race} of 35 &mdash; This Weekend</div>
+        <div class="this-week-track">${race.track}</div>
+      </div>
+      <div class="this-week-track-img" style="width:80px;height:60px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:0.4;">
+        ${trackHtml}
+      </div>
+      <div class="this-week-meta">
+        ${race.date}<br>${race.time}<br>
+        <span style="color:${tvColor};font-weight:700;">${race.tv}</span><br>
+        <span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span>
+      </div>
+    </div>
+    <div class="this-week-col-headers">${colHeaders}</div>
+    <div class="this-week-picks">${playerCols}</div>`;
+}
+
+function renderLeaderboard() {
+  const sorted = PLAYER_NAMES.map((n,i) => ({name:n, total:cumulScore(i,34), idx:i, scored: picks[i].filter(r => r.d1fin||r.d2fin||r.d3fin).length}))
+    .sort((a,b) => b.total - a.total);
+  const maxPts = sorted[0].total || 1;
+  const listEl = document.getElementById('leaderboard-list');
+  listEl.innerHTML = `<div class="lb-header">
+    <div>POS</div><div></div><div>PLAYER</div><div></div><div style="text-align:right;padding-right:16px;">PTS</div><div style="text-align:right;padding-right:16px;">RACES</div>
+  </div>`;
+  sorted.forEach((p, i) => {
+    const rank = i + 1;
+    const pct = maxPts > 0 ? Math.round((p.total / maxPts) * 100) : 0;
+    listEl.innerHTML += `<div class="lb-row lb-${rank}">
+      <div class="lb-rank">${rank}</div>
+      <div class="lb-carnum"></div>
+      <div class="lb-name">${p.name}</div>
+      <div class="lb-bar-wrap">
+        <div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="lb-pts">${p.total}<span class="lb-pts-label">PTS</span></div>
+      <div class="lb-races">${p.scored} / 35 races</div>
+    </div>`;
+  });
+}
+
+function renderStandings() {
+  renderThisWeek();
+  renderLeaderboard();
+  const tbody = document.getElementById('standings-full-body');
+  tbody.innerHTML = '';
+  SCHEDULE.forEach((race, ri) => {
+    const tr = document.createElement('tr');
+    let cells = '';
+    PLAYER_NAMES.forEach((_, pi) => {
+      const d = picks[pi][ri];
+      const names = [d.d1name, d.d2name, d.d3name].filter(Boolean);
+      const badges = names.map(n => {
+        const dr = DRIVERS.find(x => x.name === n);
+        return dr ? carNumBadge(dr.num, 'sm') : '<span style="color:#555">—</span>';
+      }).join('') || '—';
+      cells += `<td class="center" style="white-space:nowrap;padding:6px 8px;">${badges}</td><td class="center pts">${weekScore(pi,ri)||'—'}</td><td class="center" style="color:#ccc">${cumulScore(pi,ri)||'—'}</td>`;
+    });
+    tr.innerHTML = `<td class="week-num">${race.race}</td><td>${race.track}</td>
+      <td><span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span></td>${cells}`;
+    tbody.appendChild(tr);
+  });
+}
+
+function makeAutocomplete(pi, ri, slot) {
+  const wrap = document.createElement('div');
+  wrap.className = 'autocomplete-wrap';
+  const input = document.createElement('input');
+  input.type = 'text'; input.className = 'driver-input';
+  input.value = picks[pi][ri][slot+'name'] || '';
+  input.placeholder = 'Driver...'; input.readOnly = !commishUnlocked; input.autocomplete = 'off';
+  const dropdown = document.createElement('div');
+  dropdown.className = 'ac-dropdown';
+  let sel = -1;
+
+  function populate(q) {
+    dropdown.innerHTML = ''; sel = -1;
+    const m = DRIVERS.filter(d => d.name.toLowerCase().includes(q.toLowerCase()) || d.num.includes(q));
+    if (!m.length || !q) { dropdown.classList.remove('open'); return; }
+    m.forEach(d => {
+      const item = document.createElement('div'); item.className = 'ac-item';
+      item.innerHTML = `<span class="car-num">#${d.num}</span>${d.name}`;
+      item.onmousedown = () => {
+        input.value = d.name; picks[pi][ri][slot+'name'] = d.name;
+        dropdown.classList.remove('open'); refreshRow(pi, ri); scheduleSave();
+      };
+      dropdown.appendChild(item);
+    });
+    dropdown.classList.add('open');
+  }
+  input.addEventListener('input', () => populate(input.value));
+  input.addEventListener('focus', () => { if (input.value) populate(input.value); });
+  input.addEventListener('blur', () => { setTimeout(() => dropdown.classList.remove('open'), 150); picks[pi][ri][slot+'name'] = input.value; });
+  input.addEventListener('keydown', e => {
+    const items = dropdown.querySelectorAll('.ac-item');
+    if (e.key==='ArrowDown') { sel=Math.min(sel+1,items.length-1); items.forEach((it,i)=>it.classList.toggle('selected',i===sel)); e.preventDefault(); }
+    if (e.key==='ArrowUp')   { sel=Math.max(sel-1,0); items.forEach((it,i)=>it.classList.toggle('selected',i===sel)); e.preventDefault(); }
+    if (e.key==='Enter' && sel>=0) items[sel].onmousedown();
+    if (e.key==='Escape') dropdown.classList.remove('open');
+  });
+  wrap.appendChild(input); wrap.appendChild(dropdown);
+  return wrap;
+}
+
+function makeFinInput(pi, ri, slot) {
+  const input = document.createElement('input');
+  input.type = 'number'; input.className = 'fin-input';
+  input.min = 1; input.max = 43;
+  input.value = picks[pi][ri][slot+'fin'] || '';
+  input.placeholder = 'Pos'; input.readOnly = !commishUnlocked;
+  input.addEventListener('change', () => {
+    picks[pi][ri][slot+'fin'] = input.value;
+    refreshRow(pi, ri);
+    for (let r = ri; r < 35; r++) {
+      const w = document.getElementById(`p${pi}r${r}wk`);
+      const c = document.getElementById(`p${pi}r${r}cu`);
+      if (w) w.textContent = weekScore(pi,r) || '';
+      if (c) c.textContent = cumulScore(pi,r) || '';
+    }
+    scheduleSave();
+  });
+  return input;
+}
+
+function refreshRow(pi, ri) {
+  ['d1','d2','d3'].forEach(dx => {
+    const el = document.getElementById(`p${pi}r${ri}${dx}pts`);
+    if (el) el.textContent = picks[pi][ri][dx+'fin'] ? finPts(picks[pi][ri][dx+'fin']) : '';
+  });
+  const w = document.getElementById(`p${pi}r${ri}wk`);
+  const c = document.getElementById(`p${pi}r${ri}cu`);
+  if (w) w.textContent = weekScore(pi,ri) || '';
+  if (c) c.textContent = cumulScore(pi,ri) || '';
+}
+
+function renderPicksPanels() {
+  const tabsEl = document.getElementById('player-tabs');
+  const panelsEl = document.getElementById('picks-panels');
+  PLAYER_NAMES.forEach((name, pi) => {
+    const btn = document.createElement('button');
+    btn.className = 'player-tab' + (pi===0?' active':'');
+    btn.textContent = name;
+    btn.onclick = () => {
+      document.querySelectorAll('.player-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.picks-content').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('picks-panel-'+pi).classList.add('active');
+    };
+    tabsEl.appendChild(btn);
+
+    const panel = document.createElement('div');
+    panel.className = 'picks-content'+(pi===0?' active':'');
+    panel.id = 'picks-panel-'+pi;
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    const table = document.createElement('table');
+    table.className = 'picks-table'; table.style.minWidth = '860px';
+    table.innerHTML = `<thead>
+      <tr>
+        <th rowspan="2" class="center">#</th><th rowspan="2">Track</th><th rowspan="2">Type</th>
+        <th colspan="3" class="group-header center">Driver 1</th>
+        <th colspan="3" class="group-header center">Driver 2</th>
+        <th colspan="3" class="group-header center">Driver 3</th>
+        <th rowspan="2" class="center" style="background:var(--dark-gold);color:var(--cream)">Week Pts</th>
+        <th rowspan="2" class="center" style="background:#1a1a1a">Cumul.</th>
+      </tr>
+      <tr class="subheader">
+        <th>Driver</th><th class="center">Fin</th><th class="center">Pts</th>
+        <th>Driver</th><th class="center">Fin</th><th class="center">Pts</th>
+        <th>Driver</th><th class="center">Fin</th><th class="center">Pts</th>
+      </tr></thead>`;
+    const tbody = document.createElement('tbody');
+    SCHEDULE.forEach((race, ri) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="week-num">${race.race}</td><td style="font-size:0.85rem">${race.track}</td>
+        <td><span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc].substring(0,5)}</span></td>`;
+      ['d1','d2','d3'].forEach(slot => {
+        const nTd = document.createElement('td'); nTd.className = 'edit-cell'; nTd.appendChild(makeAutocomplete(pi,ri,slot));
+        const fTd = document.createElement('td'); fTd.className = 'edit-cell center'; fTd.appendChild(makeFinInput(pi,ri,slot));
+        const pTd = document.createElement('td');
+        pTd.id = `p${pi}r${ri}${slot}pts`; pTd.className = 'center pts';
+        pTd.textContent = picks[pi][ri][slot+'fin'] ? finPts(picks[pi][ri][slot+'fin']) : '';
+        tr.appendChild(nTd); tr.appendChild(fTd); tr.appendChild(pTd);
+      });
+      const wTd = document.createElement('td'); wTd.id = `p${pi}r${ri}wk`; wTd.className = 'center pts'; wTd.style.color = 'var(--gold)'; wTd.textContent = weekScore(pi,ri)||'';
+      const cTd = document.createElement('td'); cTd.id = `p${pi}r${ri}cu`; cTd.className = 'center'; cTd.style.color = '#ccc'; cTd.textContent = cumulScore(pi,ri)||'';
+      tr.appendChild(wTd); tr.appendChild(cTd);
+      tbody.appendChild(tr);
+    });
+    const tot = document.createElement('tr'); tot.className = 'total-row';
+    tot.innerHTML = `<td colspan="3" style="text-align:right;color:var(--gold);font-family:'Bebas Neue',sans-serif;letter-spacing:2px;">SEASON TOTAL</td>
+      <td colspan="9"></td><td class="center pts" style="font-size:1.2rem">${cumulScore(pi,34)||'—'}</td><td></td>`;
+    tbody.appendChild(tot);
+    table.appendChild(tbody); wrap.appendChild(table); panel.appendChild(wrap); panelsEl.appendChild(panel);
+  });
+}
+
+function renderSchedule() {
+  const tbody = document.getElementById('schedule-body');
+  SCHEDULE.forEach(race => {
+    const tr = document.createElement('tr');
+    const tvColor = {FOX:'#f5a623',FS1:'#f5a623',Prime:'#00a8e0',USA:'#1a6bb5',NBC:'#d4a017'}[race.tv]||'#aaa';
+    tr.innerHTML = `<td class="week-num">${race.race}</td><td>${race.track}</td>
+      <td><span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span></td>
+      <td class="dim">${race.date}</td><td class="dim">${race.time}</td>
+      <td style="color:${tvColor};font-weight:700;font-size:0.9rem">${race.tv}</td>
+      <td class="dim">${race.radio}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderPointsRef() {
+  const tbody = document.getElementById('points-ref-body');
+  const sfx = ['st','nd','rd'];
+  for (let p = 1; p <= 40; p++) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${p}${p<=3?sfx[p-1]:'th'}</td><td class="center pts">${POINTS_TABLE[p]}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+
+
+// ============================================================
+// DRIVER ROSTER TAB
+// ============================================================
+const DRIVER_ROSTER = [
+  {num:'1',  name:'Ross Chastain',        team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'Ross-Chastain.png'},
+  {num:'2',  name:'Austin Cindric',       team:'Team Penske',             mfr:'Ford',      photo:'Austin-Cindric.png'},
+  {num:'3',  name:'Austin Dillon',        team:'Richard Childress Racing',mfr:'Chevrolet', photo:'Austin-Dillon.png'},
+  {num:'4',  name:'Noah Gragson',         team:'Front Row Motorsports',   mfr:'Ford',      photo:'Noah-Gragson.png'},
+  {num:'5',  name:'Kyle Larson',          team:'Hendrick Motorsports',    mfr:'Chevrolet', photo:'Kyle-Larson.png'},
+  {num:'6',  name:'Brad Keselowski',      team:'RFK Racing',              mfr:'Ford',      photo:'Brad-Keselowski.png'},
+  {num:'7',  name:'Daniel Suarez',        team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Daniel-Suarez.png'},
+  {num:'8',  name:'Kyle Busch',           team:'Richard Childress Racing',mfr:'Chevrolet', photo:'Kyle-Busch.png'},
+  {num:'9',  name:'Chase Elliott',        team:'Hendrick Motorsports',    mfr:'Chevrolet', photo:'Chase-Elliott.png'},
+  {num:'10', name:'Ty Dillon',            team:'Kaulig Racing',           mfr:'Chevrolet', photo:'Ty-Dillon.png'},
+  {num:'11', name:'Denny Hamlin',         team:'Joe Gibbs Racing',        mfr:'Toyota',    photo:'Denny-Hamlin.png'},
+  {num:'12', name:'Ryan Blaney',          team:'Team Penske',             mfr:'Ford',      photo:'Ryan-Blaney.png'},
+  {num:'16', name:'AJ Allmendinger',      team:'Kaulig Racing',           mfr:'Chevrolet', photo:'AJ-Allmendinger.png'},
+  {num:'17', name:'Chris Buescher',       team:'RFK Racing',              mfr:'Ford',      photo:'Chris-Buescher.png'},
+  {num:'19', name:'Chase Briscoe',        team:'Joe Gibbs Racing',        mfr:'Toyota',    photo:'Chase-Briscoe.png'},
+  {num:'20', name:'Christopher Bell',     team:'Joe Gibbs Racing',        mfr:'Toyota',    photo:'Christopher-Bell.png'},
+  {num:'21', name:'Josh Berry',           team:'Wood Brothers Racing',    mfr:'Ford',      photo:'Josh-Berry.png'},
+  {num:'22', name:'Joey Logano',          team:'Team Penske',             mfr:'Ford',      photo:'Joey-Logano.png'},
+  {num:'23', name:'Bubba Wallace',        team:'23XI Racing',             mfr:'Toyota',    photo:'Bubba-Wallace.png'},
+  {num:'24', name:'William Byron',        team:'Hendrick Motorsports',    mfr:'Chevrolet', photo:'William-Byron.png'},
+  {num:'34', name:'Todd Gilliland',       team:'Front Row Motorsports',   mfr:'Ford',      photo:'Todd-Gilliand.png'},
+  {num:'35', name:'Riley Herbst',         team:'Kaulig Racing',           mfr:'Chevrolet', photo:'Riley-Herbst.png'},
+  {num:'41', name:'Cole Custer',          team:'Stewart-Haas Racing',     mfr:'Ford',      photo:'Cole-Custer.png'},
+  {num:'42', name:'John Hunter Nemechek', team:'Legacy Motor Club',       mfr:'Chevrolet', photo:'John-hunter-Nemechek.png'},
+  {num:'43', name:'Erik Jones',           team:'Legacy Motor Club',       mfr:'Chevrolet', photo:'Erik-Jones.png'},
+  {num:'45', name:'Tyler Reddick',        team:'23XI Racing',             mfr:'Toyota',    photo:'Tyler-Reddick.png'},
+  {num:'47', name:'Ricky Stenhouse Jr',   team:'JTG Daugherty Racing',    mfr:'Chevrolet', photo:'Ricky-Stenhouse-Jr.png'},
+  {num:'48', name:'Alex Bowman',          team:'Hendrick Motorsports',    mfr:'Chevrolet', photo:'Alex-Bowman.png'},
+  {num:'51', name:'Cody Ware',            team:'Rick Ware Racing',        mfr:'Ford',      photo:'Cody-Ware.png'},
+  {num:'54', name:'Ty Gibbs',             team:'Joe Gibbs Racing',        mfr:'Toyota',    photo:'Ty-Gibbs.png'},
+  {num:'71', name:'Zane Smith',           team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Zane-Smith.png'},
+  {num:'77', name:'Carson Hocevar',       team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Carson-Hocevar.png'},
+  {num:'88', name:'Connor Zilisch',       team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'Connor-Zilisch.png'},
+  {num:'97', name:'Shane van Gisbergen',  team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'shane-van-gisbergen.png'},
+  {num:'99', name:'Daniel Hemric',        team:'Spire Motorsports',       mfr:'Chevrolet', photo:null},
+];
+
+function renderDriverRoster() {
+  const grid = document.getElementById('drivers-grid');
+  if (!grid || grid.innerHTML) return;
+  grid.innerHTML = DRIVER_ROSTER.map(d => {
+    const colors = DRIVER_COLORS[d.num] || {bg:'#444', text:'#fff'};
+    const mfrClass = 'mfr-' + d.mfr.toLowerCase();
+    const photoPath = d.photo ? 'images/drivers/' + d.photo : null;
+    const numPath = 'images/numbers/' + d.num + '.png';
+    return `<div class="driver-card-roster" style="border-top-color:${colors.bg}">
+      <div class="driver-card-photo-placeholder" style="position:relative;">
+        ${photoPath ? `<img src="${photoPath}" class="driver-card-photo"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+          onload="this.nextElementSibling.style.display='none';"
+          alt="${d.name}">` : ''}
+        <div class="driver-card-photo-placeholder" style="${photoPath ? 'display:none;' : ''}position:absolute;inset:0;">
+          <div class="driver-card-num-big" style="color:${colors.bg}">${d.num}</div>
+        </div>
+      </div>
+      <div class="driver-card-body">
+        <div class="driver-card-namenum">
+          <img src="${numPath}" style="height:24px;width:auto;object-fit:contain;"
+            onerror="this.style.display='none'" alt="${d.num}">
+          <div class="driver-card-name">${d.name}</div>
+        </div>
+        <div class="driver-card-team">${d.team}</div>
+        <span class="driver-card-mfr ${mfrClass}">${d.mfr}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// DRIVER STATS
+// ============================================================
+function renderDriverStats() {
+  const container = document.getElementById('driverstats-inner');
+  if (!container) return;
+
+  // Build driver stat maps
+  const driverStats = {}; // name -> {totalPts, timespicked, finishes, weeklyWins}
+
+  PLAYER_NAMES.forEach((_, pi) => {
+    SCHEDULE.forEach((race, ri) => {
+      ['d1','d2','d3'].forEach(slot => {
+        const name = picks[pi][ri][slot+'name'];
+        const fin  = parseInt(picks[pi][ri][slot+'fin']);
+        if (!name) return;
+        if (!driverStats[name]) driverStats[name] = {totalPts:0, timesPickedBy:{}, finishes:[], weeklyWins:0};
+        const pts = fin ? finPts(fin) : 0;
+        driverStats[name].totalPts += pts;
+        driverStats[name].timesPickedBy[pi] = (driverStats[name].timesPickedBy[pi]||0)+1;
+        if (fin) driverStats[name].finishes.push(fin);
+      });
+    });
+  });
+
+  // Per-player driver breakdown
+  const playerDriverStats = PLAYER_NAMES.map((_, pi) => {
+    const map = {};
+    SCHEDULE.forEach((race, ri) => {
+      ['d1','d2','d3'].forEach(slot => {
+        const name = picks[pi][ri][slot+'name'];
+        const fin = parseInt(picks[pi][ri][slot+'fin']);
+        if (!name) return;
+        if (!map[name]) map[name] = {pts:0, picks:0, finishes:[]};
+        map[name].picks++;
+        if (fin) { map[name].pts += finPts(fin); map[name].finishes.push(fin); }
+      });
+    });
+    return map;
+  });
+
+  // Summary highlights
+  const racesComplete = SCHEDULE.filter((_, ri) => PLAYER_NAMES.some((_, pi) => picks[pi][ri].d1fin)).length;
+  const totalDriverEntries = Object.values(driverStats).reduce((s,d) => s + Object.values(d.timesPickedBy).reduce((a,b)=>a+b,0), 0);
+  const mostPickedDriver = Object.entries(driverStats).sort((a,b) => {
+    const ac = Object.values(a[1].timesPickedBy).reduce((s,v)=>s+v,0);
+    const bc = Object.values(b[1].timesPickedBy).reduce((s,v)=>s+v,0);
+    return bc - ac;
+  })[0];
+  const topScoringDriver = Object.entries(driverStats).filter(([,d]) => d.finishes.length > 0).sort((a,b) => b[1].totalPts - a[1].totalPts)[0];
+
+  let highlightHtml = '';
+  if (racesComplete === 0) {
+    highlightHtml = '<div style="color:var(--light-gray);font-style:italic;padding:8px 0 24px;">Stats will appear once race results are entered.</div>';
+  } else {
+    highlightHtml = `<div class="stats-header-row">
+      <div class="stats-highlight">
+        <div class="stats-highlight-label">Races Completed</div>
+        <div class="stats-highlight-val">${racesComplete} <span style="font-size:1rem;color:var(--light-gray)">/ 35</span></div>
+      </div>
+      <div class="stats-highlight">
+        <div class="stats-highlight-label">Most Picked Driver</div>
+        <div class="stats-highlight-val" style="font-size:1.3rem">${mostPickedDriver ? mostPickedDriver[0] : '—'}</div>
+        <div class="stats-highlight-sub">${mostPickedDriver ? Object.values(mostPickedDriver[1].timesPickedBy).reduce((a,b)=>a+b,0) + ' total picks' : ''}</div>
+      </div>
+      <div class="stats-highlight">
+        <div class="stats-highlight-label">Top Scoring Driver</div>
+        <div class="stats-highlight-val" style="font-size:1.3rem">${topScoringDriver ? topScoringDriver[0] : '—'}</div>
+        <div class="stats-highlight-sub">${topScoringDriver ? topScoringDriver[1].totalPts + ' pts across all players' : ''}</div>
+      </div>
+      <div class="stats-highlight">
+        <div class="stats-highlight-label">Total Driver Picks Made</div>
+        <div class="stats-highlight-val">${totalDriverEntries}</div>
+      </div>
+    </div>`;
+  }
+
+  // Build per-player top drivers cards
+  function makePlayerCard(pi) {
+    const map = playerDriverStats[pi];
+    const drivers = Object.entries(map).filter(([,d]) => d.picks > 0)
+      .sort((a,b) => b[1].pts - a[1].pts).slice(0, 8);
+    const maxPts = drivers[0] ? drivers[0][1].pts : 1;
+
+    if (drivers.length === 0) return `<div class="stats-empty">No picks entered yet.</div>`;
+
+    return drivers.map(([name, d], i) => {
+      const avg = d.finishes.length ? (d.finishes.reduce((a,b)=>a+b,0)/d.finishes.length).toFixed(1) : '—';
+      const pct = maxPts > 0 ? Math.round((d.pts/maxPts)*100) : 0;
+      const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      return `<div class="stats-row">
+        <div class="stats-pos ${posClass}">${i+1}</div>
+        <div class="stats-driver-name">${name}<span class="stats-sub">${d.picks}x picked &bull; avg fin ${avg}</span></div>
+        <div class="stats-bar-wrap"><div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%"></div></div></div>
+        <div class="stats-val">${d.pts}<span class="stats-val-label">PTS</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Top drivers overall (by total pts across all players)
+  function makeOverallCard() {
+    const drivers = Object.entries(driverStats)
+      .filter(([,d]) => d.finishes.length > 0)
+      .sort((a,b) => b[1].totalPts - a[1].totalPts).slice(0, 8);
+    if (drivers.length === 0) return `<div class="stats-empty">No results entered yet.</div>`;
+    const maxPts = drivers[0][1].totalPts || 1;
+    return drivers.map(([name, d], i) => {
+      const picks = Object.values(d.timesPickedBy).reduce((a,b)=>a+b,0);
+      const avg = d.finishes.length ? (d.finishes.reduce((a,b)=>a+b,0)/d.finishes.length).toFixed(1) : '—';
+      const pct = Math.round((d.totalPts/maxPts)*100);
+      const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      const dObjO = DRIVERS.find(d => d.name === name);
+      const badgeO = dObjO ? carNumBadge(dObjO.num, 'sm') : '';
+      return `<div class="stats-row">
+        <div class="stats-pos ${posClass}">${i+1}</div>
+        <div class="stats-driver-name">${badgeO} ${name}<span class="stats-sub">${picks} picks &bull; avg fin ${avg}</span></div>
+        <div class="stats-bar-wrap"><div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%"></div></div></div>
+        <div class="stats-val">${d.totalPts}<span class="stats-val-label">PTS</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Most picked drivers (popularity)
+  function makePopularityCard() {
+    const drivers = Object.entries(driverStats)
+      .map(([name, d]) => ({name, count: Object.values(d.timesPickedBy).reduce((a,b)=>a+b,0), pickers: Object.keys(d.timesPickedBy).map(i => PLAYER_NAMES[i]).join(', ')}))
+      .sort((a,b) => b.count - a.count).slice(0, 8);
+    if (drivers.length === 0) return `<div class="stats-empty">No picks entered yet.</div>`;
+    const max = drivers[0].count || 1;
+    return drivers.map((d, i) => {
+      const pct = Math.round((d.count/max)*100);
+      const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      const dObjP = DRIVERS.find(dr => dr.name === d.name);
+      const badgeP = dObjP ? carNumBadge(dObjP.num, 'sm') : '';
+      return `<div class="stats-row">
+        <div class="stats-pos ${posClass}">${i+1}</div>
+        <div class="stats-driver-name">${badgeP} ${d.name}<span class="stats-sub">${d.pickers}</span></div>
+        <div class="stats-bar-wrap"><div class="stats-bar-bg"><div class="stats-bar-fill" style="width:${pct}%"></div></div></div>
+        <div class="stats-val">${d.count}<span class="stats-val-label">PICKS</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  container.innerHTML = `
+    ${highlightHtml}
+    <div class="stats-grid">
+      <div class="stats-card">
+        <div class="stats-card-title">Top Drivers <span>Overall</span></div>
+        ${makeOverallCard()}
+      </div>
+      <div class="stats-card">
+        <div class="stats-card-title">Most Picked <span>Drivers</span></div>
+        ${makePopularityCard()}
+      </div>
+      ${PLAYER_NAMES.map((name, pi) => `
+      <div class="stats-card">
+        <div class="stats-card-title">&#128101; ${name}'s <span>Best Drivers</span></div>
+        ${makePlayerCard(pi)}
+      </div>`).join('')}
+    </div>`;
+}
+
+
+
+// ============================================================
+// SYNC RACE RESULTS FROM SHEET
+// ============================================================
+async function syncRaceResults() {
+  const statusEl = document.getElementById('sync-upload-status');
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '⏳ Syncing...';
+  statusEl.textContent = '';
+  setSyncStatus('syncing', 'Reading race results from Google Sheets...');
+  try {
+    const resp = await fetch(SCRIPT_URL + '?action=syncResults&t=' + Date.now());
+    const data = await resp.json();
+    if (data.success) {
+      // Reload picks
+      const loadResp = await fetch(SCRIPT_URL + '?action=load&t=' + Date.now());
+      const loadData = await loadResp.json();
+      if (loadData.picks) picks = loadData.picks;
+      // Re-render everything
+      document.getElementById('picks-panels').innerHTML = '';
+      document.getElementById('player-tabs').innerHTML = '';
+      renderPicksPanels();
+      renderStandings();
+      setSyncStatus('synced', 'Race results synced at ' + new Date().toLocaleTimeString());
+      statusEl.style.color = '#4caf50';
+      statusEl.textContent = data.message;
+      if (data.notFound && data.notFound.length) {
+        statusEl.style.color = 'var(--gold)';
+      }
+    } else {
+      setSyncStatus('error', 'Sync failed');
+      statusEl.style.color = '#f88';
+      statusEl.textContent = data.message || data.error || 'Sync failed';
+    }
+  } catch(e) {
+    setSyncStatus('error', 'Connection error');
+    statusEl.style.color = '#f88';
+    statusEl.textContent = 'Connection error';
+  }
+  btn.disabled = false;
+  btn.textContent = '🏁 Sync Race Results';
+}
+
+// ============================================================
+// SYNC FROM WEEKLY UPLOAD SHEET
+// ============================================================
+async function syncFromSheet() {
+  const btn = event.target;
+  const statusEl = document.getElementById('sync-upload-status');
+  btn.disabled = true;
+  btn.textContent = '⏳ Syncing...';
+  statusEl.textContent = '';
+  setSyncStatus('syncing', 'Syncing from Weekly Upload sheet...');
+  try {
+    const resp = await fetch(SCRIPT_URL + '?action=syncUpload&t=' + Date.now());
+    const data = await resp.json();
+    if (data.success) {
+      // Reload data from sheets to get the updated picks
+      const loadResp = await fetch(SCRIPT_URL + '?action=load&t=' + Date.now());
+      const loadData = await loadResp.json();
+      if (loadData.picks) picks = loadData.picks;
+      // Re-render everything
+      document.getElementById('picks-panels').innerHTML = '';
+      document.getElementById('player-tabs').innerHTML = '';
+      renderPicksPanels();
+      renderStandings();
+      setSyncStatus('synced', 'Synced at ' + new Date().toLocaleTimeString());
+      statusEl.style.color = '#4caf50';
+      statusEl.textContent = data.message || ('Updated ' + data.updated + ' entries');
+      if (data.errors && data.errors.length) {
+        statusEl.style.color = 'var(--gold)';
+        statusEl.textContent += ' ⚠ ' + data.errors.join(', ');
+      }
+    } else {
+      setSyncStatus('error', 'Sync failed');
+      statusEl.style.color = 'var(--red)';
+      statusEl.textContent = data.message || data.error || 'Sync failed';
+    }
+  } catch(e) {
+    setSyncStatus('error', 'Sync failed — check connection');
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = 'Connection error';
+  }
+  btn.disabled = false;
+  btn.textContent = '↻ Sync from Sheet';
+}
+
+// INIT
+renderSchedule();
+renderPointsRef();
+renderPicksPanels();
+loadFromSheets();
+</script>
+</body>
+</html>
