@@ -9,7 +9,7 @@
   :root {
     --black: #080b0f; --surface: #0f1318; --surface2: #161b22; --surface3: #1c2330;
     --border: #21262d; --border2: #30363d;
-    --white: #e6edf3; --muted: #7d8590; --red: #e53935; --accent: #1f6feb;
+    --white: #e6edf3; --muted: #7d8590; --red: #1a7a3c; --accent: #1f6feb;
     --gold: #f0c040; --green: #3fb950; --cream: #e6edf3;
     --gray: #161b22; --mid-gray: #30363d; --light-gray: #7d8590;
   }
@@ -20,7 +20,7 @@
   .site-header { background: var(--surface); border-bottom: 1px solid var(--border); }
   .header-checkered { display: none; }
   .header-inner { padding: 0 40px; display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 64px; }
-  .site-title { font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; color: var(--white); line-height: 1; text-transform: uppercase; }
+  .site-title { font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; color: var(--white); line-height: 1; text-transform: uppercase; font-style: italic; }
   .site-title span { color: var(--red); }
   .header-badge { display: flex; align-items: center; gap: 16px; }
   .header-badge-pill { background: var(--surface3); border: 1px solid var(--border2); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 1px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
@@ -48,7 +48,7 @@
   .commish-bar label { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
   .commish-bar input[type=password] { background: var(--surface3); border: 1px solid var(--border2); color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.88rem; padding: 5px 10px; width: 150px; outline: none; border-radius: 4px; }
   .commish-bar input[type=password]:focus { border-color: var(--accent); }
-  .commish-btn { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; background: var(--red); color: #fff; border: none; cursor: pointer; white-space: nowrap; border-radius: 4px; }
+  .commish-btn { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; background: var(--red); color: #000; border: none; cursor: pointer; white-space: nowrap; border-radius: 4px; }
   .commish-btn:hover { opacity: 0.85; }
   .commish-status { font-size: 0.8rem; color: var(--muted); }
   .commish-status.unlocked { color: var(--green); }
@@ -81,7 +81,7 @@
   .picks-content.active { display: block; }
   .picks-table thead tr { background: var(--surface3); }
   .picks-table thead th { border-right: 1px solid var(--mid-gray); }
-  .picks-table .group-header { background: var(--red); font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 1px; text-align: center; font-size: 0.78rem; text-transform: uppercase; }
+  .picks-table .group-header { background: var(--red); color: #000; font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 1px; text-align: center; font-size: 0.78rem; text-transform: uppercase; }
   .picks-table .subheader { background: var(--surface3); font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
   .edit-cell { background: rgba(255,255,255,0.03); }
 
@@ -251,11 +251,13 @@
     /* Main */
     .main { padding: 12px 10px; }
     /* This week panel */
-    .this-week-header { padding: 12px 14px; gap: 8px; }
-    .this-week-track { font-size: 1.4rem; white-space: normal; }
-    .this-week-label { font-size: 0.65rem; letter-spacing: 2px; margin-bottom: 2px; }
-    .this-week-meta { font-size: 0.7rem; }
-    .this-week-track-img { width: 50px; height: 44px; }
+    .this-week-header { padding: 10px 12px; gap: 8px; flex-wrap: nowrap; }
+    .this-week-track { font-size: 1.2rem; line-height: 1.1; }
+    .this-week-label { font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 2px; }
+    .this-week-meta { font-size: 0.68rem; line-height: 1.55; }
+    .this-week-track-img { display: none; }
+    .this-week-col-header { font-size: 0.78rem; padding: 5px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tw-name { font-size: 0.75rem; }
     .this-week-col-header { font-size: 0.75rem; padding: 5px 8px; }
     .this-week-picks { grid-template-columns: 1fr 1fr; }
     .this-week-col-headers { grid-template-columns: 1fr 1fr; }
@@ -763,35 +765,35 @@ const TRACK_SVGS = {
 
 // Map track names to uploaded image filenames
 const TRACK_IMAGE_MAP = {
-  'echopark':        'echopark-atlanta.svg',
-  'atlanta':         'echopark-atlanta.svg',
-  'circuit of the americas': 'cota.svg',
-  'cota':            'cota.svg',
-  'phoenix':         'phoenix.svg',
-  'las vegas':       'las-vegas.svg',
-  'darlington':      'darlington.svg',
-  'martinsville':    'martinsville.svg',
-  'bristol':         'bristol.svg',
-  'kansas':          'kansas.svg',
-  'texas':           'texas.svg',
-  'watkins glen':    'watkins-glen.svg',
-  'charlotte':       'charlotte.svg',
-  'talladega':       'talladega.svg',
-  'dover':           'dover.svg',
-  'michigan':        'michigan.svg',
-  'pocono':          'pocono.svg',
-  'new hampshire':   'new-hampshire.svg',
-  'chicago':         'chicagoland.svg',
-  'richmond':        'richmond.svg',
-  'sonoma':          'sonoma.svg',
-  'indianapolis':    'indianapolis-motorspeedway.svg',
-  'iowa':            'iowa.svg',
-  'homestead':       'homestead.svg',
-  'nashville':       'nashville.svg',
-  'north wilkesboro':'north-wilkesboro.svg',
-  'coronado':        'naval-base-coronado.svg',
-  'wwtr':            'WWTR.svg',
-  'world wide':      'WWTR.svg',
+  'echopark':        'echopark-atlanta.png',
+  'atlanta':         'echopark-atlanta.png',
+  'circuit of the americas': 'cota.png',
+  'cota':            'cota.png',
+  'phoenix':         'phoenix.png',
+  'las vegas':       'las-vegas.png',
+  'darlington':      'darlington.png',
+  'martinsville':    'martinsville.png',
+  'bristol':         'bristol.png',
+  'kansas':          'kansas.png',
+  'texas':           'texas.png',
+  'watkins glen':    'watkins-glen.png',
+  'charlotte':       'charlotte.png',
+  'talladega':       'talladega.png',
+  'dover':           'dover.png',
+  'michigan':        'michigan.png',
+  'pocono':          'pocono.png',
+  'new hampshire':   'new-hampshire.png',
+  'chicago':         'chicagoland.png',
+  'richmond':        'richmond.png',
+  'sonoma':          'sonoma.png',
+  'indianapolis':    'indianapolis-motorspeedway.png',
+  'iowa':            'iowa.png',
+  'homestead':       'homestead.png',
+  'nashville':       'nashville.png',
+  'north wilkesboro':'north-wilkesboro.png',
+  'coronado':        'naval-base-coronado.png',
+  'wwtr':            'WWTR.png',
+  'world wide':      'WWTR.png',
 };
 
 function getTrackImagePath(trackName) {
