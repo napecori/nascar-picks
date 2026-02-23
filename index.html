@@ -556,8 +556,10 @@ async function loadFromSheets() {
     return;
   }
   setSyncStatus('syncing', 'Loading data from Google Sheets...');
+  // Timeout after 8 seconds — show site anyway
+  const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000));
   try {
-    const resp = await fetch(scriptUrl + '?action=load&t=' + Date.now());
+    const resp = await Promise.race([fetch(scriptUrl + '?action=load&t=' + Date.now()), timeout]);
     const data = await resp.json();
     if (data.picks) {
       picks = data.picks;
@@ -568,7 +570,10 @@ async function loadFromSheets() {
     }
     setSyncStatus('synced', 'Synced with Google Sheets — ' + new Date().toLocaleTimeString());
   } catch(e) {
-    setSyncStatus('error', 'Could not connect to Google Sheets — check script URL in Weekly Picks tab');
+    const msg = e.message === 'timeout'
+      ? 'Google Sheets timed out — showing cached data'
+      : 'Could not connect to Google Sheets';
+    setSyncStatus('error', msg);
   }
   showStandings();
 }
