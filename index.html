@@ -538,9 +538,9 @@ let saveTimeout = null;
 function emptyPicks() {
   return Array.from({length:4}, () =>
     Array.from({length:35}, () => ({
-      d1name:'',d1fin:'',d1s1:'',d1s2:'',d1s3:'',d1fl:false,
-      d2name:'',d2fin:'',d2s1:'',d2s2:'',d2s3:'',d2fl:false,
-      d3name:'',d3fin:'',d3s1:'',d3s2:'',d3s3:'',d3fl:false
+      d1name:'',d1fin:'',d1pts:'',
+      d2name:'',d2fin:'',d2pts:'',
+      d3name:'',d3fin:'',d3pts:''
     }))
   );
 }
@@ -638,25 +638,15 @@ function finPts(fin) {
   if (!n || n < 1) return 0;
   return POINTS_TABLE[Math.min(n, 40)] || 1;
 }
-function stagePts(pos) {
-  const n = parseInt(pos);
-  if (!n || n < 1 || n > 10) return 0;
-  return STAGE_POINTS[n - 1];
-}
-function driverPts(slot) {
-  // slot = {fin, s1, s2, s3, fl}
-  let total = finPts(slot.fin);
-  total += stagePts(slot.s1);
-  total += stagePts(slot.s2);
-  total += stagePts(slot.s3);
-  if (slot.fl) total += 1;
-  return total;
+// driverPts: uses stored NASCAR points if available, falls back to finish points table
+function driverPts(d, slot) {
+  const pts = parseInt(d[slot+'pts']);
+  if (pts) return pts;
+  return finPts(d[slot+'fin']);
 }
 function weekScore(p, r) {
   const d = picks[p][r];
-  return driverPts({fin:d.d1fin,s1:d.d1s1,s2:d.d1s2,s3:d.d1s3,fl:d.d1fl})
-       + driverPts({fin:d.d2fin,s1:d.d2s1,s2:d.d2s2,s3:d.d2s3,fl:d.d2fl})
-       + driverPts({fin:d.d3fin,s1:d.d3s1,s2:d.d3s2,s3:d.d3s3,fl:d.d3fl});
+  return driverPts(d,'d1') + driverPts(d,'d2') + driverPts(d,'d3');
 }
 function cumulScore(p, upTo) {
   let t = 0;
@@ -1033,7 +1023,7 @@ function refreshRow(pi, ri) {
     const el = document.getElementById(`p${pi}r${ri}${dx}pts`);
     if (el) {
       const d = picks[pi][ri];
-      const pts = d[dx+'fin'] ? driverPts({fin:d[dx+'fin'],s1:d[dx+'s1'],s2:d[dx+'s2'],s3:d[dx+'s3'],fl:d[dx+'fl']}) : '';
+      const pts = d[dx+'fin'] ? driverPts(d, dx) : '';
       el.textContent = pts;
     }
   });
@@ -1235,7 +1225,7 @@ function renderDriverStats() {
         const fin  = parseInt(picks[pi][ri][slot+'fin']);
         if (!name) return;
         if (!driverStats[name]) driverStats[name] = {totalPts:0, timesPickedBy:{}, finishes:[], weeklyWins:0};
-        const pts = fin ? driverPts({fin, s1:picks[pi][ri][slot+'s1'], s2:picks[pi][ri][slot+'s2'], s3:picks[pi][ri][slot+'s3'], fl:picks[pi][ri][slot+'fl']}) : 0;
+        const pts = fin ? driverPts(picks[pi][ri], slot) : 0;
         driverStats[name].totalPts += pts;
         driverStats[name].timesPickedBy[pi] = (driverStats[name].timesPickedBy[pi]||0)+1;
         if (fin) driverStats[name].finishes.push(fin);
@@ -1253,7 +1243,7 @@ function renderDriverStats() {
         if (!name) return;
         if (!map[name]) map[name] = {pts:0, picks:0, finishes:[]};
         map[name].picks++;
-        if (fin) { map[name].pts += driverPts({fin, s1:picks[pi][ri][slot+'s1'], s2:picks[pi][ri][slot+'s2'], s3:picks[pi][ri][slot+'s3'], fl:picks[pi][ri][slot+'fl']}); map[name].finishes.push(fin); }
+        if (fin) { map[name].pts += driverPts(picks[pi][ri], slot); map[name].finishes.push(fin); }
       });
     });
     return map;
