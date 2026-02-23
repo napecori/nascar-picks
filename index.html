@@ -1361,6 +1361,53 @@ function renderDriverStats() {
     }).join('');
   }
 
+  // Build full race results card from raceResults global
+  const hasRealResults = Object.keys(raceResults).length > 0;
+  const racesWithResults = Object.keys(raceResults).length;
+  let fullResultsHtml = '';
+  if (hasRealResults) {
+    const fullDriverStats = {};
+    Object.entries(raceResults).forEach(([raceNum, drivers]) => {
+      Object.entries(drivers).forEach(([driverLower, result]) => {
+        const fin = parseInt(result.finish || result);
+        if (!fin) return;
+        const dr = DRIVERS.find(d => d.name.toLowerCase() === driverLower);
+        const name = dr ? dr.name : driverLower.split(' ').map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+        if (!fullDriverStats[name]) fullDriverStats[name] = {finishes:[],wins:0,top5:0,top10:0};
+        fullDriverStats[name].finishes.push(fin);
+        if (fin === 1) fullDriverStats[name].wins++;
+        if (fin <= 5)  fullDriverStats[name].top5++;
+        if (fin <= 10) fullDriverStats[name].top10++;
+      });
+    });
+    const sorted = Object.entries(fullDriverStats)
+      .sort((a,b) => {
+        const avgA = a[1].finishes.reduce((s,v)=>s+v,0)/a[1].finishes.length;
+        const avgB = b[1].finishes.reduce((s,v)=>s+v,0)/b[1].finishes.length;
+        return avgA - avgB;
+      });
+    const rows = sorted.map(([name, d], i) => {
+      const dr = DRIVERS.find(x => x.name === name);
+      const badge = dr ? carNumBadge(dr.num, 'sm') : '';
+      const avg = (d.finishes.reduce((s,v)=>s+v,0)/d.finishes.length).toFixed(1);
+      const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      return `<div class="stats-row">
+        <div class="stats-pos ${posClass}">${i+1}</div>
+        <div class="stats-driver-name">${badge} ${name}</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-shrink:0;font-size:0.75rem;color:#888;">
+          ${d.wins>0?`<span style="color:var(--gold);font-weight:700;">${d.wins}W</span>`:''}
+          ${d.top5>0?`<span>T5:${d.top5}</span>`:''}
+          ${d.top10>0?`<span>T10:${d.top10}</span>`:''}
+        </div>
+        <div class="stats-val">${avg}<span class="stats-val-label">AVG FIN</span></div>
+      </div>`;
+    }).join('');
+    fullResultsHtml = `<div class="stats-card" style="margin-bottom:28px;">
+      <div class="stats-card-title">Full Grid Results <span style="font-size:0.7rem;font-weight:400;color:#888;">${racesWithResults} race${racesWithResults!==1?'s':''}</span></div>
+      ${rows || '<div class="stats-empty">No results yet.</div>'}
+    </div>`;
+  }
+
   container.innerHTML = `
     ${highlightHtml}
     <div class="stats-grid">
