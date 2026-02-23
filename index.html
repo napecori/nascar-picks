@@ -850,9 +850,9 @@ function renderThisWeek() {
   PLAYER_NAMES.forEach((name, pi) => {
     const d = picks[pi][ri];
     const drivers = [
-      {name: d.d1name, fin: d.d1fin},
-      {name: d.d2name, fin: d.d2fin},
-      {name: d.d3name, fin: d.d3fin},
+      {name: d.d1name, fin: d.d1fin, slot: 'd1'},
+      {name: d.d2name, fin: d.d2fin, slot: 'd2'},
+      {name: d.d3name, fin: d.d3fin, slot: 'd3'},
     ].filter(x => x.name);
 
     let driverHtml = '';
@@ -860,7 +860,7 @@ function renderThisWeek() {
       driverHtml = '<div class="this-week-empty">No picks yet</div>';
     } else {
       drivers.forEach((drv, idx) => {
-        const pts = drv.fin ? finPts(drv.fin) : null;
+        const pts = drv.fin ? driverPts(d, drv.slot) : null;
         const ptsHtml = `<div class="tw-pts ${pts===null?'no-result':''}">${pts !== null ? pts : '—'}</div>`;
         const driverObj = DRIVERS.find(d => d.name === drv.name);
         const badge = driverObj ? carNumBadge(driverObj.num, 'sm') : '';
@@ -1309,13 +1309,23 @@ function renderDriverStats() {
 
   // Top drivers overall (by total pts across all players)
   function makeOverallCard() {
-    const drivers = Object.entries(driverStats)
-      .filter(([,d]) => d.finishes.length > 0)
-      .sort((a,b) => b[1].totalPts - a[1].totalPts).slice(0, 8);
+    // Build from full raceResults — all drivers, not just picked ones
+    const allDriverTotals = {};
+    Object.values(raceResults).forEach(raceDrivers => {
+      Object.entries(raceDrivers).forEach(([driverLower, result]) => {
+        const dr = DRIVERS.find(d => d.name.toLowerCase() === driverLower);
+        const name = dr ? dr.name : driverLower.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+        if (!allDriverTotals[name]) allDriverTotals[name] = {totalPts:0, finishes:[]};
+        allDriverTotals[name].totalPts += parseInt(result.pts) || 0;
+        allDriverTotals[name].finishes.push(parseInt(result.finish) || 0);
+      });
+    });
+    const drivers = Object.entries(allDriverTotals)
+      .filter(([,d]) => d.totalPts > 0)
+      .sort((a,b) => b[1].totalPts - a[1].totalPts).slice(0, 15);
     if (drivers.length === 0) return `<div class="stats-empty">No results entered yet.</div>`;
     const maxPts = drivers[0][1].totalPts || 1;
     return drivers.map(([name, d], i) => {
-      const picks = Object.values(d.timesPickedBy).reduce((a,b)=>a+b,0);
       const avg = d.finishes.length ? (d.finishes.reduce((a,b)=>a+b,0)/d.finishes.length).toFixed(1) : '—';
       const pct = Math.round((d.totalPts/maxPts)*100);
       const posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
@@ -1402,7 +1412,7 @@ function renderDriverStats() {
     ${highlightHtml}
     <div class="stats-grid">
       <div class="stats-card">
-        <div class="stats-card-title">Top Drivers <span>Overall</span></div>
+        <div class="stats-card-title">Driver Standings <span>Season</span></div>
         ${makeOverallCard()}
       </div>
       <div class="stats-card">
