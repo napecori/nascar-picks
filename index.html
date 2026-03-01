@@ -670,25 +670,20 @@ function switchTab(name, btn) {
 }
 
 function getCurrentRaceIndex() {
-  // Stay on the most recently completed race through Monday (day 1)
-  // so everyone can see results before flipping to the next week on Tuesday
+  // Parse schedule dates and compare to today
   const today = new Date();
-  const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon, 2=Tue...
-  const isMonOrEarlier = dayOfWeek <= 1; // Sun or Mon
+  today.setHours(0,0,0,0);
+  const months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
 
-  let lastCompleted = -1;
   for (let ri = 0; ri < SCHEDULE.length; ri++) {
-    const hasResults = PLAYER_NAMES.some((_, pi) => picks[pi][ri].d1fin);
-    if (hasResults) lastCompleted = ri;
-  }
-
-  // If it's Sunday or Monday and we have a completed race, stay on it
-  if (isMonOrEarlier && lastCompleted >= 0) return lastCompleted;
-
-  // Otherwise show the next upcoming race (first with no results)
-  for (let ri = 0; ri < SCHEDULE.length; ri++) {
-    const hasResults = PLAYER_NAMES.some((_, pi) => picks[pi][ri].d1fin);
-    if (!hasResults) return ri;
+    // date format: "Sun. Mar 1" — extract month and day
+    const parts = SCHEDULE[ri].date.replace(/[^a-zA-Z0-9 ]/g,'').trim().split(/\s+/);
+    // parts: ["Sun", "Mar", "1"]
+    const mon = months[parts[1]];
+    const day = parseInt(parts[2]);
+    if (mon === undefined || !day) continue;
+    const raceDate = new Date(2026, mon, day);
+    if (today <= raceDate) return ri;
   }
   return SCHEDULE.length - 1;
 }
@@ -1084,7 +1079,7 @@ function renderPicksPanels() {
         const fTd = document.createElement('td'); fTd.className = 'edit-cell center'; fTd.appendChild(makeFinInput(pi,ri,slot));
         const pTd = document.createElement('td');
         pTd.id = `p${pi}r${ri}${slot}pts`; pTd.className = 'center pts';
-        pTd.textContent = picks[pi][ri][slot+'fin'] ? finPts(picks[pi][ri][slot+'fin']) : '';
+        pTd.textContent = picks[pi][ri][slot+'fin'] ? driverPts(picks[pi][ri], slot) : '';
         tr.appendChild(nTd); tr.appendChild(fTd); tr.appendChild(pTd);
       });
       const wTd = document.createElement('td'); wTd.id = `p${pi}r${ri}wk`; wTd.className = 'center pts'; wTd.style.color = 'var(--gold)'; wTd.textContent = weekScore(pi,ri)||'';
