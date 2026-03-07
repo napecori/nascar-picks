@@ -929,15 +929,18 @@ function renderThisWeek() {
         const driverNum = driverObj ? driverObj.num : '?';
         const tileColor = driverObj ? getDriverTileColor(driverObj.num) : '#333';
         const photoUrl = getDriverPhotoUrl(drv.name);
-        const photoHtml = photoUrl
-          ? `<div class="tw-card-photo-tile" style="background:${tileColor}18;">
-               <img src="${photoUrl}" alt="${drv.name}" style="width:100%;height:100%;object-fit:cover;object-position:top center;"
-                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-               <div class="tw-card-photo-fallback" style="display:none;background:${tileColor}18;width:100%;height:100%;align-items:center;justify-content:center;font-style:italic;font-family:'Arial Black',sans-serif;font-size:${driverNum.length>2?'0.7rem':'0.85rem'};font-weight:900;color:${tileColor};">${driverNum}</div>
-             </div>`
-          : `<div class="tw-card-photo-tile" style="background:${tileColor}18;display:flex;align-items:center;justify-content:center;">
-               <span style="font-style:italic;font-family:'Arial Black',sans-serif;font-size:${driverNum.length>2?'0.7rem':'0.85rem'};font-weight:900;color:${tileColor};">${driverNum}</span>
-             </div>`;
+        const numSize = driverNum.length > 2 ? '0.7rem' : '0.85rem';
+        let photoHtml;
+        if (photoUrl) {
+          photoHtml = '<div class="tw-card-photo-tile" style="background:' + tileColor + '18;">'
+            + '<img src="' + photoUrl + '" alt="' + drv.name + '" style="width:100%;height:100%;object-fit:cover;object-position:top center;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">'
+            + '<div class="tw-card-photo-fallback" style="display:none;background:' + tileColor + '18;width:100%;height:100%;align-items:center;justify-content:center;font-style:italic;font-weight:900;color:' + tileColor + ';font-size:' + numSize + ';">' + driverNum + '</div>'
+            + '</div>';
+        } else {
+          photoHtml = '<div class="tw-card-photo-tile" style="background:' + tileColor + '18;display:flex;align-items:center;justify-content:center;">'
+            + '<span style="font-style:italic;font-weight:900;color:' + tileColor + ';font-size:' + numSize + ';">' + driverNum + '</span>'
+            + '</div>';
+        }
         return `<div class="tw-card">
           <div class="tw-card-photo">${photoHtml}</div>
           <div class="tw-card-info">
