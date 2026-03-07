@@ -119,7 +119,7 @@
 
   /* Player columns header bar */
   .this-week-col-headers { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--red); }
-  .this-week-col-header { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.15rem; color: #fff; letter-spacing: 0; padding: 0; margin-bottom: 14px; background: none; text-transform: none; }
+  .this-week-col-header { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.05rem; font-style: italic; letter-spacing: 2px; padding: 0; margin-bottom: 12px; background: none; text-transform: uppercase; text-shadow: 0 0 20px currentColor; }
   .this-week-col-header:last-child { border-right: none; }
 
   /* TV-style pick rows */
@@ -130,16 +130,17 @@
   .this-week-col-header { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: none; }
   /* Driver photo cards */
   .tw-driver-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-  .tw-card { display: flex; align-items: center; gap: 0; background: #161616; border: 1px solid #222; border-radius: 6px; overflow: hidden; transition: border-color 0.15s; }
+  .tw-card { display: flex; align-items: stretch; gap: 0; background: #161616; border: 1px solid #222; border-radius: 6px; overflow: hidden; transition: border-color 0.15s; height: 52px; }
   .tw-card:hover { border-color: #333; }
-  .tw-card-photo { width: 48px; height: 48px; flex-shrink: 0; overflow: hidden; position: relative; }
-  .tw-card-photo-tile { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-  .tw-card-info { flex: 1; padding: 6px 8px; min-width: 0; }
-  .tw-card-num { display: inline-block; margin-bottom: 1px; line-height: 1; }
-  .tw-card-name { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600; color: #e8e8e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .tw-card-pts-wrap { padding: 0 10px; flex-shrink: 0; text-align: right; border-left: 1px solid #222; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 44px; }
+  .tw-card-photo { width: 52px; height: 52px; flex-shrink: 0; overflow: hidden; position: relative; border-radius: 4px 0 0 4px; }
+  .tw-card-photo-tile { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; position: relative; }
+  .tw-card-photo-fallback { display: none; }
+  .tw-tile-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
+  .tw-card-info { flex: 1; padding: 0 8px; min-width: 0; display: flex; align-items: center; }
+  .tw-card-name { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; color: #e8e8e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tw-card-pts-wrap { padding: 0 10px; flex-shrink: 0; text-align: right; border-left: 1px solid #222; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 46px; }
   .tw-card-pts { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1rem; color: var(--gold); line-height: 1; }
-  .tw-card-pts.no-result { color: #2a2a2a; }
+  .tw-card-pts.no-result { color: #2a2a2a; font-size: 0.7rem; letter-spacing: 1px; }
   .tw-card-pts-label { font-size: 0.55rem; color: #555; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
   .this-week-empty { padding: 14px 4px; color: #444; font-style: italic; font-size: 0.85rem; }
   .this-week-total { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.85rem; color: #555; letter-spacing: 2px; padding: 8px 16px; border-top: 1px solid #1e1e1e; background: #0d0d0d; display: flex; justify-content: space-between; }
@@ -496,8 +497,45 @@ const DRIVERS = [
 ];
 
 function getDriverPhotoUrl(driverName) {
-  // Returns empty — we use styled number tiles instead
-  return '';
+  const photos = {
+    'AJ Allmendinger':     'images/drivers/AJ-Allmendinger.png',
+    'Alex Bowman':         'images/drivers/Alex-Bowman.png',
+    'Austin Cindric':      'images/drivers/Austin-Cindric.png',
+    'Austin Dillon':       'images/drivers/Austin-Dillon.png',
+    'Brad Keselowski':     'images/drivers/Brad-Keselowski.png',
+    'Bubba Wallace':       'images/drivers/Bubba-Wallace.png',
+    'Carson Hocevar':      'images/drivers/Carson-Hocevar.png',
+    'Chase Briscoe':       'images/drivers/Chase-Briscoe.png',
+    'Chase Elliott':       'images/drivers/Chase-Elliott.png',
+    'Chris Buescher':      'images/drivers/Chris-Buescher.png',
+    'Christopher Bell':    'images/drivers/Christopher-Bell.png',
+    'Cody Ware':           'images/drivers/Cody-Ware.png',
+    'Cole Custer':         'images/drivers/Cole-Custer.png',
+    'Connor Zilisch':      'images/drivers/Connor-Zilisch.png',
+    'Daniel Suarez':       'images/drivers/Daniel-Suarez.png',
+    'Denny Hamlin':        'images/drivers/Denny-Hamlin.png',
+    'Erik Jones':          'images/drivers/Erik-Jones.png',
+    'Joey Logano':         'images/drivers/Joey-Logano.png',
+    'John Hunter Nemechek':'images/drivers/John-hunter-Nemechek.png',
+    'Josh Berry':          'images/drivers/Josh-Berry.png',
+    'Kyle Busch':          'images/drivers/Kyle-Busch.png',
+    'Kyle Larson':         'images/drivers/Kyle-Larson.png',
+    'Michael McDowell':    'images/drivers/Michael-McDowell.png',
+    'Noah Gragson':        'images/drivers/Noah-Gragson.png',
+    'Ricky Stenhouse Jr':  'images/drivers/Ricky-Stenhouse-Jr.png',
+    'Riley Herbst':        'images/drivers/Riley-Herbst.png',
+    'Ross Chastain':       'images/drivers/Ross-Chastain.png',
+    'Ryan Blaney':         'images/drivers/Ryan-Blaney.png',
+    'Ryan Preece':         'images/drivers/Ryan-Preece.png',
+    'Shane Van Gisbergen': 'images/drivers/shane-van-gisbergen.png',
+    'Todd Gilliland':      'images/drivers/Todd-Gilliand.png',
+    'Ty Dillon':           'images/drivers/Ty-Dillon.png',
+    'Ty Gibbs':            'images/drivers/Ty-Gibbs.png',
+    'Tyler Reddick':       'images/drivers/Tyler-Reddick.png',
+    'William Byron':       'images/drivers/William-Byron.png',
+    'Zane Smith':          'images/drivers/Zane-Smith.png',
+  };
+  return photos[driverName] || '';
 }
 function getDriverTileColor(num) {
   // Team-based accent colors
@@ -890,9 +928,16 @@ function renderThisWeek() {
         const badge = driverObj ? carNumBadge(driverObj.num, 'sm') : '';
         const driverNum = driverObj ? driverObj.num : '?';
         const tileColor = driverObj ? getDriverTileColor(driverObj.num) : '#333';
-        const photoHtml = `<div class="tw-card-photo-tile" style="background:${tileColor}20;border-right:3px solid ${tileColor};">
-          <span style="font-family:'Arial Black',sans-serif;font-size:${driverNum.length>2?'0.85rem':'1rem'};font-weight:900;color:${tileColor};">${driverNum}</span>
-        </div>`;
+        const photoUrl = getDriverPhotoUrl(drv.name);
+        const photoHtml = photoUrl
+          ? `<div class="tw-card-photo-tile" style="background:${tileColor}18;">
+               <img src="${photoUrl}" alt="${drv.name}" style="width:100%;height:100%;object-fit:cover;object-position:top center;"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+               <div class="tw-card-photo-fallback" style="display:none;background:${tileColor}18;width:100%;height:100%;align-items:center;justify-content:center;font-style:italic;font-family:'Arial Black',sans-serif;font-size:${driverNum.length>2?'0.7rem':'0.85rem'};font-weight:900;color:${tileColor};">${driverNum}</div>
+             </div>`
+          : `<div class="tw-card-photo-tile" style="background:${tileColor}18;display:flex;align-items:center;justify-content:center;">
+               <span style="font-style:italic;font-family:'Arial Black',sans-serif;font-size:${driverNum.length>2?'0.7rem':'0.85rem'};font-weight:900;color:${tileColor};">${driverNum}</span>
+             </div>`;
         return `<div class="tw-card">
           <div class="tw-card-photo">${photoHtml}</div>
           <div class="tw-card-info">
@@ -911,8 +956,9 @@ function renderThisWeek() {
     const totalPts = cumulScore(pi, ri);
     const totalHtml = `<div class="this-week-total">WEEK <span>${weekPts || '—'}</span> &nbsp; TOTAL <span>${totalPts || '—'}</span></div>`;
 
+    const pColor = PLAYER_COLORS[pi];
     playerCols += `<div class="this-week-player">
-      <div class="this-week-col-header">${name}</div>
+      <div class="this-week-col-header" style="color:${pColor};">${name.toUpperCase()}</div>
       ${driverHtml}
       ${totalHtml}
     </div>`;
