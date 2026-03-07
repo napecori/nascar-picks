@@ -130,9 +130,9 @@
   .this-week-col-header { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: none; }
   /* Driver photo cards */
   .tw-driver-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-  .tw-card { display: flex; align-items: stretch; gap: 0; background: #161616; border: 1px solid #222; border-radius: 6px; overflow: hidden; transition: border-color 0.15s; height: 52px; }
+  .tw-card { display: flex; align-items: stretch; gap: 0; background: #161616; border: 1px solid #222; border-radius: 6px; overflow: hidden; transition: border-color 0.15s; min-height: 64px; }
   .tw-card:hover { border-color: #333; }
-  .tw-card-photo { width: 52px; height: 52px; flex-shrink: 0; overflow: hidden; position: relative; border-radius: 4px 0 0 4px; }
+  .tw-card-photo { width: 64px; height: 64px; flex-shrink: 0; overflow: hidden; position: relative; border-radius: 4px 0 0 4px; }
   .tw-card-photo-tile { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; position: relative; }
   .tw-card-photo-fallback { display: none; }
   .tw-tile-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
@@ -958,13 +958,13 @@ function renderThisWeek() {
         }
         return `<div class="tw-card">
           <div class="tw-card-photo">${photoHtml}</div>
-          <div class="tw-card-info">
-            <div class="tw-card-num" style="height:18px;display:flex;align-items:center;margin-bottom:3px;">
+          <div class="tw-card-info" style="display:flex;flex-direction:column;justify-content:center;gap:5px;">
+            <div class="tw-card-num" style="display:flex;align-items:center;">
               <img src="images/numbers/${driverNum}.png?v=2" alt="#${driverNum}"
-                style="height:18px;width:auto;max-width:48px;object-fit:contain;display:block;"
+                style="height:26px;width:auto;max-width:64px;object-fit:contain;display:block;"
                 onerror="this.style.display=\'none\'">
             </div>
-            <div class="tw-card-name">${drv.name}</div>
+            <div class="tw-card-name" style="font-size:0.82rem;line-height:1.2;">${drv.name}</div>
           </div>
           <div class="tw-card-pts-wrap">
             <div class="tw-card-pts ${pts===null?'no-result':''}">${pts !== null ? pts : '—'}</div>
