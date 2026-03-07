@@ -480,6 +480,7 @@ const STAGE_POINTS = [10,9,8,7,6,5,4,3,2,1];
 // Fastest lap = 1 bonus point
 
 const PLAYER_NAMES = ['Alex','Nick','Greg Sr','Greg Jr'];
+const PLAYER_COLORS = ['#FF3D57','#00E5FF','#FFD600','#39FF14'];
 
 const DRIVERS = [
   {num:'1',name:'Ross Chastain'},{num:'2',name:'Austin Cindric'},{num:'3',name:'Austin Dillon'},
@@ -625,7 +626,21 @@ async function loadFromSheets() {
     const resp = await Promise.race([fetch(scriptUrl + '?action=load&t=' + Date.now()), timeout]);
     const data = await resp.json();
     if (data.picks) {
-      picks = data.picks;
+      // Normalize picks: Google Sheets may return objects instead of arrays
+      const raw = data.picks;
+      const normalized = emptyPicks();
+      if (Array.isArray(raw)) {
+        raw.forEach((playerPicks, pi) => {
+          if (pi < 4 && Array.isArray(playerPicks)) {
+            playerPicks.forEach((race, ri) => {
+              if (ri < 35 && race && typeof race === 'object') {
+                normalized[pi][ri] = Object.assign(normalized[pi][ri], race);
+              }
+            });
+          }
+        });
+      }
+      picks = normalized;
       // Re-render picks panels so inputs show loaded data
       document.getElementById('player-tabs').innerHTML = '';
       document.getElementById('picks-panels').innerHTML = '';
@@ -1016,8 +1031,8 @@ function renderLeaderboard() {
 }
 
 function renderStandings() {
-  renderThisWeek();
-  renderLeaderboard();
+  try { renderThisWeek(); } catch(e) { console.error('renderThisWeek error:', e); }
+  try { renderLeaderboard(); } catch(e) { console.error('renderLeaderboard error:', e); }
   const tbody = document.getElementById('standings-full-body');
   tbody.innerHTML = '';
   SCHEDULE.forEach((race, ri) => {
