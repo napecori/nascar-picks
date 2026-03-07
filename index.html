@@ -152,6 +152,7 @@
   .lb-header {
   display: grid;
   grid-template-columns: 52px 1fr 90px 72px;
+  gap: 0 8px;
   background: var(--red);
   padding: 8px 12px;
   font-family: 'Inter', sans-serif;
@@ -164,6 +165,7 @@
 .lb-row {
   display: grid;
   grid-template-columns: 52px 1fr 90px 72px;
+  gap: 0 8px;
   align-items: center;
   background: #141414;
   border-bottom: 1px solid #1c1c1c;
@@ -937,7 +939,7 @@ function renderLeaderboard() {
   const listEl = document.getElementById('leaderboard-list');
   const leader = sorted[0].total || 0;
   listEl.innerHTML = `<div class="lb-header">
-    <div>POS</div><div>PLAYER</div><div style="text-align:right;">PTS</div><div style="text-align:right;padding-right:14px;">BACK</div>
+    <div>POS</div><div>PLAYER</div><div style="text-align:right;">PTS</div><div style="text-align:right;padding-right:14px;border-left:1px solid rgba(255,255,255,0.2);margin-left:4px;padding-left:10px;">BACK</div>
   </div>`;
   sorted.forEach((p, i) => {
     const rank = i + 1;
