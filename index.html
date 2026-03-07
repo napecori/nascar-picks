@@ -149,7 +149,7 @@
 
   /* LEADERBOARD — broadcast TV style */
   .leaderboard-list { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
-  .lb-header { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px 80px; background: var(--red); padding: 6px 12px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 3px; color: rgba(255,255,255,0.8); align-items: center; gap: 0; }
+  .lb-header { display: grid; grid-template-columns: 48px 48px 1fr auto 120px; background: var(--red); padding: 6px 12px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 3px; color: rgba(255,255,255,0.8); align-items: center; gap: 0; }
   .lb-row { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px; align-items: center; background: #141414; border-bottom: 1px solid #1c1c1c; transition: background 0.15s; }
   .lb-row:hover { background: #1a1a1a; }
   .lb-row.lb-1 { background: #1a1500; border-left: 3px solid var(--gold); }
@@ -1018,7 +1018,7 @@ function renderLeaderboard() {
   const listEl = document.getElementById('leaderboard-list');
   const leader = sorted[0].total || 0;
   listEl.innerHTML = `<div class="lb-header">
-    <div>POS</div><div></div><div>PLAYER</div><div></div><div style="text-align:right;padding-right:16px;">PTS</div><div style="text-align:right;padding-right:12px;color:#888;">BACK</div>
+    <div>POS</div><div></div><div>PLAYER</div><div></div><div style="text-align:right;padding-right:16px;">PTS / BACK</div>
   </div>`;
   sorted.forEach((p, i) => {
     const rank = i + 1;
@@ -1028,11 +1028,11 @@ function renderLeaderboard() {
       <div class="lb-rank">${rank}</div>
       <div class="lb-carnum"></div>
       <div class="lb-name" style="color:${PLAYER_COLORS[p.idx]};text-shadow:0 0 20px ${PLAYER_COLORS[p.idx]}88;font-style:italic;letter-spacing:2px;">${p.name.toUpperCase()}</div>
-      <div class="lb-bar-wrap">
-        <div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${pct}%"></div></div>
+
+      <div class="lb-pts" style="display:flex;flex-direction:column;align-items:flex-end;padding-right:16px;line-height:1;">
+        <div>${p.total}<span class="lb-pts-label" style="display:inline;">PTS</span></div>
+        <div style="font-size:0.75rem;font-weight:700;margin-top:2px;">${back}</div>
       </div>
-      <div class="lb-pts">${p.total}<span class="lb-pts-label">PTS</span></div>
-      <div style="text-align:right;padding-right:12px;display:flex;align-items:center;justify-content:flex-end;">${back}</div>
     </div>`;
   });
 }
