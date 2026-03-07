@@ -493,8 +493,14 @@ const DRIVERS = [
   {num:'43',name:'Erik Jones'},{num:'45',name:'Tyler Reddick'},{num:'47',name:'Ricky Stenhouse Jr'},
   {num:'48',name:'Alex Bowman'},{num:'51',name:'Cody Ware'},{num:'54',name:'Ty Gibbs'},
   {num:'71',name:'Zane Smith'},{num:'77',name:'Carson Hocevar'},{num:'88',name:'Connor Zilisch'},
-  {num:'97',name:'Shane van Gisbergen'},{num:'99',name:'Daniel Hemric'},
+  {num:'97',name:'Shane Van Gisbergen'},{num:'99',name:'Daniel Hemric'},
 ];
+
+function getDriverPhotoUrl(driverName) {
+  const d = DRIVERS.find(x => x.name === driverName);
+  if (!d) return '';
+  return `https://cf.nascar.com/data/images/carbio/${d.num}/2026/h/0_full.png`;
+}
 
 const SCHEDULE = [
   {race:1,  track:'EchoPark Speedway (Atlanta)',       disc:'superspeedway', date:'Sun. Feb 22', time:'3:00pm ET',  tv:'FOX',   radio:'PRN'},
@@ -1192,7 +1198,7 @@ const DRIVER_ROSTER = [
   {num:'71', name:'Zane Smith',           team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Zane-Smith.png'},
   {num:'77', name:'Carson Hocevar',       team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Carson-Hocevar.png'},
   {num:'88', name:'Connor Zilisch',       team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'Connor-Zilisch.png'},
-  {num:'97', name:'Shane van Gisbergen',  team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'shane-van-gisbergen.png'},
+  {num:'97', name:'Shane Van Gisbergen',  team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'shane-van-gisbergen.png'},
   {num:'99', name:'Daniel Hemric',        team:'Spire Motorsports',       mfr:'Chevrolet', photo:null},
 ];
 
