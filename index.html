@@ -959,7 +959,11 @@ function renderThisWeek() {
         return `<div class="tw-card">
           <div class="tw-card-photo">${photoHtml}</div>
           <div class="tw-card-info">
-            <div class="tw-card-num" style="font-size:0.65rem;font-weight:900;font-style:italic;color:${tileColor};letter-spacing:1px;line-height:1;margin-bottom:2px;">#${driverNum}</div>
+            <div class="tw-card-num" style="height:18px;display:flex;align-items:center;margin-bottom:3px;">
+              <img src="images/numbers/${driverNum}.png?v=2" alt="#${driverNum}"
+                style="height:18px;width:auto;max-width:48px;object-fit:contain;display:block;"
+                onerror="this.style.display=\'none\'">
+            </div>
             <div class="tw-card-name">${drv.name}</div>
           </div>
           <div class="tw-card-pts-wrap">
