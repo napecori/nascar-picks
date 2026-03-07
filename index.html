@@ -149,167 +149,86 @@
 
   /* LEADERBOARD — broadcast TV style */
   .leaderboard-list { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
-  .lb-header { display: grid; grid-template-columns: 48px 48px 1fr auto 120px; background: var(--red); padding: 6px 12px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 3px; color: rgba(255,255,255,0.8); align-items: center; gap: 0; }
-  .lb-row { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px; align-items: center; background: #141414; border-bottom: 1px solid #1c1c1c; transition: background 0.15s; }
-  .lb-row:hover { background: #1a1a1a; }
-  .lb-row.lb-1 { background: #1a1500; border-left: 3px solid var(--gold); }
-  .lb-row.lb-2 { background: #151515; border-left: 3px solid #888; }
-  .lb-row.lb-3 { background: #130d00; border-left: 3px solid #cd7f32; }
-  .lb-row.lb-4 { border-left: 3px solid #333; }
-  .lb-rank { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.1rem; color: #555; text-align: center; padding: 14px 0; }
-  .lb-row.lb-1 .lb-rank { color: var(--gold); }
-  .lb-row.lb-2 .lb-rank { color: #888; }
-  .lb-row.lb-3 .lb-rank { color: #cd7f32; }
-  .lb-carnum { width: 48px; display: flex; align-items: center; justify-content: center; padding: 8px 4px; }
-  .lb-name { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: 1.5px; color: #fff; padding: 12px 8px; }
-  .lb-bar-wrap { padding: 0 16px; }
-  .lb-bar-bg { background: #0a0a0a; height: 6px; border-radius: 3px; overflow: hidden; }
-  .lb-bar-fill { height: 100%; border-radius: 3px; background: #333; transition: width 0.8s ease; }
-  .lb-row.lb-1 .lb-bar-fill { background: var(--gold); }
-  .lb-row.lb-2 .lb-bar-fill { background: #888; }
-  .lb-row.lb-3 .lb-bar-fill { background: #cd7f32; }
-  .lb-pts { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.6rem; color: #fff; text-align: right; padding-right: 16px; }
-  .lb-row.lb-1 .lb-pts { color: var(--gold); }
-  .lb-pts-label { font-size: 0.6rem; color: #555; letter-spacing: 2px; display: block; text-align: right; line-height: 1; }
-  .lb-races { font-size: 0.72rem; color: #555; text-align: right; padding-right: 16px; letter-spacing: 1px; }
+  .lb-header {
+  display: grid;
+  grid-template-columns: 52px 1fr 90px 72px;
+  background: var(--red);
+  padding: 8px 12px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.8);
+  align-items: center;
+}
+.lb-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 90px 72px;
+  align-items: center;
+  background: #141414;
+  border-bottom: 1px solid #1c1c1c;
+  transition: background 0.15s;
+  min-height: 58px;
+}
+.lb-row:hover { background: #1a1a1a; }
+.lb-rank {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #555;
+  text-align: center;
+  padding: 14px 0;
+}
+.lb-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: 1.5px;
+  color: #fff;
+  padding: 12px 8px;
+}
+.lb-pts {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 1.55rem;
+  color: #fff;
+  text-align: right;
+}
+.lb-pts-label {
+  font-size: 0.55rem;
+  color: #555;
+  letter-spacing: 2px;
+  display: block;
+  text-align: right;
+  line-height: 1;
+}
+.lb-back {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #666;
+  text-align: right;
+  padding-right: 14px;
+  letter-spacing: 0.5px;
+}
+@media (max-width: 600px) {
+  .lb-header { grid-template-columns: 40px 1fr 72px 60px; padding: 6px 8px; }
+  .lb-row    { grid-template-columns: 40px 1fr 72px 60px; }
+  .lb-name   { font-size: 1.05rem; padding: 10px 6px; }
+  .lb-pts    { font-size: 1.2rem; }
+  .lb-rank   { font-size: 0.95rem; padding: 10px 0; }
+  .lb-back   { font-size: 0.72rem; padding-right: 8px; }
+}
+@media (max-width: 400px) {
+  .lb-header { grid-template-columns: 36px 1fr 64px 52px; }
+  .lb-row    { grid-template-columns: 36px 1fr 64px 52px; }
+  .lb-name   { font-size: 0.9rem; }
+  .lb-pts    { font-size: 1.05rem; }
+}
 
-  @media (max-width: 700px) {
-    .this-week-picks { grid-template-columns: 1fr 1fr; }
-    .this-week-col-headers { grid-template-columns: 1fr 1fr; }
-    .this-week-col-header:nth-child(2) { border-right: none; }
-    .this-week-col-header:nth-child(3), .this-week-col-header:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.15); }
-    .this-week-player:nth-child(2) { border-right: none; }
-    .this-week-player:nth-child(3) { border-top: 1px solid #1e1e1e; border-right: 1px solid #1e1e1e; }
-    .this-week-player:nth-child(4) { border-top: 1px solid #1e1e1e; border-right: none; }
-    .lb-row, .lb-header { grid-template-columns: 40px 44px 1fr 80px; }
-    .lb-bar-wrap { display: none; }
-    .lb-races { display: none; }
-    .lb-name { font-size: 1.1rem; }
-  }
-
-
-  /* DRIVERS GRID */
-  .drivers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px; }
-  .driver-card-roster { background: var(--gray); border: 1px solid var(--mid-gray); border-top: 4px solid var(--red); overflow: hidden; position: relative; transition: border-color 0.2s; }
-  .driver-card-roster:hover { border-color: var(--gold); }
-  .driver-card-photo { width: 100%; height: 140px; object-fit: cover; object-position: top; display: block; background: #1a1a1a; }
-  .driver-card-photo-placeholder { width: 100%; height: 140px; background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); display: flex; align-items: center; justify-content: center; }
-  .driver-card-num-big { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 4rem; line-height: 1; opacity: 0.15; }
-  .driver-card-body { padding: 10px 12px 12px; }
-  .driver-card-namenum { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-  .driver-card-name { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.05rem; letter-spacing: 1px; color: var(--cream); line-height: 1.2; }
-  .driver-card-team { font-size: 0.75rem; color: var(--light-gray); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .driver-card-mfr { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; padding: 1px 6px; border-radius: 2px; text-transform: uppercase; }
-  .mfr-chevrolet { background: #c8102e; color: #fff; }
-  .mfr-ford { background: #003087; color: #fff; }
-  .mfr-toyota { background: #eb0a1e; color: #fff; }
-  @media (max-width: 600px) {
-    .drivers-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-    .driver-card-photo, .driver-card-photo-placeholder { height: 110px; }
-    .driver-card-num-big { font-size: 3rem; }
-  }
-  /* DRIVER STATS */
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 32px; }
-  .stats-card { background: var(--gray); border: 1px solid var(--mid-gray); border-top: 4px solid var(--red); padding: 0; overflow: hidden; }
-  .stats-card-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: 3px; color: var(--cream); background: #1a1a1a; padding: 10px 16px; border-bottom: 1px solid var(--mid-gray); display: flex; align-items: center; gap: 8px; }
-  .stats-card-title span { color: var(--gold); }
-  .stats-row { display: flex; align-items: center; gap: 0; padding: 10px 16px; border-bottom: 1px solid #1f1f1f; }
-  .stats-row:last-child { border-bottom: none; }
-  .stats-pos { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--light-gray); width: 28px; flex-shrink: 0; }
-  .stats-pos.gold { color: var(--gold); }
-  .stats-pos.silver { color: #aaa; }
-  .stats-pos.bronze { color: #cd7f32; }
-  .stats-driver-name { flex: 1; font-size: 0.95rem; color: var(--cream); display: flex; align-items: center; gap: 8px; }
-  .stats-bar-wrap { flex: 1; padding: 0 12px; }
-  .stats-bar-bg { background: #111; height: 6px; border-radius: 3px; overflow: hidden; }
-  .stats-bar-fill { height: 100%; border-radius: 3px; background: var(--red); }
-  .stats-val { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--gold); width: 60px; text-align: right; flex-shrink: 0; }
-  .stats-val-label { font-size: 0.65rem; color: var(--light-gray); display: block; text-align: right; line-height: 1; margin-top: 1px; }
-  .stats-sub { font-size: 0.75rem; color: var(--light-gray); margin-left: 4px; }
-  .stats-empty { padding: 20px 16px; color: var(--light-gray); font-style: italic; font-size: 0.9rem; }
-  .stats-header-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-  .stats-highlight { background: var(--gray); border: 1px solid var(--mid-gray); border-left: 4px solid var(--gold); padding: 16px 20px; }
-  .stats-highlight-label { font-size: 0.7rem; letter-spacing: 3px; color: var(--light-gray); text-transform: uppercase; }
-  .stats-highlight-val { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 2rem; color: var(--gold); line-height: 1.1; }
-  .stats-highlight-sub { font-size: 0.8rem; color: #bbb; margin-top: 2px; }
-  @media (max-width: 700px) {
-    .stats-grid { grid-template-columns: 1fr; }
-    .stats-header-row { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 900px) {
-    .main { padding: 16px; }
-    .header-inner { padding: 0 16px; }
-    .points-ref-grid { grid-template-columns: 1fr; }
-    .nav-tabs { padding: 0 4px; }
-    .sync-bar { padding: 5px 16px; }
-    .stats-grid { grid-template-columns: 1fr; }
-    .stats-header-row { grid-template-columns: 1fr 1fr; }
-    .lb-bar-wrap { display: none; }
-    .lb-races { display: none; }
-    .lb-row, .lb-header { grid-template-columns: 40px 44px 1fr 80px; }
-  }
-  @media (max-width: 600px) {
-    /* Header */
-    .header-inner { padding: 0 12px; height: 52px; }
-    .site-title { font-size: 1.3rem; letter-spacing: 0.5px; }
-    .season-label { display: none; }
-    .header-badge-pill { display: none; }
-    /* Nav */
-    .nav-tabs { padding: 0; }
-    .nav-tab { padding: 10px 10px; font-size: 0.72rem; letter-spacing: 0; }
-    /* Sync bar */
-    .sync-bar { padding: 4px 12px; font-size: 0.7rem; }
-    /* Main */
-    .main { padding: 12px 10px; }
-    /* This week panel */
-    .this-week-header { padding: 10px 12px; gap: 8px; flex-wrap: nowrap; }
-    .this-week-track { font-size: 1.15rem; line-height: 1.1; }
-    .this-week-label { font-size: 0.58rem; letter-spacing: 2px; margin-bottom: 2px; }
-    .this-week-meta { font-size: 0.65rem; line-height: 1.5; margin-top: 4px; }
-    .this-week-track-img-wrap { display: none; }
-    .this-week-col-header { font-size: 0.78rem; padding: 5px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .tw-name { font-size: 0.75rem; }
-    .this-week-col-header { font-size: 0.76rem; padding: 6px 10px; letter-spacing: 1px; }
-    .this-week-picks { grid-template-columns: 1fr 1fr; }
-    .this-week-player:nth-child(2) { border-right: none; }
-    .this-week-player:nth-child(3) { border-top: 1px solid #2a2a2a; border-right: 1px solid #1e1e1e; }
-    .this-week-player:nth-child(4) { border-top: 1px solid #2a2a2a; border-right: none; }
-    .tw-name { font-size: 0.78rem; padding: 8px 4px 8px 2px; }
-    .tw-pos { width: 20px; font-size: 0.85rem; }
-    .tw-num { width: 32px; padding: 6px 2px; }
-    .tw-pts { width: 28px; font-size: 0.85rem; padding-right: 6px; }
-    .this-week-total { font-size: 0.72rem; padding: 6px 10px; }
-    /* Leaderboard */
-    .lb-bar-wrap { display: none; }
-    .lb-races { display: none; }
-    .lb-row, .lb-header { grid-template-columns: 36px 40px 1fr 70px; }
-    .lb-name { font-size: 1.1rem; padding: 10px 6px; }
-    .lb-rank { font-size: 1rem; padding: 10px 0; }
-    .lb-pts { font-size: 1.3rem; padding-right: 10px; }
-    /* Tables */
-    tbody td { font-size: 0.78rem; padding: 7px 6px; }
-    thead th { font-size: 0.72rem; padding: 7px 6px; }
-    /* Commish bar */
-    .commish-bar { gap: 6px; padding: 8px 10px; }
-    .commish-bar input[type=password] { width: 120px; font-size: 0.82rem; }
-    .commish-status { width: 100%; }
-    /* Player tabs */
-    .player-tab { padding: 8px 12px; font-size: 0.72rem; }
-    /* Picks table inputs */
-    .autocomplete-wrap input { min-width: 80px; font-size: 0.8rem; }
-    .fin-input { width: 36px; font-size: 0.8rem; }
-    /* Driver stats */
-    .stats-grid { grid-template-columns: 1fr; }
-    .stats-header-row { grid-template-columns: 1fr; }
-    .stats-card-title { font-size: 0.9rem; }
-    .stats-row { padding: 8px 12px; }
-    /* Driver cards */
-    .drivers-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
-    .driver-card-photo, .driver-card-photo-placeholder { height: 100px; }
-    .driver-card-name { font-size: 0.9rem; }
-    /* Schedule table - hide radio column on mobile */
-    .hide-mobile { display: none; }
-  }
+.lb-1 .lb-rank { color: var(--gold); }
+.lb-2 .lb-rank { color: #aaa; }
+.lb-3 .lb-rank { color: #cd7f32; }
+.lb-1 .lb-pts  { color: var(--gold); }
 </style>
 </head>
 <body>
@@ -1018,21 +937,17 @@ function renderLeaderboard() {
   const listEl = document.getElementById('leaderboard-list');
   const leader = sorted[0].total || 0;
   listEl.innerHTML = `<div class="lb-header">
-    <div>POS</div><div></div><div>PLAYER</div><div></div><div style="text-align:right;padding-right:16px;">PTS / BACK</div>
+    <div>POS</div><div>PLAYER</div><div style="text-align:right;">PTS</div><div style="text-align:right;padding-right:14px;">BACK</div>
   </div>`;
   sorted.forEach((p, i) => {
     const rank = i + 1;
     const pct = maxPts > 0 ? Math.round((p.total / maxPts) * 100) : 0;
-    const back = rank === 1 ? '<span style="color:#FFD600;font-size:0.8rem;font-weight:700;">LEADER</span>' : '<span style="color:#888;font-size:0.95rem;font-weight:700;">-' + (leader - p.total) + '</span>';
+    const back = rank === 1 ? '' : '<span style="color:#888;font-size:0.95rem;font-weight:700;">-' + (leader - p.total) + '</span>';
     listEl.innerHTML += `<div class="lb-row lb-${rank}">
       <div class="lb-rank">${rank}</div>
-      <div class="lb-carnum"></div>
-      <div class="lb-name" style="color:${PLAYER_COLORS[p.idx]};text-shadow:0 0 20px ${PLAYER_COLORS[p.idx]}88;font-style:italic;letter-spacing:2px;">${p.name.toUpperCase()}</div>
-
-      <div class="lb-pts" style="display:flex;flex-direction:column;align-items:flex-end;padding-right:16px;line-height:1;">
-        <div>${p.total}<span class="lb-pts-label" style="display:inline;">PTS</span></div>
-        <div style="font-size:0.75rem;font-weight:700;margin-top:2px;">${back}</div>
-      </div>
+      <div class="lb-name" style="color:${PLAYER_COLORS[p.idx]};text-shadow:0 0 18px ${PLAYER_COLORS[p.idx]}88;font-style:italic;letter-spacing:2px;">${p.name.toUpperCase()}</div>
+      <div class="lb-pts" style="text-align:right;">${p.total}<span class="lb-pts-label">PTS</span></div>
+      <div class="lb-back">${back}</div>
     </div>`;
   });
 }
