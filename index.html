@@ -130,18 +130,17 @@
   .this-week-col-header { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: none; }
   /* Driver photo cards */
   .tw-driver-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-  .tw-card { display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid #222; border-radius: 8px; overflow: hidden; transition: border-color 0.15s; }
+  .tw-card { display: flex; align-items: center; gap: 0; background: #161616; border: 1px solid #222; border-radius: 6px; overflow: hidden; transition: border-color 0.15s; }
   .tw-card:hover { border-color: #333; }
-  .tw-card-photo { width: 64px; height: 64px; flex-shrink: 0; background: #111; overflow: hidden; position: relative; }
-  .tw-card-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; filter: grayscale(20%); }
-  .tw-card-photo-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 900; color: #333; }
-  .tw-card-info { flex: 1; padding: 8px 4px; min-width: 0; }
-  .tw-card-num { display: inline-block; margin-bottom: 2px; }
-  .tw-card-name { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; color: #e8e8e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .tw-card-pts-wrap { padding: 0 12px 0 4px; flex-shrink: 0; text-align: right; }
-  .tw-card-pts { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.15rem; color: var(--gold); line-height: 1; }
+  .tw-card-photo { width: 48px; height: 48px; flex-shrink: 0; overflow: hidden; position: relative; }
+  .tw-card-photo-tile { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .tw-card-info { flex: 1; padding: 6px 8px; min-width: 0; }
+  .tw-card-num { display: inline-block; margin-bottom: 1px; line-height: 1; }
+  .tw-card-name { font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600; color: #e8e8e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tw-card-pts-wrap { padding: 0 10px; flex-shrink: 0; text-align: right; border-left: 1px solid #222; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 44px; }
+  .tw-card-pts { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1rem; color: var(--gold); line-height: 1; }
   .tw-card-pts.no-result { color: #2a2a2a; }
-  .tw-card-pts-label { font-size: 0.6rem; color: #555; letter-spacing: 1px; text-transform: uppercase; }
+  .tw-card-pts-label { font-size: 0.55rem; color: #555; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
   .this-week-empty { padding: 14px 4px; color: #444; font-style: italic; font-size: 0.85rem; }
   .this-week-total { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.85rem; color: #555; letter-spacing: 2px; padding: 8px 16px; border-top: 1px solid #1e1e1e; background: #0d0d0d; display: flex; justify-content: space-between; }
   .this-week-total span { color: var(--gold); }
@@ -497,9 +496,21 @@ const DRIVERS = [
 ];
 
 function getDriverPhotoUrl(driverName) {
-  const d = DRIVERS.find(x => x.name === driverName);
-  if (!d) return '';
-  return `https://cf.nascar.com/data/images/carbio/${d.num}/2026/h/0_full.png`;
+  // Returns empty — we use styled number tiles instead
+  return '';
+}
+function getDriverTileColor(num) {
+  // Team-based accent colors
+  const colors = {
+    '45':'#d4313a','23':'#1a6bb5',  // 23XI
+    '5':'#e8252e','9':'#1a6bb5','24':'#e8252e','48':'#e8252e', // Hendrick
+    '11':'#e8252e','19':'#e8252e','20':'#1a6bb5','54':'#e8252e', // JGR
+    '12':'#ffcc00','22':'#ffcc00','2':'#ffcc00', // Penske
+    '1':'#2d9c4c','88':'#2d9c4c','7':'#2d9c4c', // Trackhouse
+    '8':'#e8252e','3':'#e8252e', // RCR
+    '77':'#555','97':'#c0392b', // Spire/RBR
+  };
+  return colors[num] || '#333';
 }
 
 const SCHEDULE = [
@@ -877,16 +888,14 @@ function renderThisWeek() {
         const pts = drv.fin ? driverPts(d, drv.slot) : null;
         const driverObj = DRIVERS.find(x => x.name === drv.name);
         const badge = driverObj ? carNumBadge(driverObj.num, 'sm') : '';
-        const photoUrl = getDriverPhotoUrl(drv.name);
-        const lastName = drv.name.split(' ').slice(-1)[0].toUpperCase();
-        const photoHtml = photoUrl
-          ? `<img src="${photoUrl}" alt="${drv.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-             <div class="tw-card-photo-fallback" style="display:none;">${lastName.slice(0,2)}</div>`
-          : `<div class="tw-card-photo-fallback">${lastName.slice(0,2)}</div>`;
+        const driverNum = driverObj ? driverObj.num : '?';
+        const tileColor = driverObj ? getDriverTileColor(driverObj.num) : '#333';
+        const photoHtml = `<div class="tw-card-photo-tile" style="background:${tileColor}20;border-right:3px solid ${tileColor};">
+          <span style="font-family:'Arial Black',sans-serif;font-size:${driverNum.length>2?'0.85rem':'1rem'};font-weight:900;color:${tileColor};">${driverNum}</span>
+        </div>`;
         return `<div class="tw-card">
           <div class="tw-card-photo">${photoHtml}</div>
           <div class="tw-card-info">
-            <div class="tw-card-num">${badge}</div>
             <div class="tw-card-name">${drv.name}</div>
           </div>
           <div class="tw-card-pts-wrap">
