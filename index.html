@@ -149,7 +149,7 @@
 
   /* LEADERBOARD — broadcast TV style */
   .leaderboard-list { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
-  .lb-header { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px; background: var(--red); padding: 6px 12px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 3px; color: rgba(255,255,255,0.8); align-items: center; gap: 0; }
+  .lb-header { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px 80px; background: var(--red); padding: 6px 12px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 3px; color: rgba(255,255,255,0.8); align-items: center; gap: 0; }
   .lb-row { display: grid; grid-template-columns: 48px 48px 1fr auto 100px 80px; align-items: center; background: #141414; border-bottom: 1px solid #1c1c1c; transition: background 0.15s; }
   .lb-row:hover { background: #1a1a1a; }
   .lb-row.lb-1 { background: #1a1500; border-left: 3px solid var(--gold); }
@@ -1016,12 +1016,14 @@ function renderLeaderboard() {
     .sort((a,b) => b.total - a.total);
   const maxPts = sorted[0].total || 1;
   const listEl = document.getElementById('leaderboard-list');
+  const leader = sorted[0].total || 0;
   listEl.innerHTML = `<div class="lb-header">
-    <div>POS</div><div></div><div>PLAYER</div><div></div><div style="text-align:right;padding-right:16px;">PTS</div>
+    <div>POS</div><div></div><div>PLAYER</div><div></div><div style="text-align:right;padding-right:16px;">PTS</div><div style="text-align:right;padding-right:12px;color:#888;">BACK</div>
   </div>`;
   sorted.forEach((p, i) => {
     const rank = i + 1;
     const pct = maxPts > 0 ? Math.round((p.total / maxPts) * 100) : 0;
+    const back = rank === 1 ? '<span style="color:#FFD600;font-size:0.8rem;font-weight:700;">LEADER</span>' : '<span style="color:#888;font-size:0.95rem;font-weight:700;">-' + (leader - p.total) + '</span>';
     listEl.innerHTML += `<div class="lb-row lb-${rank}">
       <div class="lb-rank">${rank}</div>
       <div class="lb-carnum"></div>
@@ -1030,7 +1032,7 @@ function renderLeaderboard() {
         <div class="lb-bar-bg"><div class="lb-bar-fill" style="width:${pct}%"></div></div>
       </div>
       <div class="lb-pts">${p.total}<span class="lb-pts-label">PTS</span></div>
-
+      <div style="text-align:right;padding-right:12px;display:flex;align-items:center;justify-content:flex-end;">${back}</div>
     </div>`;
   });
 }
