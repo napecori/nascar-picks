@@ -213,12 +213,26 @@
   letter-spacing: 0.5px;
 }
 @media (max-width: 600px) {
+  /* Leaderboard */
   .lb-header { grid-template-columns: 40px 1fr 72px 60px; padding: 6px 8px; }
   .lb-row    { grid-template-columns: 40px 1fr 72px 60px; }
   .lb-name   { font-size: 1.05rem; padding: 10px 6px; }
   .lb-pts    { font-size: 1.2rem; }
   .lb-rank   { font-size: 0.95rem; padding: 10px 0; }
   .lb-back   { font-size: 0.72rem; padding-right: 8px; }
+  /* This Week panel — 2x2 grid */
+  .this-week-col-headers { grid-template-columns: repeat(2, 1fr) !important; }
+  .this-week-picks       { grid-template-columns: repeat(2, 1fr) !important; }
+  .this-week-player:nth-child(2) { border-right: none; }
+  .this-week-player:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.08); }
+  .this-week-player:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.08); }
+  /* Hide track SVG on mobile */
+  .this-week-header svg, .track-svg { display: none !important; }
+  /* Shrink race header */
+  .this-week-header { padding: 12px 16px; }
+  /* Smaller driver cards */
+  .tw-card-photo { width: 52px; height: 52px; }
+  .tw-card-name  { font-size: 0.75rem; }
 }
 @media (max-width: 400px) {
   .lb-header { grid-template-columns: 36px 1fr 64px 52px; }
