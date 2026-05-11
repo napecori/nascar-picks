@@ -108,6 +108,48 @@
 
   .loading-state { text-align: center; padding: 60px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: 3px; color: var(--light-gray); }
 
+  /* ── DRIVER ROSTER GRID ── */
+  .drivers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .driver-card-roster { background: var(--surface2); border: 1px solid var(--border); border-top: 3px solid #444; border-radius: 6px; overflow: hidden; transition: border-color 0.15s, transform 0.15s; }
+  .driver-card-roster:hover { transform: translateY(-2px); border-color: var(--border2); }
+  .driver-card-photo-placeholder { width: 100%; aspect-ratio: 1 / 1; background: var(--surface3); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .driver-card-photo { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+  .driver-card-num-big { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 3rem; font-style: italic; opacity: 0.5; }
+  .driver-card-body { padding: 10px 12px 12px; }
+  .driver-card-namenum { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .driver-card-name { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--white); line-height: 1.2; }
+  .driver-card-team { font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .driver-card-mfr { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; }
+  .mfr-chevrolet { background: rgba(255,200,0,0.12); color: #f0c040; border: 1px solid rgba(255,200,0,0.25); }
+  .mfr-ford      { background: rgba(0,112,210,0.12); color: #58a6ff; border: 1px solid rgba(0,112,210,0.25); }
+  .mfr-toyota    { background: rgba(220,0,0,0.12);   color: #f07070; border: 1px solid rgba(220,0,0,0.25); }
+
+  /* ── DRIVER STATS ── */
+  .stats-header-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .stats-highlight { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 14px 18px; }
+  .stats-highlight-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .stats-highlight-val { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.8rem; color: var(--white); line-height: 1.1; }
+  .stats-highlight-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stats-card { background: var(--surface2); border: 1px solid var(--border); padding: 0; }
+  .stats-card-title { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface3); }
+  .stats-card-title span { color: var(--white); }
+  .stats-row { display: grid; grid-template-columns: 36px 1fr 100px 64px; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border); transition: background 0.12s; }
+  .stats-row:last-child { border-bottom: none; }
+  .stats-row:hover { background: var(--surface3); }
+  .stats-pos { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1rem; color: var(--muted); text-align: center; }
+  .stats-pos.gold   { color: var(--gold); }
+  .stats-pos.silver { color: #aaa; }
+  .stats-pos.bronze { color: #cd7f32; }
+  .stats-driver-name { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.88rem; color: var(--white); display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .stats-sub { font-size: 0.72rem; color: var(--muted); font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stats-bar-wrap { display: flex; align-items: center; }
+  .stats-bar-bg { width: 100%; height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+  .stats-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+  .stats-val { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1rem; color: var(--gold); text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+  .stats-val-label { font-size: 0.55rem; font-weight: 600; letter-spacing: 1px; color: var(--muted); line-height: 1; margin-top: 1px; }
+  .stats-empty { padding: 20px 16px; color: var(--muted); font-style: italic; font-size: 0.85rem; }
+
 
   /* THIS WEEK PANEL — broadcast TV style */
   .this-week-panel { background: #111; border: 1px solid #222; padding: 0; margin-bottom: 20px; overflow: hidden; }
@@ -220,26 +262,33 @@
   .lb-pts    { font-size: 1.2rem; }
   .lb-rank   { font-size: 0.95rem; padding: 10px 0; }
   .lb-back   { font-size: 0.72rem; padding-right: 8px; }
-  /* This Week panel — single column, each player full width */
+
+  /* ── This Week panel — 2x2 grid, horizontal cards ── */
   .this-week-col-headers { display: none !important; }
-  .this-week-picks { grid-template-columns: 1fr !important; }
-  .this-week-player { border-right: none !important; border-top: 1px solid rgba(255,255,255,0.06); padding: 10px 10px 0; }
-  .this-week-player:first-child { border-top: none; }
+  .this-week-picks { grid-template-columns: repeat(2, 1fr) !important; }
+  .this-week-player { padding: 10px 8px 0; }
+  .this-week-player:nth-child(2) { border-right: none; }
+  .this-week-player:nth-child(3) { border-right: 1px solid #1e1e1e; border-top: 1px solid #1e1e1e; }
+  .this-week-player:nth-child(4) { border-right: none; border-top: 1px solid #1e1e1e; }
   .this-week-col-header { font-size: 1rem; margin-bottom: 8px; display: block; }
-  /* 3 driver cards side-by-side within each player row */
-  .tw-driver-cards { flex-direction: row; flex-wrap: nowrap; gap: 5px; }
-  .tw-card { flex: 1 1 0; min-width: 0; min-height: 52px; flex-direction: column; border-radius: 4px; }
-  .tw-card-photo { width: 100%; height: 52px; border-radius: 4px 4px 0 0; }
-  .tw-card-info { padding: 4px 5px 2px; justify-content: center; }
-  .tw-card-name { font-size: 0.65rem; white-space: normal; line-height: 1.2; text-align: center; }
-  .tw-card-pts-wrap { border-left: none; border-top: 1px solid #222; padding: 3px 4px; min-width: unset; flex-direction: row; gap: 4px; justify-content: center; }
-  .tw-card-pts { font-size: 0.82rem; }
-  .tw-card-pts-label { margin-top: 0; font-size: 0.5rem; }
-  .this-week-total { font-size: 0.78rem; padding: 6px 10px; }
-  /* Hide track SVG on mobile */
+
+  /* Driver cards: keep horizontal (photo | info | pts), just tighter */
+  .tw-driver-cards { flex-direction: column; gap: 5px; }
+  .tw-card { flex-direction: row; min-height: 48px; }
+  .tw-card-photo { width: 44px; height: 44px; flex-shrink: 0; }
+  .tw-card-info { flex: 1; padding: 0 4px; min-width: 0; }
+  .tw-card-name { font-size: 0.68rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tw-card-num { display: none !important; }
+  .tw-card-pts-wrap { min-width: 36px; padding: 0 5px; }
+  .tw-card-pts { font-size: 0.88rem; }
+  .tw-card-pts-label { font-size: 0.5rem; }
+  .this-week-total { font-size: 0.7rem; padding: 5px 8px; letter-spacing: 1px; }
+
+  /* Header */
   .this-week-header svg, .track-svg { display: none !important; }
-  .this-week-header { padding: 12px 16px; }
-  .this-week-track { font-size: 1.3rem; }
+  .this-week-header { padding: 12px 14px; }
+  .this-week-track { font-size: 1.4rem; }
+  .main { padding: 16px 10px; }
 }
 @media (max-width: 400px) {
   .lb-header { grid-template-columns: 36px 1fr 64px 52px; }
@@ -435,7 +484,7 @@ const DRIVERS = [
   {num:'35',name:'Riley Herbst'},{num:'41',name:'Cole Custer'},{num:'42',name:'John Hunter Nemechek'},
   {num:'43',name:'Erik Jones'},{num:'45',name:'Tyler Reddick'},{num:'47',name:'Ricky Stenhouse Jr'},
   {num:'48',name:'Alex Bowman'},{num:'51',name:'Cody Ware'},{num:'54',name:'Ty Gibbs'},
-  {num:'71',name:'Zane Smith'},{num:'77',name:'Carson Hocevar'},{num:'88',name:'Connor Zilisch'},
+  {num:'71',name:'Michael McDowell'},{num:'77',name:'Carson Hocevar'},{num:'88',name:'Connor Zilisch'},
   {num:'97',name:'Shane Van Gisbergen'},{num:'99',name:'Daniel Hemric'},
 ];
 
@@ -476,8 +525,7 @@ function getDriverPhotoUrl(driverName) {
     'Ty Gibbs':            'images/drivers/Ty-Gibbs.png',
     'Tyler Reddick':       'images/drivers/Tyler-Reddick.png',
     'William Byron':       'images/drivers/William-Byron.png',
-    'Zane Smith':          'images/drivers/Zane-Smith.png',
-  };
+      };
   return photos[driverName] || '';
 }
 function getDriverTileColor(num) {
@@ -742,7 +790,7 @@ const DRIVER_COLORS = {
   '48': {bg:'#005aaa', text:'#fff'},   // Bowman - HMS blue
   '51': {bg:'#333333', text:'#fff'},   // Ware - gray
   '54': {bg:'#e8000d', text:'#fff'},   // Gibbs - JGR red
-  '71': {bg:'#2d6a4f', text:'#fff'},   // Z.Smith - Spire green
+  '71': {bg:'#003087', text:'#fff'},   // McDowell - FRM blue
   '77': {bg:'#ff6b00', text:'#fff'},   // Hocevar - Spire orange
   '88': {bg:'#e8000d', text:'#fff'},   // Zilisch - Trackhouse red
   '97': {bg:'#e8000d', text:'#fff'},   // SVG - Trackhouse red
@@ -1214,7 +1262,7 @@ const DRIVER_ROSTER = [
   {num:'48', name:'Alex Bowman',          team:'Hendrick Motorsports',    mfr:'Chevrolet', photo:'Alex-Bowman.png'},
   {num:'51', name:'Cody Ware',            team:'Rick Ware Racing',        mfr:'Ford',      photo:'Cody-Ware.png'},
   {num:'54', name:'Ty Gibbs',             team:'Joe Gibbs Racing',        mfr:'Toyota',    photo:'Ty-Gibbs.png'},
-  {num:'71', name:'Zane Smith',           team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Zane-Smith.png'},
+  {num:'71', name:'Michael McDowell',     team:'Front Row Motorsports',   mfr:'Ford',      photo:'Michael-McDowell.png'},
   {num:'77', name:'Carson Hocevar',       team:'Spire Motorsports',       mfr:'Chevrolet', photo:'Carson-Hocevar.png'},
   {num:'88', name:'Connor Zilisch',       team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'Connor-Zilisch.png'},
   {num:'97', name:'Shane Van Gisbergen',  team:'Trackhouse Racing',       mfr:'Chevrolet', photo:'shane-van-gisbergen.png'},
