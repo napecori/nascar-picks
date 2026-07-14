@@ -150,6 +150,17 @@
   .stats-val-label { font-size: 0.55rem; font-weight: 600; letter-spacing: 1px; color: var(--muted); line-height: 1; margin-top: 1px; }
   .stats-empty { padding: 20px 16px; color: var(--muted); font-style: italic; font-size: 0.85rem; }
 
+  /* ── BUMP CHART ── */
+  .bump-chart-wrap { background: var(--surface2); border: 1px solid var(--border); margin-bottom: 24px; }
+  .bump-chart-header { padding: 14px 20px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface3); }
+  .bump-chart-title { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .bump-chart-title span { color: var(--white); }
+  .bump-chart-legend { display: flex; gap: 18px; }
+  .bump-legend-item { display: flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; font-style: italic; }
+  .bump-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .bump-chart-svg-wrap { padding: 8px 0 4px; overflow-x: auto; }
+  .bump-chart-svg-wrap svg { display: block; }
+
 
   /* THIS WEEK PANEL — broadcast TV style */
   .this-week-panel { background: #111; border: 1px solid #222; padding: 0; margin-bottom: 20px; overflow: hidden; }
@@ -525,7 +536,7 @@ function getDriverPhotoUrl(driverName) {
     'Ty Gibbs':            'images/drivers/Ty-Gibbs.png',
     'Tyler Reddick':       'images/drivers/Tyler-Reddick.png',
     'William Byron':       'images/drivers/William-Byron.png',
-      };
+  };
   return photos[driverName] || '';
 }
 function getDriverTileColor(num) {
@@ -1300,6 +1311,131 @@ function renderDriverRoster() {
   }).join('');
 }
 
+
+// ============================================================
+// BUMP CHART — cumulative rank per race
+// ============================================================
+function renderBumpChart() {
+  const W = 860, H = 240;
+  const padL = 64, padR = 70, padT = 28, padB = 32;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const n = 4; // players
+
+  // Find races with any scored result
+  const scoredRaces = [];
+  for (let ri = 0; ri < 35; ri++) {
+    if (PLAYER_NAMES.some((_, pi) => picks[pi][ri].d1fin || picks[pi][ri].d2fin || picks[pi][ri].d3fin)) {
+      scoredRaces.push(ri);
+    }
+  }
+  if (scoredRaces.length < 2) return `<div class="stats-empty" style="padding:28px 20px;">Bump chart will appear once at least 2 races have results.</div>`;
+
+  // For each scored race, compute cumulative totals and rank (1=best)
+  const rankHistory = PLAYER_NAMES.map(() => []); // rankHistory[pi][raceIndex] = rank 1-4
+  scoredRaces.forEach((ri, idx) => {
+    const totals = PLAYER_NAMES.map((_, pi) => cumulScore(pi, ri));
+    const sorted = [...totals].sort((a, b) => b - a);
+    PLAYER_NAMES.forEach((_, pi) => {
+      const rank = sorted.indexOf(totals[pi]) + 1;
+      rankHistory[pi].push({ rank, pts: totals[pi], raceNum: SCHEDULE[ri].race, track: SCHEDULE[ri].track });
+    });
+  });
+
+  const xStep = chartW / Math.max(scoredRaces.length - 1, 1);
+  const yStep = chartH / (n - 1); // 4 positions
+
+  function xOf(i) { return padL + i * xStep; }
+  function yOf(rank) { return padT + (rank - 1) * yStep; }
+
+  // Build smooth cubic bezier paths
+  function makePath(pi) {
+    const pts = rankHistory[pi];
+    if (pts.length === 0) return '';
+    let d = `M ${xOf(0).toFixed(1)} ${yOf(pts[0].rank).toFixed(1)}`;
+    for (let i = 1; i < pts.length; i++) {
+      const x0 = xOf(i - 1), y0 = yOf(pts[i-1].rank);
+      const x1 = xOf(i),     y1 = yOf(pts[i].rank);
+      const cx = (x0 + x1) / 2;
+      d += ` C ${cx.toFixed(1)} ${y0.toFixed(1)}, ${cx.toFixed(1)} ${y1.toFixed(1)}, ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+    }
+    return d;
+  }
+
+  // Rank labels on left/right
+  const rankLabels = ['1ST', '2ND', '3RD', '4TH'];
+
+  // Horizontal grid lines
+  let gridLines = '';
+  for (let r = 1; r <= 4; r++) {
+    const y = yOf(r).toFixed(1);
+    gridLines += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="#1e2530" stroke-width="1"/>`;
+  }
+
+  // Vertical tick marks for each scored race
+  let ticks = '';
+  scoredRaces.forEach((ri, i) => {
+    const x = xOf(i).toFixed(1);
+    // Only show every N labels to avoid crowding
+    const showLabel = scoredRaces.length <= 18 || i % 2 === 0 || i === scoredRaces.length - 1;
+    ticks += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${H - padB}" stroke="#1a2030" stroke-width="1"/>`;
+    if (showLabel) {
+      ticks += `<text x="${x}" y="${H - padB + 14}" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#3d4a5a" font-weight="600">${SCHEDULE[ri].race}</text>`;
+    }
+  });
+
+  // Draw paths (behind dots)
+  let paths = '';
+  PLAYER_NAMES.forEach((_, pi) => {
+    paths += `<path d="${makePath(pi)}" fill="none" stroke="${PLAYER_COLORS[pi]}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>`;
+  });
+
+  // Draw dots and end labels
+  let dots = '';
+  let endLabels = '';
+  PLAYER_NAMES.forEach((name, pi) => {
+    const pts = rankHistory[pi];
+    pts.forEach((p, i) => {
+      const x = xOf(i).toFixed(1);
+      const y = yOf(p.rank).toFixed(1);
+      const isLast = i === pts.length - 1;
+      dots += `<circle cx="${x}" cy="${y}" r="${isLast ? 5 : 3.5}" fill="${PLAYER_COLORS[pi]}" stroke="#0f1318" stroke-width="1.5"/>`;
+      if (isLast) {
+        dots += `<circle cx="${x}" cy="${y}" r="8" fill="${PLAYER_COLORS[pi]}" opacity="0.18"/>`;
+      }
+    });
+    // Right-side label: name + pts
+    if (pts.length > 0) {
+      const last = pts[pts.length - 1];
+      const lx = (W - padR + 10).toFixed(1);
+      const ly = yOf(last.rank).toFixed(1);
+      endLabels += `<text x="${lx}" y="${(parseFloat(ly) - 3).toFixed(1)}" font-family="Inter,sans-serif" font-size="9.5" font-weight="800" font-style="italic" fill="${PLAYER_COLORS[pi]}" letter-spacing="0.5">${name.toUpperCase()}</text>`;
+      endLabels += `<text x="${lx}" y="${(parseFloat(ly) + 9).toFixed(1)}" font-family="Inter,sans-serif" font-size="8.5" font-weight="600" fill="${PLAYER_COLORS[pi]}" opacity="0.7">${last.pts} PTS</text>`;
+    }
+  });
+
+  // Left-side rank axis labels
+  let axisLabels = '';
+  rankLabels.forEach((label, i) => {
+    const y = yOf(i + 1).toFixed(1);
+    axisLabels += `<text x="${(padL - 8).toFixed(1)}" y="${(parseFloat(y) + 4).toFixed(1)}" text-anchor="end" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#3d4a5a" letter-spacing="1">${label}</text>`;
+  });
+
+  // Race label axis header
+  const axisHeader = `<text x="${(padL + chartW/2).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#2a3545" font-weight="600" letter-spacing="2">RACE</text>`;
+
+  return `<div class="bump-chart-svg-wrap">
+    <svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:480px;max-width:${W}px;" preserveAspectRatio="xMidYMid meet">
+      ${gridLines}
+      ${ticks}
+      ${axisLabels}
+      ${axisHeader}
+      ${paths}
+      ${dots}
+      ${endLabels}
+    </svg>
+  </div>`;
+}
 // ============================================================
 // DRIVER STATS
 // ============================================================
@@ -1500,8 +1636,25 @@ function renderDriverStats() {
     </div>`;
   }
 
+  // Build legend HTML
+  const bumpLegend = PLAYER_NAMES.map((name, pi) =>
+    `<div class="bump-legend-item" style="color:${PLAYER_COLORS[pi]};text-shadow:0 0 12px ${PLAYER_COLORS[pi]}66;">
+      <div class="bump-legend-dot" style="background:${PLAYER_COLORS[pi]};box-shadow:0 0 6px ${PLAYER_COLORS[pi]}88;"></div>
+      ${name.toUpperCase()}
+    </div>`
+  ).join('');
+
+  const bumpHtml = `<div class="bump-chart-wrap">
+    <div class="bump-chart-header">
+      <div class="bump-chart-title">Season <span>Standings Race-by-Race</span></div>
+      <div class="bump-chart-legend">${bumpLegend}</div>
+    </div>
+    ${renderBumpChart()}
+  </div>`;
+
   container.innerHTML = `
     ${highlightHtml}
+    ${bumpHtml}
     <div class="stats-grid">
       <div class="stats-card">
         <div class="stats-card-title">Driver Standings <span>Season</span></div>
