@@ -150,6 +150,15 @@
   .stats-val-label { font-size: 0.55rem; font-weight: 600; letter-spacing: 1px; color: var(--muted); line-height: 1; margin-top: 1px; }
   .stats-empty { padding: 20px 16px; color: var(--muted); font-style: italic; font-size: 0.85rem; }
 
+  /* ── WEEK NAV ── */
+  .week-nav { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .week-nav-btn { background: none; border: 1px solid #2a2a2a; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; padding: 3px 10px; cursor: pointer; border-radius: 3px; transition: all 0.15s; line-height: 1; letter-spacing: 0.5px; flex-shrink: 0; }
+  .week-nav-btn:hover:not(:disabled) { border-color: var(--border2); color: var(--white); }
+  .week-nav-btn:disabled { opacity: 0.25; cursor: default; }
+  .week-nav-btn.today-btn { border-color: var(--red); color: var(--red); font-size: 0.68rem; letter-spacing: 1px; }
+  .week-nav-btn.today-btn:hover { background: var(--red); color: #000; }
+  .week-nav-label { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 600; color: var(--muted); letter-spacing: 1px; min-width: 60px; text-align: center; }
+
   /* ── BUMP CHART ── */
   .bump-chart-wrap { background: var(--surface2); border: 1px solid var(--border); margin-bottom: 24px; }
   .bump-chart-header { padding: 14px 20px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface3); }
@@ -158,8 +167,8 @@
   .bump-chart-legend { display: flex; gap: 18px; }
   .bump-legend-item { display: flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; font-style: italic; }
   .bump-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .bump-chart-svg-wrap { padding: 8px 0 4px; overflow-x: auto; }
-  .bump-chart-svg-wrap svg { display: block; }
+  .bump-chart-svg-wrap { padding: 8px 0 4px; }
+  .bump-chart-svg-wrap svg { display: block; width: 100%; }
 
 
   /* THIS WEEK PANEL — broadcast TV style */
@@ -599,6 +608,7 @@ let raceResults = {};
 let commishUnlocked = false;
 let scriptUrl = SCRIPT_URL;
 let saveTimeout = null;
+let viewedRaceIndex = null; // null = auto (this weekend)
 
 function emptyPicks() {
   return Array.from({length:4}, () =>
@@ -920,9 +930,11 @@ function getTrackSVG(trackName) {
   return '<ellipse cx="60" cy="50" rx="48" ry="30" fill="none" stroke="white" stroke-width="5"/><ellipse cx="60" cy="50" rx="34" ry="17" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 3"/>';
 }
 
-function renderThisWeek() {
+function renderThisWeek(riOverride) {
   const panel = document.getElementById('this-week-panel');
-  const ri = getCurrentRaceIndex();
+  const autoRi = getCurrentRaceIndex();
+  if (riOverride !== undefined) viewedRaceIndex = riOverride;
+  const ri = (viewedRaceIndex !== null) ? viewedRaceIndex : autoRi;
   const race = SCHEDULE[ri];
   const tvColor = {FOX:'#f5a623',FS1:'#f5a623',Prime:'#00a8e0',USA:'#1a6bb5',NBC:'#d4a017'}[race.tv]||'#aaa';
 
@@ -997,11 +1009,17 @@ function renderThisWeek() {
   panel.innerHTML = `
     <div class="this-week-header">
       <div class="this-week-header-left">
-        <div class="this-week-label">Race ${race.race} of 35 &mdash; This Weekend</div>
+        <div class="this-week-label">Race ${race.race} of 35 &mdash; ${ri === autoRi ? 'This Weekend' : (ri < autoRi ? 'Past Results' : 'Upcoming')}</div>
         <div class="this-week-track">${race.track}</div>
         <div class="this-week-meta" style="text-align:left;margin-top:6px;">
           ${race.date} &bull; ${race.time} &bull; <span style="color:${tvColor};font-weight:700;">${race.tv}</span>
           &bull; <span class="discipline-badge ${DISC_CLASS[race.disc]}">${DISC_LABELS[race.disc]}</span>
+        </div>
+        <div class="week-nav">
+          <button class="week-nav-btn" onclick="renderThisWeek(${ri - 1})" ${ri <= 0 ? 'disabled' : ''}>&larr; Prev</button>
+          <span class="week-nav-label">Race ${race.race}</span>
+          <button class="week-nav-btn" onclick="renderThisWeek(${ri + 1})" ${ri >= 34 ? 'disabled' : ''}>Next &rarr;</button>
+          ${ri !== autoRi ? `<button class="week-nav-btn today-btn" onclick="viewedRaceIndex=null;renderThisWeek()">&#8617; Current</button>` : ''}
         </div>
       </div>
       <div class="this-week-track-img-wrap">
@@ -1014,7 +1032,9 @@ function renderThisWeek() {
 }
 
 function renderLeaderboard() {
-  const sorted = PLAYER_NAMES.map((n,i) => ({name:n, total:cumulScore(i,34), idx:i, scored: picks[i].filter(r => r.d1fin||r.d2fin||r.d3fin).length}))
+  const autoRi = getCurrentRaceIndex();
+  const lbRi = (viewedRaceIndex !== null) ? viewedRaceIndex : 34;
+  const sorted = PLAYER_NAMES.map((n,i) => ({name:n, total:cumulScore(i, lbRi), idx:i, scored: picks[i].filter(r => r.d1fin||r.d2fin||r.d3fin).length}))
     .sort((a,b) => b.total - a.total);
   const maxPts = sorted[0].total || 1;
   const listEl = document.getElementById('leaderboard-list');
@@ -1440,7 +1460,7 @@ function renderBumpChart() {
   const axisHeader = `<text x="${(padL + chartW/2).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#2a3545" font-weight="600" letter-spacing="2">RACE</text>`;
 
   return `<div class="bump-chart-svg-wrap">
-    <svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:480px;max-width:${W}px;" preserveAspectRatio="xMidYMid meet">
+    <svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:320px;" preserveAspectRatio="xMidYMid meet">
       ${gridLines}
       ${ticks}
       ${axisLabels}
