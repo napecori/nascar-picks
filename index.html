@@ -173,7 +173,9 @@
 
   /* THIS WEEK PANEL — broadcast TV style */
   .this-week-panel { background: #111; border: 1px solid #222; padding: 0; margin-bottom: 20px; overflow: hidden; }
-  .this-week-header { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); border-bottom: 3px solid var(--gold); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .this-week-header { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); border-bottom: 3px solid var(--gold); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap; gap: 8px; }
+  .this-week-header-left { flex: 1; min-width: 0; }
+  .this-week-track-img-wrap { flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; width: 110px; }
   .this-week-label { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.85rem; letter-spacing: 4px; color: var(--gold); }
   .this-week-track { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: 2px; color: #fff; line-height: 1; }
   .this-week-meta { font-family: 'Inter', sans-serif; font-size: 0.82rem; color: #999; letter-spacing: 1px; text-align: right; }
@@ -305,7 +307,7 @@
   .this-week-total { font-size: 0.7rem; padding: 5px 8px; letter-spacing: 1px; }
 
   /* Header */
-  .this-week-header svg, .track-svg { display: none !important; }
+  .this-week-track-img-wrap { display: none !important; }
   .this-week-header { padding: 12px 14px; }
   .this-week-track { font-size: 1.4rem; }
   .main { padding: 16px 10px; }
