@@ -645,6 +645,7 @@ async function loadFromSheets() {
       // Re-render picks panels so inputs show loaded data
       document.getElementById('player-tabs').innerHTML = '';
       document.getElementById('picks-panels').innerHTML = '';
+      document.getElementById('driverstats-inner').innerHTML = '';
       renderPicksPanels();
     }
     setSyncStatus('synced', 'Synced with Google Sheets — ' + new Date().toLocaleTimeString());
@@ -1331,80 +1332,94 @@ function renderBumpChart() {
   }
   if (scoredRaces.length < 2) return `<div class="stats-empty" style="padding:28px 20px;">Bump chart will appear once at least 2 races have results.</div>`;
 
+  const totalRaces = 35; // full season X axis
+
   // For each scored race, compute cumulative totals and rank (1=best)
-  const rankHistory = PLAYER_NAMES.map(() => []); // rankHistory[pi][raceIndex] = rank 1-4
-  scoredRaces.forEach((ri, idx) => {
+  // rankHistory[pi] = array of {rank, pts, raceNum, ri} for scored races only
+  const rankHistory = PLAYER_NAMES.map(() => []);
+  scoredRaces.forEach(ri => {
     const totals = PLAYER_NAMES.map((_, pi) => cumulScore(pi, ri));
     const sorted = [...totals].sort((a, b) => b - a);
     PLAYER_NAMES.forEach((_, pi) => {
       const rank = sorted.indexOf(totals[pi]) + 1;
-      rankHistory[pi].push({ rank, pts: totals[pi], raceNum: SCHEDULE[ri].race, track: SCHEDULE[ri].track });
+      rankHistory[pi].push({ rank, pts: totals[pi], raceNum: SCHEDULE[ri].race, ri });
     });
   });
 
-  const xStep = chartW / Math.max(scoredRaces.length - 1, 1);
-  const yStep = chartH / (n - 1); // 4 positions
+  // X spans full 35-race season; Y spans 4 positions
+  const xStep = chartW / (totalRaces - 1);
+  const yStep = chartH / (n - 1);
 
-  function xOf(i) { return padL + i * xStep; }
+  function xOf(ri) { return padL + ri * xStep; }        // takes race INDEX (0-34)
   function yOf(rank) { return padT + (rank - 1) * yStep; }
 
-  // Build smooth cubic bezier paths
-  function makePath(pi) {
-    const pts = rankHistory[pi];
-    if (pts.length === 0) return '';
-    let d = `M ${xOf(0).toFixed(1)} ${yOf(pts[0].rank).toFixed(1)}`;
-    for (let i = 1; i < pts.length; i++) {
-      const x0 = xOf(i - 1), y0 = yOf(pts[i-1].rank);
-      const x1 = xOf(i),     y1 = yOf(pts[i].rank);
-      const cx = (x0 + x1) / 2;
-      d += ` C ${cx.toFixed(1)} ${y0.toFixed(1)}, ${cx.toFixed(1)} ${y1.toFixed(1)}, ${x1.toFixed(1)} ${y1.toFixed(1)}`;
-    }
-    return d;
-  }
-
-  // Rank labels on left/right
   const rankLabels = ['1ST', '2ND', '3RD', '4TH'];
 
-  // Horizontal grid lines
+  // Horizontal grid lines (one per rank)
   let gridLines = '';
   for (let r = 1; r <= 4; r++) {
     const y = yOf(r).toFixed(1);
     gridLines += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="#1e2530" stroke-width="1"/>`;
   }
 
-  // Vertical tick marks for each scored race
+  // Vertical tick for every race; subtle future races, stronger scored ones
   let ticks = '';
-  scoredRaces.forEach((ri, i) => {
-    const x = xOf(i).toFixed(1);
-    // Only show every N labels to avoid crowding
-    const showLabel = scoredRaces.length <= 18 || i % 2 === 0 || i === scoredRaces.length - 1;
-    ticks += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${H - padB}" stroke="#1a2030" stroke-width="1"/>`;
+  for (let ri = 0; ri < totalRaces; ri++) {
+    const x = xOf(ri).toFixed(1);
+    const isScored = scoredRaces.includes(ri);
+    const isChase = SCHEDULE[ri] && SCHEDULE[ri].race >= 26;
+    const tickColor = isScored ? '#1a2030' : '#111620';
+    ticks += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${H - padB}" stroke="${tickColor}" stroke-width="1"/>`;
+    // Show every race number, but dim unscored ones
+    const labelFill = isScored ? '#3d4a5a' : '#1e2530';
+    const raceNum = SCHEDULE[ri] ? SCHEDULE[ri].race : ri + 1;
+    // Only label every other race once we have many, to avoid crowding
+    const showLabel = totalRaces <= 20 || ri % 2 === 0 || ri === totalRaces - 1;
     if (showLabel) {
-      ticks += `<text x="${x}" y="${H - padB + 14}" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#3d4a5a" font-weight="600">${SCHEDULE[ri].race}</text>`;
+      ticks += `<text x="${x}" y="${H - padB + 14}" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="${labelFill}" font-weight="600">${raceNum}</text>`;
     }
-  });
+    // Chase for the Cup marker
+    if (isChase && SCHEDULE[ri].race === 26) {
+      ticks += `<line x1="${x}" y1="${padT - 6}" x2="${x}" y2="${H - padB}" stroke="rgba(240,192,64,0.2)" stroke-width="1" stroke-dasharray="3,3"/>`;
+      ticks += `<text x="${x}" y="${padT - 8}" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="rgba(240,192,64,0.4)" font-weight="700" letter-spacing="1">CHASE</text>`;
+    }
+  }
 
-  // Draw paths (behind dots)
+  // Build smooth cubic bezier paths connecting only scored race points
+  function makePath(pi) {
+    const pts = rankHistory[pi];
+    if (pts.length === 0) return '';
+    let d = `M ${xOf(pts[0].ri).toFixed(1)} ${yOf(pts[0].rank).toFixed(1)}`;
+    for (let i = 1; i < pts.length; i++) {
+      const x0 = xOf(pts[i-1].ri), y0 = yOf(pts[i-1].rank);
+      const x1 = xOf(pts[i].ri),   y1 = yOf(pts[i].rank);
+      const cx = (x0 + x1) / 2;
+      d += ` C ${cx.toFixed(1)} ${y0.toFixed(1)}, ${cx.toFixed(1)} ${y1.toFixed(1)}, ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+    }
+    return d;
+  }
+
+  // Draw paths
   let paths = '';
   PLAYER_NAMES.forEach((_, pi) => {
     paths += `<path d="${makePath(pi)}" fill="none" stroke="${PLAYER_COLORS[pi]}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>`;
   });
 
-  // Draw dots and end labels
+  // Draw dots + end labels
   let dots = '';
   let endLabels = '';
   PLAYER_NAMES.forEach((name, pi) => {
     const pts = rankHistory[pi];
     pts.forEach((p, i) => {
-      const x = xOf(i).toFixed(1);
+      const x = xOf(p.ri).toFixed(1);
       const y = yOf(p.rank).toFixed(1);
       const isLast = i === pts.length - 1;
-      dots += `<circle cx="${x}" cy="${y}" r="${isLast ? 5 : 3.5}" fill="${PLAYER_COLORS[pi]}" stroke="#0f1318" stroke-width="1.5"/>`;
+      dots += `<circle cx="${x}" cy="${y}" r="${isLast ? 5 : 3}" fill="${PLAYER_COLORS[pi]}" stroke="#0f1318" stroke-width="1.5"/>`;
       if (isLast) {
-        dots += `<circle cx="${x}" cy="${y}" r="8" fill="${PLAYER_COLORS[pi]}" opacity="0.18"/>`;
+        dots += `<circle cx="${x}" cy="${y}" r="9" fill="${PLAYER_COLORS[pi]}" opacity="0.15"/>`;
       }
     });
-    // Right-side label: name + pts
+    // Right-side label at latest race position
     if (pts.length > 0) {
       const last = pts[pts.length - 1];
       const lx = (W - padR + 10).toFixed(1);
@@ -1421,7 +1436,7 @@ function renderBumpChart() {
     axisLabels += `<text x="${(padL - 8).toFixed(1)}" y="${(parseFloat(y) + 4).toFixed(1)}" text-anchor="end" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#3d4a5a" letter-spacing="1">${label}</text>`;
   });
 
-  // Race label axis header
+  // Race axis label
   const axisHeader = `<text x="${(padL + chartW/2).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#2a3545" font-weight="600" letter-spacing="2">RACE</text>`;
 
   return `<div class="bump-chart-svg-wrap">
@@ -1698,6 +1713,9 @@ async function syncRaceResults() {
       document.getElementById('player-tabs').innerHTML = '';
       renderPicksPanels();
       renderStandings();
+      // Refresh driver stats if that tab is active or was already rendered
+      document.getElementById('driverstats-inner').innerHTML = '';
+      if (document.getElementById('tab-driverstats').classList.contains('active')) renderDriverStats();
       setSyncStatus('synced', 'Race results synced at ' + new Date().toLocaleTimeString());
       statusEl.style.color = '#4caf50';
       statusEl.textContent = data.message;
@@ -1741,6 +1759,8 @@ async function syncFromSheet() {
       document.getElementById('player-tabs').innerHTML = '';
       renderPicksPanels();
       renderStandings();
+      document.getElementById('driverstats-inner').innerHTML = '';
+      if (document.getElementById('tab-driverstats').classList.contains('active')) renderDriverStats();
       setSyncStatus('synced', 'Synced at ' + new Date().toLocaleTimeString());
       statusEl.style.color = '#4caf50';
       statusEl.textContent = data.message || ('Updated ' + data.updated + ' entries');
